@@ -4,27 +4,26 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
-import com.picture.diary.extract.data.Extensions;
-import com.picture.diary.extract.data.FileData;
-import com.picture.diary.extract.data.ImageMetadata;
-import com.picture.diary.extract.data.SplitParts;
+import com.picture.diary.extract.data.*;
+import com.picture.diary.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class DataExtractorServiceImpl {
+public class ImageFileExtractorServiceImpl {
 
     public List<FileData> getImageFileList(String path) throws IOException{
         Path folder = Paths.get(path);
@@ -35,13 +34,13 @@ public class DataExtractorServiceImpl {
             .filter(file -> {
                 String fileName = file.getName();
                 String extension = Extensions.findOf(fileName).toString();
+
                 return Extensions.contains(extension);
             })
             .map(FileData::new)
             .collect(Collectors.toList());
     }
 
-    //TODO : 소스코드 너무 지저분함 !! 정리하기
     public ImageMetadata getImageMetadata(FileData fileData) {
         String fileName = fileData.getFileName();
         String path = fileData.getFilePath();
@@ -50,15 +49,13 @@ public class DataExtractorServiceImpl {
             FileInputStream is = new FileInputStream(path);
             Metadata metadata = ImageMetadataReader.readMetadata(is);
 
-            GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-            GeoLocation location = gpsDirectory.getGeoLocation();
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
+            Geometry geometry = this.getImageGeometry(metadata);
+            LocalDateTime dateTime = this.getImageDate(metadata);
 
             return ImageMetadata.builder()
-                    .fileName(fileName)
-                    .latitude(latitude)
-                    .longitude(longitude)
+                    .latitude(geometry.getLatitude())
+                    .longitude(geometry.getLongitude())
+                    .date(dateTime)
                     .build();
 
         } catch (NullPointerException e) {
@@ -75,5 +72,23 @@ public class DataExtractorServiceImpl {
             log.error("IOException occur.");
             return null;
         }
+    }
+
+    private Geometry getImageGeometry(Metadata metadata) {
+
+        GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+        GeoLocation location = gpsDirectory.getGeoLocation();
+
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        return new Geometry(latitude, longitude);
+    }
+
+    private LocalDateTime getImageDate(Metadata metadata) {
+        ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+        Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+
+        return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
     }
 }

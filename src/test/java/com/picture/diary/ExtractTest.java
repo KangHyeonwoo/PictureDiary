@@ -1,7 +1,6 @@
 package com.picture.diary;
 
-import com.drew.metadata.Metadata;
-import com.picture.diary.extract.DataExtractorServiceImpl;
+import com.picture.diary.extract.ImageFileExtractorServiceImpl;
 import com.picture.diary.extract.data.FileData;
 import com.picture.diary.extract.data.ImageMetadata;
 import org.assertj.core.api.Assertions;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 public class ExtractTest {
 
     @Autowired
-    DataExtractorServiceImpl dataExtractorService;
+    ImageFileExtractorServiceImpl dataExtractorService;
 
     @Test
     void getMetdataListTest() {
