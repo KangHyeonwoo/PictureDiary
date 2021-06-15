@@ -7,6 +7,8 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.*;
+import com.picture.diary.extract.exception.NotFoundDateException;
+import com.picture.diary.extract.exception.NotFoundGeometryException;
 import com.picture.diary.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,12 +44,15 @@ public class ImageFileExtractorServiceImpl {
     }
 
     public ImageMetadata getImageMetadata(FileData fileData) {
+    	FileInputStream is = null;
+    	Metadata metadata = null;
+    	
         String fileName = fileData.getFileName();
         String path = fileData.getFilePath();
 
         try {
-            FileInputStream is = new FileInputStream(path);
-            Metadata metadata = ImageMetadataReader.readMetadata(is);
+            is = new FileInputStream(path);
+            metadata = ImageMetadataReader.readMetadata(is);
 
             Geometry geometry = this.getImageGeometry(metadata);
             LocalDateTime dateTime = this.getImageDate(metadata);
@@ -58,37 +63,54 @@ public class ImageFileExtractorServiceImpl {
                     .date(dateTime)
                     .build();
 
-        } catch (NullPointerException e) {
+        } catch (NotFoundGeometryException e) {
             log.error("Not Found GeoLocation. File Name [{}]", fileName);
+            LocalDateTime dateTime = this.getImageDate(metadata);
+            
             return ImageMetadata.builder()
                     .fileName(fileName)
+                    .date(dateTime)
                     .build();
-
+            
+        } catch (NotFoundDateException e) {
+        	log.error("Not Found Date. File Name [{}]", fileName);
+        	
+        	return ImageMetadata.builder()
+                    .fileName(fileName)
+                    .build();
+        	
         } catch (ImageProcessingException ie) {
             log.error("Fail to load metadata. File name [{}]", fileName);
             return null;
-
+            
         } catch (IOException ie) {
             log.error("IOException occur.");
             return null;
         }
     }
+    
+    private Geometry getImageGeometry(Metadata metadata) throws NotFoundGeometryException {
+    	try {
+    		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+            GeoLocation location = gpsDirectory.getGeoLocation();
 
-    private Geometry getImageGeometry(Metadata metadata) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
 
-        GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-        GeoLocation location = gpsDirectory.getGeoLocation();
-
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-
-        return new Geometry(latitude, longitude);
+            return new Geometry(latitude, longitude);
+    	} catch (NullPointerException e) {
+    		throw new NotFoundGeometryException();
+    	}
     }
 
-    private LocalDateTime getImageDate(Metadata metadata) {
-        ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-        Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+    private LocalDateTime getImageDate(Metadata metadata) throws NotFoundDateException{
+    	try {
+    		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+            Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 
-        return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
+            return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
+    	} catch (NullPointerException e) {
+    		throw new NotFoundDateException();
+    	}
     }
 }
