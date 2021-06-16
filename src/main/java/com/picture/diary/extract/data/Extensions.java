@@ -1,11 +1,5 @@
 package com.picture.diary.extract.data;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-
-import java.util.Arrays;
-import java.util.Locale;
-
 public enum Extensions {
     HEIC,
     JPG,
