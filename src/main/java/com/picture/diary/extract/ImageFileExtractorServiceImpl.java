@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class ImageFileExtractorServiceImpl {
 
-    public List<FileData> getImageFileList(String path) throws IOException{
+    public List<ImageFile> getImageFileList(String path) throws IOException{
         Path folder = Paths.get(path);
 
         return Files.walk(folder)
@@ -39,16 +39,16 @@ public class ImageFileExtractorServiceImpl {
 
                 return Extensions.contains(extension);
             })
-            .map(FileData::new)
+            .map(ImageFile::new)
             .collect(Collectors.toList());
     }
 
-    public ImageMetadata getImageMetadata(FileData fileData) {
+    public ImageMetadata getImageMetadata(ImageFile imageFile) {
     	FileInputStream is = null;
     	Metadata metadata = null;
     	
-        String fileName = fileData.getFileName();
-        String path = fileData.getFilePath();
+        String fileName = imageFile.getFileName();
+        String path = imageFile.getFilePath();
 
         try {
             is = new FileInputStream(path);

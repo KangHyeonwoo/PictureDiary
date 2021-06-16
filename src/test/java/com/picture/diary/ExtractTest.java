@@ -1,7 +1,7 @@
 package com.picture.diary;
 
 import com.picture.diary.extract.ImageFileExtractorServiceImpl;
-import com.picture.diary.extract.data.FileData;
+import com.picture.diary.extract.data.ImageFile;
 import com.picture.diary.extract.data.ImageMetadata;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class ExtractTest {
         try {
 
             //1. get fileDataList
-            List<FileData> fileDataList = dataExtractorService.getImageFileList(path);
+            List<ImageFile> fileDataList = dataExtractorService.getImageFileList(path);
             Assertions.assertThat(fileDataList.size()).isGreaterThan(0);
 
             //2. get Metadata in FileData

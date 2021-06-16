@@ -9,7 +9,7 @@ import java.io.File;
 @Builder
 @AllArgsConstructor
 @Getter
-public class FileData {
+public class ImageFile {
 
     private String fileName;
     private String extension;
@@ -18,7 +18,7 @@ public class FileData {
     private String filePath;
     private ImageMetadata imageMetadata;
 
-    public FileData(File file) {
+    public ImageFile(File file) {
         String fileName = file.getName();
 
         this.fileName = fileName;
