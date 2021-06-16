@@ -7,8 +7,6 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.*;
-import com.picture.diary.extract.exception.NotFoundDateException;
-import com.picture.diary.extract.exception.NotFoundGeometryException;
 import com.picture.diary.utils.DateUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -63,26 +61,11 @@ public class ImageFileExtractorServiceImpl {
             LocalDateTime imageDate = this.getImageDate(metadata);
 
             return ImageMetadata.builder()
+                    .fileName(fileName)
                     .geometry(geometry)
                     .imageDate(imageDate)
                     .build();
 
-        } catch (NotFoundGeometryException e) {
-            log.error("Not Found GeoLocation. File Name [{}]", fileName);
-            LocalDateTime imageDate = this.getImageDate(metadata);
-            
-            return ImageMetadata.builder()
-                    .fileName(fileName)
-                    .imageDate(imageDate)
-                    .build();
-            
-        } catch (NotFoundDateException e) {
-        	log.error("Not Found Date. File Name [{}]", fileName);
-        	
-        	return ImageMetadata.builder()
-                    .fileName(fileName)
-                    .build();
-        	
         } catch (ImageProcessingException ie) {
             log.error("Fail to load metadata. File name [{}]", fileName);
             return null;
@@ -93,7 +76,7 @@ public class ImageFileExtractorServiceImpl {
         }
     }
     
-    private Geometry getImageGeometry(Metadata metadata) throws NotFoundGeometryException {
+    private Geometry getImageGeometry(Metadata metadata) {
     	try {
     		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             GeoLocation location = gpsDirectory.getGeoLocation();
@@ -103,18 +86,20 @@ public class ImageFileExtractorServiceImpl {
 
             return new Geometry(latitude, longitude);
     	} catch (NullPointerException e) {
-    		throw new NotFoundGeometryException();
+
+    		return null;
     	}
     }
 
-    private LocalDateTime getImageDate(Metadata metadata) throws NotFoundDateException{
+    private LocalDateTime getImageDate(Metadata metadata) {
     	try {
     		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 
             return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
     	} catch (NullPointerException e) {
-    		throw new NotFoundDateException();
+
+    		return null;
     	}
     }
 }
