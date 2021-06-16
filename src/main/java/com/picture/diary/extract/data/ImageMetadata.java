@@ -6,18 +6,24 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
 @ToString
 public class ImageMetadata {
 
     private String fileName;
     private String description;
-
+    
     private String sggCode;
+    private Geometry geometry;
+    
+    LocalDateTime imageDate;
 
-    private double latitude;
-    private double longitude;
-
-    LocalDateTime date;
+    @Builder
+    public ImageMetadata(String fileName, String description, String sggCode, Geometry geometry, LocalDateTime imageDate) {
+    	this.fileName = fileName;
+    	this.description = description;
+    	this.sggCode = sggCode;
+    	this.geometry = geometry;
+    	this.imageDate = imageDate;
+    }
 }

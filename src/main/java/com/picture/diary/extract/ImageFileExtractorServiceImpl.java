@@ -10,6 +10,8 @@ import com.picture.diary.extract.data.*;
 import com.picture.diary.extract.exception.NotFoundDateException;
 import com.picture.diary.extract.exception.NotFoundGeometryException;
 import com.picture.diary.utils.DateUtils;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ImageFileExtractorServiceImpl {
 
+	private final FilePathProperties filePathProperties;
+	
     public List<ImageFile> getImageFileList(String path) throws IOException{
         Path folder = Paths.get(path);
 
@@ -55,21 +60,20 @@ public class ImageFileExtractorServiceImpl {
             metadata = ImageMetadataReader.readMetadata(is);
 
             Geometry geometry = this.getImageGeometry(metadata);
-            LocalDateTime dateTime = this.getImageDate(metadata);
+            LocalDateTime imageDate = this.getImageDate(metadata);
 
             return ImageMetadata.builder()
-                    .latitude(geometry.getLatitude())
-                    .longitude(geometry.getLongitude())
-                    .date(dateTime)
+                    .geometry(geometry)
+                    .imageDate(imageDate)
                     .build();
 
         } catch (NotFoundGeometryException e) {
             log.error("Not Found GeoLocation. File Name [{}]", fileName);
-            LocalDateTime dateTime = this.getImageDate(metadata);
+            LocalDateTime imageDate = this.getImageDate(metadata);
             
             return ImageMetadata.builder()
                     .fileName(fileName)
-                    .date(dateTime)
+                    .imageDate(imageDate)
                     .build();
             
         } catch (NotFoundDateException e) {
