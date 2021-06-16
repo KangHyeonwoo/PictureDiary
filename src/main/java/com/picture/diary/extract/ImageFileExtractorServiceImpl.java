@@ -35,9 +35,9 @@ public class ImageFileExtractorServiceImpl {
             .filter(file -> file.getName().split(SplitParts.DOT.getValue()).length > 0)
             .filter(file -> {
                 String fileName = file.getName();
-                String extension = Extensions.findOf(fileName).toString();
+                Extensions extension = Extensions.findOf(fileName);
 
-                return Extensions.contains(extension);
+                return extension != Extensions.NOT_ALLOWED;
             })
             .map(ImageFile::new)
             .collect(Collectors.toList());

@@ -12,7 +12,7 @@ import java.io.File;
 public class ImageFile {
 
     private String fileName;
-    private String extension;
+    private Extensions extension;
     private long fileSize;
 
     private String filePath;
@@ -22,7 +22,7 @@ public class ImageFile {
         String fileName = file.getName();
 
         this.fileName = fileName;
-        this.extension = Extensions.findOf(fileName).toString();
+        this.extension = Extensions.findOf(fileName);
         this.fileSize = file.length();
         this.filePath = file.getPath();
     }
