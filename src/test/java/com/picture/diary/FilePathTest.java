@@ -15,12 +15,12 @@ public class FilePathTest {
     @Test
     void findFilePath() {
 
-        String beforePath = filePathProperties.getBeforePath();;
-        String afterPath = filePathProperties.getAfterPath();
+        String fromPath = filePathProperties.getFromPath();;
+        String toPath = filePathProperties.getToPath();
         String tempPath = filePathProperties.getTempPath();
 
         Assertions.assertThat(tempPath).isEqualTo("/download/temp/");
-        Assertions.assertThat(beforePath).isEqualTo("/download/");
-        Assertions.assertThat(afterPath).isEqualTo("/download/save/");
+        Assertions.assertThat(fromPath).isEqualTo("/download/");
+        Assertions.assertThat(toPath).isEqualTo("/download/save/");
     }
 }

@@ -17,12 +17,12 @@ public class FilePathProperties {
     /**
      * 원본 파일 경로
      */
-    private final String beforePath;
+    private final String fromPath;
 
     /**
      * 메타데이터가 존재하는 파일 저장 경로
      */
-    private final String afterPath;
+    private final String toPath;
 
     /**
      * 메타데이터가 존재하지 않는 파일의 저장 경로
