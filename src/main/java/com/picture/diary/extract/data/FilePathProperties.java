@@ -22,7 +22,7 @@ public class FilePathProperties {
     /**
      * 메타데이터가 존재하는 파일 저장 경로
      */
-    private final String toPath;
+    private final String dataPath;
 
     /**
      * 메타데이터가 존재하지 않는 파일의 저장 경로

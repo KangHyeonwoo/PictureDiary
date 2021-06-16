@@ -16,7 +16,7 @@ public class FilePathTest {
     void findFilePath() {
 
         String fromPath = filePathProperties.getFromPath();;
-        String toPath = filePathProperties.getToPath();
+        String toPath = filePathProperties.getDataPath();
         String tempPath = filePathProperties.getTempPath();
 
         Assertions.assertThat(tempPath).isEqualTo("/download/temp/");
