@@ -1,9 +1,11 @@
 package com.picture.diary;
 
-import com.picture.diary.extract.ImageFileExtractorServiceImpl;
-import com.picture.diary.extract.data.FilePathProperties;
-import com.picture.diary.extract.data.ImageFile;
-import com.picture.diary.extract.data.ImageMetadata;
+import com.picture.diary.extract.data.PicturePathProperties;
+import com.picture.diary.extract.data.PictureFile;
+import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.extract.service.impl.PictureExtractorServiceImpl;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,25 +18,25 @@ import java.util.stream.Collectors;
 public class ExtractTest {
 
     @Autowired
-    ImageFileExtractorServiceImpl dataExtractorService;
+    PictureExtractorService pictureExtractorService;
 
     @Autowired
-    FilePathProperties filePathProperties;
+    PicturePathProperties picturePathProperties;
     
     
     @Test
     void getMetdataListTest() {
-        String path = filePathProperties.getFromPath();
+        String path = picturePathProperties.getFromPath();
 
         try {
 
             //1. get fileDataList
-            List<ImageFile> fileDataList = dataExtractorService.getImageFileList(path);
+            List<PictureFile> fileDataList = pictureExtractorService.getPictureList(path);
             Assertions.assertThat(fileDataList.size()).isGreaterThan(0);
 
             //2. get Metadata in FileData
-            List<ImageMetadata> metadataList = fileDataList.stream()
-                    .map(dataExtractorService::getImageMetadata)
+            List<PictureMetadata> metadataList = fileDataList.stream()
+                    .map(pictureExtractorService::getPictureMetadata)
                     .collect(Collectors.toList());
 
             //3. list size select
@@ -47,31 +49,31 @@ public class ExtractTest {
     
     @Test
     void moveFileTest() throws Exception {
-    	String path = filePathProperties.getFromPath();
+    	String path = picturePathProperties.getFromPath();
     	
-    	List<ImageFile> fileDataList = dataExtractorService.getImageFileList(path);
+    	List<PictureFile> fileDataList = pictureExtractorService.getPictureList(path);
     	int beforeSize = fileDataList.size();
     	
     	fileDataList.stream()
     	.map(fileData -> {
-			ImageMetadata imageMetadata = dataExtractorService.getImageMetadata(fileData);
-			fileData.addMetadata(imageMetadata);
+			PictureMetadata pictureMetadata = pictureExtractorService.getPictureMetadata(fileData);
+			fileData.addMetadata(pictureMetadata);
 			
 			return fileData;
 		})
     	.forEach(fileData -> {
-    		if(fileData.getImageMetadata().getGeometry() == null) {
-    			dataExtractorService.moveImageFileToTempPath(fileData);
+    		if(fileData.getPictureMetadata().getGeometry() == null) {
+    			pictureExtractorService.movePictureToTempPath(fileData);
     		} else {
-    			dataExtractorService.moveImageFileToDataPath(fileData);
+    			pictureExtractorService.movePictureToDataPath(fileData);
     		}
     	});
     	
     	
-    	String dataPath = filePathProperties.getDataPath();
-    	String tempPath = filePathProperties.getTempPath();
-    	int dataSize = dataExtractorService.getImageFileList(dataPath).size();
-    	int tempSize = dataExtractorService.getImageFileList(tempPath).size();
+    	String dataPath = picturePathProperties.getDataPath();
+    	String tempPath = picturePathProperties.getTempPath();
+    	int dataSize = pictureExtractorService.getPictureList(dataPath).size();
+    	int tempSize = pictureExtractorService.getPictureList(tempPath).size();
     	
     	Assertions.assertThat(beforeSize).isEqualTo(dataSize + tempSize);
     }

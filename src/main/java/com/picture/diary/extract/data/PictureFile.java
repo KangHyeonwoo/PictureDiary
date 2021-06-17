@@ -10,7 +10,7 @@ import java.io.File;
 @Builder
 @AllArgsConstructor
 @Getter @ToString
-public class ImageFile {
+public class PictureFile {
 	
 	/**
 	 * 파일명 (확장자 제외)
@@ -35,9 +35,9 @@ public class ImageFile {
     /**
      * 메타데이터
      */
-    private ImageMetadata imageMetadata;
+    private PictureMetadata pictureMetadata;
     
-    public ImageFile(File file) {
+    public PictureFile(File file) {
         String fileName = file.getName();
         
         this.fileName = file.getName().split(SplitParts.DOT.getValue())[0];
@@ -46,8 +46,8 @@ public class ImageFile {
         this.filePath = file.getPath();
     }
     
-    public void addMetadata(ImageMetadata imageMetadata) {
-    	this.imageMetadata = imageMetadata;
+    public void addMetadata(PictureMetadata pictureMetadata) {
+    	this.pictureMetadata = pictureMetadata;
     }
     
     public void changeFilePath(String path) {

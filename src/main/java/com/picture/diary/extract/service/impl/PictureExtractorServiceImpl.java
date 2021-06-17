@@ -1,4 +1,4 @@
-package com.picture.diary.extract;
+package com.picture.diary.extract.service.impl;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -7,12 +7,12 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.*;
+import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.utils.DateUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +20,6 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -29,11 +28,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ImageFileExtractorServiceImpl {
+public class PictureExtractorServiceImpl implements PictureExtractorService {
 
-	private final FilePathProperties filePathProperties;
+	private final PicturePathProperties picturePathProperties;
 	
-    public List<ImageFile> getImageFileList(String path) throws IOException{
+    public List<PictureFile> getPictureList(String path) throws IOException{
         Path folder = Paths.get(path);
 
         return Files.walk(folder)
@@ -45,30 +44,30 @@ public class ImageFileExtractorServiceImpl {
 
                 return extension != Extensions.NOT_ALLOWED;
             })
-            .map(ImageFile::new)
+            .map(PictureFile::new)
             .collect(Collectors.toList());
     }
 
-    public ImageMetadata getImageMetadata(ImageFile imageFile) {
-    	ImageMetadata imageMetadata = null;
+    public PictureMetadata getPictureMetadata(PictureFile pictureFile) {
+    	PictureMetadata pictureMetadata = null;
     	
     	FileInputStream is = null;
     	Metadata metadata = null;
     	
-        String fileName = imageFile.getFileName();
-        String path = imageFile.getFilePath();
+        String fileName = pictureFile.getFileName();
+        String path = pictureFile.getFilePath();
 
         try {
             is = new FileInputStream(path);
             metadata = ImageMetadataReader.readMetadata(is);
 
-            Geometry geometry = this.getImageGeometry(metadata);
-            LocalDateTime imageDate = this.getImageDate(metadata);
+            Geometry geometry = this.getPictureGeometry(metadata);
+            LocalDateTime pictureDate = this.getPictureDate(metadata);
 
-            imageMetadata = ImageMetadata.builder()
+            pictureMetadata = PictureMetadata.builder()
                     .fileName(fileName)
                     .geometry(geometry)
-                    .imageDate(imageDate)
+                    .pictureDate(pictureDate)
                     .build();
 
         } catch (ImageProcessingException ie) {
@@ -85,10 +84,32 @@ public class ImageFileExtractorServiceImpl {
 			}
 		}
         
-        return imageMetadata;
+        return pictureMetadata;
     }
     
-    private Geometry getImageGeometry(Metadata metadata) {
+    public boolean movePictureToDataPath(PictureFile pictureFile) {
+    	String dataPath = picturePathProperties.getDataPath(pictureFile);
+    	boolean moveResult = this.movePictureFile(pictureFile, dataPath);
+    	
+    	if(moveResult) {
+    		pictureFile.changeFilePath(dataPath);
+    	}
+    	
+    	return moveResult;
+    }
+    
+    public boolean movePictureToTempPath(PictureFile pictureFile) {
+    	String tempPath = picturePathProperties.getTempPath(pictureFile);
+    	boolean moveResult = this.movePictureFile(pictureFile, tempPath);
+    	
+    	if(moveResult) {
+    		pictureFile.changeFilePath(tempPath);
+    	}
+    	
+    	return moveResult;
+    }
+    
+    private Geometry getPictureGeometry(Metadata metadata) {
     	try {
     		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             GeoLocation location = gpsDirectory.getGeoLocation();
@@ -102,41 +123,19 @@ public class ImageFileExtractorServiceImpl {
     	}
     }
 
-    private LocalDateTime getImageDate(Metadata metadata) {
+    private LocalDateTime getPictureDate(Metadata metadata) {
     	try {
     		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-            Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+            Date pictureDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 
-            return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
+            return DateUtils.convertToLocalDateTimeViaInstant(pictureDate);
     	} catch (NullPointerException e) {
     		return null;
     	}
     }
     
-    public boolean moveImageFileToDataPath(ImageFile imageFile) {
-    	String dataPath = filePathProperties.getDataPath(imageFile);
-    	boolean moveResult = this.moveImageFile(imageFile, dataPath);
-    	
-    	if(moveResult) {
-    		imageFile.changeFilePath(dataPath);
-    	}
-    	
-    	return moveResult;
-    }
-    
-    public boolean moveImageFileToTempPath(ImageFile imageFile) {
-    	String tempPath = filePathProperties.getTempPath(imageFile);
-    	boolean moveResult = this.moveImageFile(imageFile, tempPath);
-    	
-    	if(moveResult) {
-    		imageFile.changeFilePath(tempPath);
-    	}
-    	
-    	return moveResult;
-    }
-    
-    private boolean moveImageFile(ImageFile imageFile, String to) {
-    	String from = imageFile.getFilePath();
+    private boolean movePictureFile(PictureFile pictureFile, String to) {
+    	String from = pictureFile.getFilePath();
     	
     	Path fromPath = Paths.get(from);
     	Path toPath = Paths.get(to);

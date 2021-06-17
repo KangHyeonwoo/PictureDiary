@@ -1,6 +1,6 @@
 package com.picture.diary;
 
-import com.picture.diary.extract.data.FilePathProperties;
+import com.picture.diary.extract.data.PicturePathProperties;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class FilePathTest {
 
     @Autowired
-    FilePathProperties filePathProperties;
+    PicturePathProperties filePathProperties;
 
     @Test
     void findFilePath() {

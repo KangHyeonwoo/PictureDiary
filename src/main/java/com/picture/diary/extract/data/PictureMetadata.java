@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-public class ImageMetadata {
+public class PictureMetadata {
 
     private String fileName;
     private String description;
@@ -16,14 +16,14 @@ public class ImageMetadata {
     private String sggCode;
     private Geometry geometry;
     
-    LocalDateTime imageDate;
+    LocalDateTime pictureDate;
 
     @Builder
-    public ImageMetadata(String fileName, String description, String sggCode, Geometry geometry, LocalDateTime imageDate) {
+    public PictureMetadata(String fileName, String description, String sggCode, Geometry geometry, LocalDateTime pictureDate) {
     	this.fileName = fileName;
     	this.description = description;
     	this.sggCode = sggCode;
     	this.geometry = geometry;
-    	this.imageDate = imageDate;
+    	this.pictureDate = pictureDate;
     }
 }

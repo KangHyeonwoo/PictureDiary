@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @RequiredArgsConstructor
 @ConstructorBinding
 @ConfigurationProperties("file.path")
-public class FilePathProperties {
+public class PicturePathProperties {
 
     /**
      * 원본 파일 경로
@@ -30,18 +30,18 @@ public class FilePathProperties {
     private final String tempPath;
 
     
-    public String getFromPath(ImageFile imageFile) {
+    public String getFromPath(PictureFile pictureFile) {
     	
-    	return this.fromPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    	return this.fromPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
     }
     
-    public String getDataPath(ImageFile imageFile) {
+    public String getDataPath(PictureFile pictureFile) {
     	
-    	return this.dataPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    	return this.dataPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
     }
     
-    public String getTempPath(ImageFile imageFile) {
+    public String getTempPath(PictureFile pictureFile) {
     	
-    	return this.tempPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    	return this.tempPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
     }
 }
