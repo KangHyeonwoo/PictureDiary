@@ -139,6 +139,7 @@ public class ImageFileExtractorServiceImpl {
 			Files.move(fromPath, toPath, copyOptions);
 			return true;
 			
+			
 		} catch (IOException e) {
 			//TODO 에러 유형 확인 후 삭제 필요함.
 			e.printStackTrace();
