@@ -29,5 +29,19 @@ public class FilePathProperties {
      */
     private final String tempPath;
 
-
+    
+    public String getFromPath(ImageFile imageFile) {
+    	
+    	return this.fromPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    }
+    
+    public String getDataPath(ImageFile imageFile) {
+    	
+    	return this.dataPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    }
+    
+    public String getTempPath(ImageFile imageFile) {
+    	
+    	return this.tempPath + "/" + imageFile.getFileName() + "." + imageFile.getExtension();
+    }
 }
