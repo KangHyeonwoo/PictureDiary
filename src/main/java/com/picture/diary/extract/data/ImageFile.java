@@ -26,4 +26,8 @@ public class ImageFile {
         this.fileSize = file.length();
         this.filePath = file.getPath();
     }
+    
+    public void changeFilePath(String path) {
+    	this.filePath = path;
+    }
 }

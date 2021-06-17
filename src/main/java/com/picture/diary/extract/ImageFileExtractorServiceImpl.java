@@ -7,19 +7,20 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.*;
-import com.picture.diary.extract.exception.NotFoundDateException;
-import com.picture.diary.extract.exception.NotFoundGeometryException;
 import com.picture.diary.utils.DateUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -63,26 +64,11 @@ public class ImageFileExtractorServiceImpl {
             LocalDateTime imageDate = this.getImageDate(metadata);
 
             return ImageMetadata.builder()
+                    .fileName(fileName)
                     .geometry(geometry)
                     .imageDate(imageDate)
                     .build();
 
-        } catch (NotFoundGeometryException e) {
-            log.error("Not Found GeoLocation. File Name [{}]", fileName);
-            LocalDateTime imageDate = this.getImageDate(metadata);
-            
-            return ImageMetadata.builder()
-                    .fileName(fileName)
-                    .imageDate(imageDate)
-                    .build();
-            
-        } catch (NotFoundDateException e) {
-        	log.error("Not Found Date. File Name [{}]", fileName);
-        	
-        	return ImageMetadata.builder()
-                    .fileName(fileName)
-                    .build();
-        	
         } catch (ImageProcessingException ie) {
             log.error("Fail to load metadata. File name [{}]", fileName);
             return null;
@@ -93,7 +79,7 @@ public class ImageFileExtractorServiceImpl {
         }
     }
     
-    private Geometry getImageGeometry(Metadata metadata) throws NotFoundGeometryException {
+    private Geometry getImageGeometry(Metadata metadata) {
     	try {
     		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             GeoLocation location = gpsDirectory.getGeoLocation();
@@ -103,18 +89,62 @@ public class ImageFileExtractorServiceImpl {
 
             return new Geometry(latitude, longitude);
     	} catch (NullPointerException e) {
-    		throw new NotFoundGeometryException();
+
+    		return null;
     	}
     }
 
-    private LocalDateTime getImageDate(Metadata metadata) throws NotFoundDateException{
+    private LocalDateTime getImageDate(Metadata metadata) {
     	try {
     		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             Date imageDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 
             return DateUtils.convertToLocalDateTimeViaInstant(imageDate);
     	} catch (NullPointerException e) {
-    		throw new NotFoundDateException();
+
+    		return null;
     	}
+    }
+    
+    public boolean moveImageFileToDataPath(ImageFile imageFile) {
+    	String dataPath = filePathProperties.getDataPath();
+    	boolean moveResult = this.moveImageFile(imageFile, dataPath);
+    	
+    	if(moveResult) {
+    		imageFile.changeFilePath(dataPath);
+    	}
+    	
+    	return moveResult;
+    }
+    
+    public boolean moveImageFileToTempPath(ImageFile imageFile) {
+    	String tempPath = filePathProperties.getTempPath();
+    	boolean moveResult = this.moveImageFile(imageFile, tempPath);
+    	
+    	if(moveResult) {
+    		imageFile.changeFilePath(tempPath);
+    	}
+    	
+    	return moveResult;
+    }
+    
+    private boolean moveImageFile(ImageFile imageFile, String to) {
+    	String from = StringUtils.hasLength(imageFile.getFilePath()) ? filePathProperties.getFromPath() : imageFile.getFilePath();
+    	
+    	Path fromPath = Paths.get(from);
+    	Path toPath = Paths.get(to);
+    	CopyOption[] copyOptions = {StandardCopyOption.COPY_ATTRIBUTES};
+    	
+    	try {
+			Files.move(fromPath, toPath, copyOptions);
+			return true;
+			
+		} catch (IOException e) {
+			//TODO 에러 유형 확인 후 삭제 필요함.
+			e.printStackTrace();
+			
+			log.error("Fail the move file. Move path [{} -> {}]", from, to);
+			return false;
+		}
     }
 }
