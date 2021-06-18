@@ -15,7 +15,7 @@ public interface PictureExtractorService {
 	 * @return List<PictureFile>
 	 * @throws IOException
 	 */
-	List<PictureFile> getPictureList(String path) throws IOException;
+	List<PictureFile> getPictureList(String path);
 	
 	/** 사진 메타데이터 조회
 	 * @param pictureFile

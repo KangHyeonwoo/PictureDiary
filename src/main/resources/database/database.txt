@@ -1,0 +1,25 @@
+# MySQL
+ 1. Create Database
+create database picture_diary default character set utf8;
+
+ 1-1. Select Database list
+show databased;
+
+ 2. Use Database
+use picture_diary;
+
+ 3. DDL
+create table picture (
+    picture_id int not null primary key auto_increment,
+    picture_name varchar(100),
+    picture_origin_name varchar(20) not null,
+    extension varchar(10) not null,
+    picture_size int not null,
+    picture_path varchar(100) not null,
+    picture_date timestamp,
+    latitude double,
+    longitude double,
+    create_dt timestamp,
+    update_dt timestamp
+);
+

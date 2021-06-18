@@ -25,7 +25,7 @@ public class ExtractTest {
     
     
     @Test
-    void getMetdataListTest() {
+    void getMetadataListTest() {
         String path = picturePathProperties.getFromPath();
 
         try {
@@ -41,7 +41,6 @@ public class ExtractTest {
 
             //3. list size select
             Assertions.assertThat(metadataList.size()).isGreaterThan(0);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

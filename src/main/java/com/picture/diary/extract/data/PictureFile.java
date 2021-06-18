@@ -1,5 +1,6 @@
 package com.picture.diary.extract.data;
 
+import com.picture.diary.picture.data.PictureEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class PictureFile {
     private long fileSize;
 
     /**
-     * 파일 경로 (파일명 제외)
+     * 파일 경로
      */
     private String filePath;
     
@@ -54,5 +55,14 @@ public class PictureFile {
     	this.filePath = path;
     }
     
-    
+    public PictureEntity toEntity() {
+        return PictureEntity.builder()
+                .pictureOriginName(this.fileName)
+                .extension(this.extension)
+                .pictureSize(this.fileSize)
+                .picturePath(this.filePath)
+                .pictureDate(pictureMetadata.getPictureDate())
+                .geometry(pictureMetadata.getGeometry())
+                .build();
+    }
 }

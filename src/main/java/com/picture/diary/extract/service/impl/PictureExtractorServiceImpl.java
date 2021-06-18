@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,25 +33,33 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 
 	private final PicturePathProperties picturePathProperties;
 	
-    public List<PictureFile> getPictureList(String path) throws IOException{
+    public List<PictureFile> getPictureList(String path) {
         Path folder = Paths.get(path);
+        List<PictureFile> pictureFileList = new ArrayList<>();
 
-        return Files.walk(folder)
-            .map(data -> data.toFile())
-            .filter(file -> file.getName().split(SplitParts.DOT.getValue()).length > 0)		//폴더 제외
-            .filter(file -> {
-                String fileName = file.getName();
-                Extensions extension = Extensions.findOf(fileName);
+		try {
+			pictureFileList = Files.walk(folder)
+					.map(data -> data.toFile())
+					.filter(file -> file.getName().split(SplitParts.DOT.getValue()).length > 0)		//폴더 제외
+					.filter(file -> {
+						String fileName = file.getName();
+						Extensions extension = Extensions.findOf(fileName);
 
-                return extension != Extensions.NOT_ALLOWED;
-            })
-            .map(PictureFile::new)
-            .collect(Collectors.toList());
+						return extension != Extensions.NOT_ALLOWED;
+					})
+					.map(PictureFile::new)
+					.collect(Collectors.toList());
+
+		} catch(IOException e) {
+			log.error("can not find path [{}]", path);
+		}
+
+        return pictureFileList;
     }
 
     public PictureMetadata getPictureMetadata(PictureFile pictureFile) {
-    	PictureMetadata pictureMetadata = null;
-    	
+    	PictureMetadata pictureMetadata = new PictureMetadata();
+
     	FileInputStream is = null;
     	Metadata metadata = null;
     	
@@ -65,7 +74,6 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
             LocalDateTime pictureDate = this.getPictureDate(metadata);
 
             pictureMetadata = PictureMetadata.builder()
-                    .fileName(fileName)
                     .geometry(geometry)
                     .pictureDate(pictureDate)
                     .build();

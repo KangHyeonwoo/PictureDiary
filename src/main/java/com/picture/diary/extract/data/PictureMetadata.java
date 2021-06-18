@@ -2,27 +2,21 @@ package com.picture.diary.extract.data;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class PictureMetadata {
 
-    private String fileName;
-    private String description;
-    
-    private String sggCode;
     private Geometry geometry;
-    
     LocalDateTime pictureDate;
 
     @Builder
-    public PictureMetadata(String fileName, String description, String sggCode, Geometry geometry, LocalDateTime pictureDate) {
-    	this.fileName = fileName;
-    	this.description = description;
-    	this.sggCode = sggCode;
+    public PictureMetadata(Geometry geometry, LocalDateTime pictureDate) {
     	this.geometry = geometry;
     	this.pictureDate = pictureDate;
     }
