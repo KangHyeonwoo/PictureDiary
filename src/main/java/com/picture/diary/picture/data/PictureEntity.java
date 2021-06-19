@@ -70,4 +70,19 @@ public class PictureEntity {
             this.longitude = geometry.getLongitude();
         }
     }
+
+    public PictureDto toDto() {
+        return PictureDto.builder()
+                .pictureId(this.pictureId)
+                .pictureName(this.pictureName)
+                .pictureOriginName(this.pictureOriginName)
+                .extension(this.extension)
+                .pictureSize(this.pictureSize)
+                .pictureDate(this.pictureDate)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .createDt(this.createDt)
+                .updateDt(this.updateDt)
+                .build();
+    }
 }
