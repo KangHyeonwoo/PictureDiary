@@ -1,10 +1,14 @@
-const xhttp = new XMLHttpRequest();
-const dataObj = {};
-dataObj.dataList = [];
-dataObj.tempList = [];
+//const xhttp = new XMLHttpRequest();
+const async = new Async();
 
-map = {};
-map.options = {
+const picture = {};
+
+picture.data = {};
+picture.data.dataList = [];
+picture.data.tempList = [];
+
+picture.map = {};
+picture.map.options = {
     divId : 'map',
     center : {
         lat : 33.50972,
@@ -13,7 +17,7 @@ map.options = {
     level : 9,
 }
 
-map.start = function() {
+picture.map.on = function() {
     const container = document.getElementById(this.options.divId);
 
     const options = {
@@ -24,26 +28,22 @@ map.start = function() {
     map = new kakao.maps.Map(container, options);
 }
 
-map.start();
+picture.map.pictureExtract = function() {
+    const url = '/picture/extract';
+    const data = {};
 
-xhttp.onreadystatechange = function(){
-    //TODO SUCCESS, FAIL, ERROR 분기처리 및 비동기 함수 만들어서 공통 js로 빼기
-    if(xhttp.readyState == 4 && xhttp.status == 200){
-        const responseObj = JSON.parse(xhttp.response);
+    async.post(url, data, function(result){
+        debugger;
+    })
+}
 
-        const resultList = responseObj.resultList;
-        resultList.forEach(addToc);
-    }
-};
-xhttp.open('GET', '/picture/list', true);
-xhttp.send();
+picture.map.getList = function() {
+    const url = '/picture/list';
+    const data = {};
 
-function pictureExtract() {
-    const param = 'fname=Henry&lname=Ford';
-    xhttp.open('POST', '/picture/extract', true);
-    xhttp.setRequestHeader('Content-type', 'application/json');
-    //xhttp.send(param);
-    xhttp.send();
+    async.get(url, data, function(result) {
+        debugger;
+    })
 }
 
 function addMarker(pictureObj) {
@@ -69,9 +69,12 @@ function addToc(pictureObj) {
     if(hasGeometry) {
         addMarker(pictureObj);
         dataGroup.appendChild(li);
-        dataObj.dataList.push(pictureObj);
+        picture.data.dataList.push(pictureObj);
     } else {
         tempGroup.appendChild(li);
-        dataObj.tempList.push(pictureObj);
+        picture.data.tempList.push(pictureObj);
     }
 }
+
+picture.map.on();
+picture.map.getList();

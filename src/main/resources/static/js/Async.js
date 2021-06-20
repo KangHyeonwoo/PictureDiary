@@ -3,27 +3,51 @@ function Async() {
 }
 
 Async.prototype.get = function(url, data, fnCallback) {
-    xhttp.open('GET', url, true);
-    xhttp.send();
-    xhttp.onreadystatechange = function(){
-        //TODO SUCCESS, FAIL, ERROR 분기처리 및 비동기 함수 만들어서 공통 js로 빼기
-        if(xhttp.readyState == 4 && xhttp.status == 200 && xhttp.response.resultCode == SUCCESS){
-            fnCallback(response);
-        } else {
-            console.error('Error : ' + response.message);
+    this.xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            const responseObj = JSON.parse(this.response);
+            if(responseObj.resultCode == 'SUCCESS') {
+                fnCallback(responseObj.resultList);
+            }
         }
     };
+
+    let param = this.toParam(data);
+    if(param != '') {
+        param = '?' + param;
+    }
+
+    this.xhttp.open('GET', url, true);
+    this.xhttp.send(param);
 }
 
 Async.prototype.post = function(url, data, fnCallback) {
-    const param = 'fname=Henry&lname=Ford';
-    xhttp.open('POST', '/picture/extract', true);
-    xhttp.setRequestHeader('Content-type', 'application/json');
-    //xhttp.send(param);
-    xhttp.send();
+    this.xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            const responseObj = JSON.parse(this.response);
+            if(responseObj.resultCode == 'SUCCESS') {
+                fnCallback(responseObj.resultList);
+            }
+        }
+    };
+
+    const param = this.toParam(data);
+
+    this.xhttp.open('POST', url, true);
+    this.xhttp.setRequestHeader('Content-type', 'application/json');
+    this.xhttp.send(param);
 }
 
+Async.prototype.toParam = function(data) {
+    let param = '';
 
-xhttp.open('GET', '/picture/list', true);
-xhttp.send();
+    if(typeof data != 'Object') {
+        return param;
+    }
 
+    Object.keys(data).forEach(key => {
+        param += (key + "=" + data[key] + '&');
+    })
+
+    return param.slice(0, -1);
+}
