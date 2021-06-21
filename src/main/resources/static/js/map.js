@@ -75,7 +75,7 @@ function addMarker(pictureObj) {
 		
 		infowindow.open(map, marker);
 		//지도 클릭 -> 인포윈도우 닫기
-		kakao.maps.event.addListener(map, 'click', function() {	
+		kakao.maps.event.addListener(map, 'click', function() {
 			infowindow.close();
 		});
 
