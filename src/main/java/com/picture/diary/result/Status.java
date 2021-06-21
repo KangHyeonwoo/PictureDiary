@@ -1,7 +1,7 @@
 package com.picture.diary.result;
 
-public enum Results {
-      SUCCESS
+public enum Status {
+      OK
     , FAIL
     , ERROR;
 }

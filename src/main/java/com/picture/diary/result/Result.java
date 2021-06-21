@@ -10,8 +10,8 @@ import java.util.List;
 @Builder
 @ToString
 public class Result<T> {
-    private Results resultCode;
+    private Status status;
     private String message;
 
-    private T result;
+    private T responseData;
 }

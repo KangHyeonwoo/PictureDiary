@@ -3,7 +3,6 @@ package com.picture.diary.picture.controller;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
 import com.picture.diary.result.Result;
-import com.picture.diary.result.ResultList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +19,13 @@ public class PictureRestController {
     private final PictureService pictureService;
 
     @PostMapping("/extract")
-    public ResultList<PictureDto> pictureExtract() {
+    public Result<List<PictureDto>> pictureExtract() {
 
         return pictureService.pictureExtract();
     }
 
     @GetMapping("/list")
-    public ResultList<PictureDto> findAllList() {
+    public Result<List<PictureDto>> findAllList() {
 
         return pictureService.findPictureList();
     }

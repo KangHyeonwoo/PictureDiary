@@ -78,6 +78,7 @@ public class PictureEntity {
                 .pictureOriginName(this.pictureOriginName)
                 .extension(this.extension)
                 .pictureSize(this.pictureSize)
+                .picturePath(this.picturePath)
                 .pictureDate(this.pictureDate)
                 .latitude(this.latitude)
                 .longitude(this.longitude)

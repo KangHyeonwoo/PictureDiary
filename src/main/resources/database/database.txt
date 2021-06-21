@@ -23,3 +23,9 @@ create table picture (
     update_dt timestamp
 );
 
+# 기타
+ - JS 환경에서 MySQL 서버 접속
+  1. \connect mysql://root@localhost:3306
+  2. 패스워드 입력
+  3. \sql
+  	(JS mode -> SQL mode)

@@ -8,8 +8,8 @@ import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
-import com.picture.diary.result.ResultList;
-import com.picture.diary.result.Results;
+import com.picture.diary.result.Result;
+import com.picture.diary.result.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,10 @@ import java.util.stream.Collectors;
 public class PictureServiceImpl implements PictureService {
 
     private final PicturePathProperties picturePathProperties;
-
     private final PictureExtractorService pictureExtractorService;
-
     private final PictureRepository pictureRepository;
 
-    public ResultList<PictureDto> pictureExtract() {
+    public Result<List<PictureDto>> pictureExtract() {
         String path = picturePathProperties.getFromPath();
         //1. 사진파일 목록 조회
         List<PictureFile> pictureFileList = pictureExtractorService.getPictureList(path);
@@ -56,21 +54,21 @@ public class PictureServiceImpl implements PictureService {
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
 
-        return ResultList.<PictureDto>builder()
-                .resultCode(Results.SUCCESS)
-                .resultList(savedDtoList)
+        return Result.<List<PictureDto>>builder()
+                .status(Status.OK)
+                .responseData(savedDtoList)
                 .build();
     }
 
-    public ResultList<PictureDto> findPictureList() {
+    public Result<List<PictureDto>> findPictureList() {
 
         List<PictureDto> pictureDtoList = pictureRepository.findAll().stream()
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
 
-        return ResultList.<PictureDto>builder()
-                .resultCode(Results.SUCCESS)
-                .resultList(pictureDtoList).build();
+        return Result.<List<PictureDto>>builder()
+                .status(Status.OK)
+                .responseData(pictureDtoList).build();
     }
 
 }

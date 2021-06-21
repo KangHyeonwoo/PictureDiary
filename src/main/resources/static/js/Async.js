@@ -6,8 +6,8 @@ Async.prototype.get = function(url, data, fnCallback) {
     this.xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             const responseObj = JSON.parse(this.response);
-            if(responseObj.resultCode == 'SUCCESS') {
-                fnCallback(responseObj.resultList);
+            if(responseObj.status == 'OK') {
+                fnCallback(responseObj.responseData);
             }
         }
     };
@@ -25,8 +25,8 @@ Async.prototype.post = function(url, data, fnCallback) {
     this.xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             const responseObj = JSON.parse(this.response);
-            if(responseObj.resultCode == 'SUCCESS') {
-                fnCallback(responseObj.resultList);
+            if(responseObj.status == 'OK') {
+                fnCallback(responseObj.responseData);
             }
         }
     };
