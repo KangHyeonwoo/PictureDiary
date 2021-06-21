@@ -1,5 +1,5 @@
 const async = new Async();
-
+/*
 const picture = {};
 picture.toc = {
 	dataGroupId : 'data-group',
@@ -25,7 +25,7 @@ picture.map.on = function() {
         level: this.options.level,
     };
 
-    map = new kakao.maps.Map(container, options);
+    picture.map = new kakao.maps.Map(container, options);
 }
 
 picture.map.pictureExtract = function() {
@@ -113,3 +113,106 @@ picture.toc.findById = function(id) {
 
 picture.map.on();
 picture.map.getList();
+*/
+///////////////////////////////////////////////////
+
+const map = {};
+const picture = {};
+const toc = {};
+
+toc.group = {
+    data : 'data-group',
+    temp : 'temp-group'
+}
+map.options = {
+    divId : 'map',
+    center : {
+        lat : 33.50972,
+        lng : 126.52194,
+    },
+    level : 9,
+}
+map.init = function() {
+    //1. map on
+    this.on();
+    picture.getList(pictureObj => {
+        if(pictureObj.hasGeometry) {
+            picture.setMap(pictureObj);
+        }
+
+        toc.add(pictureObj);
+    })
+}
+map.on = function() {
+    const container = document.getElementById(this.options.divId);
+
+    const options = {
+        center: new kakao.maps.LatLng(this.options.center.lat, this.options.center.lng),
+        level: this.options.level,
+    };
+
+    picture.map = new kakao.maps.Map(container, options);
+}
+
+
+picture.list = [];
+picture.setMap = function(pictureObj) {
+    pictureObj.marker.setMap(map);
+}
+picture.findById = function(id) {
+    return this.list.find(e => e.pictureId == id);
+}
+picture.getList = function(fnCallback) {
+    const url = '/picture/list';
+    const data = {};
+    if(this.list.length > 0) {
+        fnCallback(this.list);
+    }
+
+    async.get(url, data, function(result) {
+        result.forEach(pictureObj => {
+            if(pictureObj.latitude != 0 && pictureObj.longitude != 0) {
+                const content = '<div style="padding:5px;">' + pictureObj.pictureOriginName + '</div>';
+                const removeable = true;
+
+                pictureObj.position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
+                pictureObj.infowindow = new kakao.maps.InfoWindow({
+                    position : pictureObj.position,
+                    content : content,
+                    removable : removeable
+                });
+                pictureObj.marker = new kakao.maps.Marker({
+                     position: pictureObj.position
+                });
+                pictureObj.marker.id = pictureObj.pictureId;
+
+                pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
+            }
+
+            picture.list.push(pictureObj);
+        });
+
+        fnCallback(picture.list);
+    })
+}
+
+toc.add = function(pictureObj) {
+    const dataGroup = document.getElementById(toc.group.data);
+    const tempGroup = document.getElementById(toc.group.temp);
+
+    const li = document.createElement('li');
+    li.id = (pictureObj.hasGeometry ? toc.group.data + '_' + pictureObj.pictureId
+						 : toc.group.temp + '_' + pictureObj.pictureId);
+    li.innerText = ((pictureObj.pictureName == '' || pictureObj.pictureName == null)? pictureObj.pictureOriginName : pictureObj.pictureName);
+
+    if(pictureObj.hasGeometry) {
+        dataGroup.appendChild(li);
+    } else {
+        tempGroup.appendChild(li);
+    }
+}
+
+
+toc.remove = function(picture) {
+
+}
