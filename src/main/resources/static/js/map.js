@@ -135,13 +135,17 @@ map.options = {
 map.init = function() {
     //1. map on
     this.on();
-    picture.getList(pictureObj => {
-        if(pictureObj.hasGeometry) {
-            picture.setMap(pictureObj);
-        }
 
-        toc.add(pictureObj);
-    })
+	picture.getList(pictureList => {
+		pictureList.forEach(pictureObj => {
+			if(pictureObj.hasGeometry) {
+	            picture.setMap(pictureObj);
+				picture.setInfowindow(pictureObj);
+	        }
+	
+	        toc.add(pictureObj);
+		})
+	})
 }
 map.on = function() {
     const container = document.getElementById(this.options.divId);
@@ -151,17 +155,33 @@ map.on = function() {
         level: this.options.level,
     };
 
-    picture.map = new kakao.maps.Map(container, options);
+    map.obj = new kakao.maps.Map(container, options);
 }
 
 
 picture.list = [];
 picture.setMap = function(pictureObj) {
-    pictureObj.marker.setMap(map);
+	
+    pictureObj.marker.setMap(map.obj);
 }
+
+picture.setInfowindow = function(pictureObj) {
+	kakao.maps.event.addListener(pictureObj.marker, 'click', function() {
+		picture.list
+			.filter(data => data.hasGeometry)
+			.forEach(data => {
+				data.infowindow.close();
+			})
+		
+		pictureObj.infowindow.open(map.obj, pictureObj.marker);
+	});
+}
+
 picture.findById = function(id) {
+	
     return this.list.find(e => e.pictureId == id);
 }
+
 picture.getList = function(fnCallback) {
     const url = '/picture/list';
     const data = {};
@@ -172,28 +192,41 @@ picture.getList = function(fnCallback) {
     async.get(url, data, function(result) {
         result.forEach(pictureObj => {
             if(pictureObj.latitude != 0 && pictureObj.longitude != 0) {
-                const content = '<div style="padding:5px;">' + pictureObj.pictureOriginName + '</div>';
-                const removeable = true;
-
+				const content = picture.infowindowContent(pictureObj);
+				
+				const removeable = true;
+				
                 pictureObj.position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
+
                 pictureObj.infowindow = new kakao.maps.InfoWindow({
                     position : pictureObj.position,
                     content : content,
                     removable : removeable
                 });
+
                 pictureObj.marker = new kakao.maps.Marker({
                      position: pictureObj.position
                 });
-                pictureObj.marker.id = pictureObj.pictureId;
 
-                pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
+                pictureObj.marker.id = pictureObj.pictureId;
             }
 
+			pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
+			
             picture.list.push(pictureObj);
         });
 
         fnCallback(picture.list);
     })
+}
+
+picture.infowindowContent = function(pictureObj) {
+	const url = '/infowindow/'+pictureObj.pictureId;
+	const data = {};
+	
+	const infowindowContent = async.syncHtml(url, data);
+	
+	return infowindowContent
 }
 
 toc.add = function(pictureObj) {

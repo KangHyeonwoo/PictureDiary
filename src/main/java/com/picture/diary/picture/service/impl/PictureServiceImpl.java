@@ -24,6 +24,14 @@ public class PictureServiceImpl implements PictureService {
     private final PictureExtractorService pictureExtractorService;
     private final PictureRepository pictureRepository;
 
+    public Result<PictureDto> findByPictureId(long pictureId) {
+    	PictureEntity pictureEntity = pictureRepository.findByPictureId(pictureId);
+    	
+    	return Result.<PictureDto>builder()
+    			.status(Status.OK)
+    			.responseData(pictureEntity.toDto()).build();
+    }
+    
     public Result<List<PictureDto>> pictureExtract() {
         String path = picturePathProperties.getFromPath();
         //1. 사진파일 목록 조회

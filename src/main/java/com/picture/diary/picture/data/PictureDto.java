@@ -3,6 +3,8 @@ package com.picture.diary.picture.data;
 import com.picture.diary.extract.data.Extensions;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@ToString
 public class PictureDto {
 
     private long pictureId;
