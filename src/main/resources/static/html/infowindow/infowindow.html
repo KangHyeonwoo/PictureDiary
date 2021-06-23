@@ -5,13 +5,13 @@
     <title>Infowindow</title>
 </head>
 <body>
-	<div style="width:100px; height:100px">
+	<div style="width:150px; height:150px">
 		<table>
 			<tr><td th:text="${pictureDto.pictureId}"/></tr>
 			<tr>
 				<td><img th:src="|/picture/images/${pictureDto.pictureOriginName}.${pictureDto.extension}|" style="width:80px; height:80px;"/></td>
 			</tr>
-			<!-- <tr><td th:text="${#temporals.format(pictureDto.pictureDate, 'dd/MMM/yyyy HH:mm')}"/></tr> -->
+			<tr><td th:text="${pictureDto.pictureDate}"/></tr>
 		</table>
 	</div>
 </body>

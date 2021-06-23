@@ -1,19 +1,5 @@
 package com.picture.diary.extract.service.impl;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.lang.GeoLocation;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.exif.GpsDirectory;
-import com.picture.diary.extract.data.*;
-import com.picture.diary.extract.service.PictureExtractorService;
-import com.picture.diary.utils.DateUtils;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.CopyOption;
@@ -25,6 +11,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.exif.GpsDirectory;
+import com.picture.diary.extract.data.Extensions;
+import com.picture.diary.extract.data.Geometry;
+import com.picture.diary.extract.data.PictureFile;
+import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.extract.data.PicturePathProperties;
+import com.picture.diary.extract.data.SplitParts;
+import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.picture.data.PictureDto;
+import com.picture.diary.utils.DateUtils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -95,26 +102,31 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
         return pictureMetadata;
     }
     
-    public boolean movePictureToDataPath(PictureFile pictureFile) {
-    	String dataPath = picturePathProperties.getDataPath(pictureFile);
-    	boolean moveResult = this.movePictureFile(pictureFile, dataPath);
+    public boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList) {
     	
-    	if(moveResult) {
-    		pictureFile.changeFilePath(dataPath);
-    	}
-    	
-    	return moveResult;
+    	return savedPictureList.stream()
+    			.anyMatch(savedPicture -> 
+    				pictureFile.getFileName().equals(savedPicture.getPictureOriginName()) && 
+    				savedPicture.getPictureSize() == pictureFile.getFileSize()
+    	);
     }
     
-    public boolean movePictureToTempPath(PictureFile pictureFile) {
-    	String tempPath = picturePathProperties.getTempPath(pictureFile);
-    	boolean moveResult = this.movePictureFile(pictureFile, tempPath);
+    public boolean movePictureFile(PictureFile pictureFile) {
+    	String from = pictureFile.getFilePath();
+    	String to = picturePathProperties.getDataPath(pictureFile);
     	
-    	if(moveResult) {
-    		pictureFile.changeFilePath(tempPath);
-    	}
+    	Path fromPath = Paths.get(from);
+    	Path toPath = Paths.get(to);
+    	CopyOption[] copyOptions = {};
     	
-    	return moveResult;
+    	try {
+			Files.move(fromPath, toPath, copyOptions);
+			return true;
+			
+		} catch (IOException e) {
+			log.error("Fail the move file. Move path [{} -> {}]", from, to);
+			return false;
+		}
     }
     
     private Geometry getPictureGeometry(Metadata metadata) {
@@ -141,21 +153,5 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     		return null;
     	}
     }
-    
-    private boolean movePictureFile(PictureFile pictureFile, String to) {
-    	String from = pictureFile.getFilePath();
-    	
-    	Path fromPath = Paths.get(from);
-    	Path toPath = Paths.get(to);
-    	CopyOption[] copyOptions = {};
-    	
-    	try {
-			Files.move(fromPath, toPath, copyOptions);
-			return true;
-			
-		} catch (IOException e) {
-			log.error("Fail the move file. Move path [{} -> {}]", from, to);
-			return false;
-		}
-    }
+ 
 }

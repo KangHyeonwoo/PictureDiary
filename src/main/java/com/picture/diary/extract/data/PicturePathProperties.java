@@ -24,11 +24,6 @@ public class PicturePathProperties {
      */
     private final String dataPath;
 
-    /**
-     * 메타데이터가 존재하지 않는 파일의 저장 경로
-     */
-    private final String tempPath;
-
     
     public String getFromPath(PictureFile pictureFile) {
     	
@@ -38,10 +33,5 @@ public class PicturePathProperties {
     public String getDataPath(PictureFile pictureFile) {
     	
     	return this.dataPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
-    }
-    
-    public String getTempPath(PictureFile pictureFile) {
-    	
-    	return this.tempPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
     }
 }

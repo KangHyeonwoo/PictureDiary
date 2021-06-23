@@ -1,18 +1,20 @@
 package com.picture.diary;
 
-import com.picture.diary.extract.data.PicturePathProperties;
-import com.picture.diary.extract.data.PictureFile;
-import com.picture.diary.extract.data.PictureMetadata;
-import com.picture.diary.extract.service.PictureExtractorService;
-import com.picture.diary.extract.service.impl.PictureExtractorServiceImpl;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.picture.diary.extract.data.PictureFile;
+import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.extract.data.PicturePathProperties;
+import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.picture.service.PictureService;
 
 @SpringBootTest
 public class ExtractTest {
@@ -22,6 +24,9 @@ public class ExtractTest {
 
     @Autowired
     PicturePathProperties picturePathProperties;
+    
+    @Autowired
+    PictureService pictureService;
     
     
     @Test
@@ -61,21 +66,19 @@ public class ExtractTest {
 			return fileData;
 		})
     	.forEach(fileData -> {
-    		if(fileData.getPictureMetadata().getGeometry() == null) {
-    			pictureExtractorService.movePictureToTempPath(fileData);
-    		} else {
-    			pictureExtractorService.movePictureToDataPath(fileData);
-    		}
+    		pictureExtractorService.movePictureFile(fileData);
     	});
     	
     	
     	String dataPath = picturePathProperties.getDataPath();
-    	String tempPath = picturePathProperties.getTempPath();
     	int dataSize = pictureExtractorService.getPictureList(dataPath).size();
-    	int tempSize = pictureExtractorService.getPictureList(tempPath).size();
     	
-    	Assertions.assertThat(beforeSize).isEqualTo(dataSize + tempSize);
+    	Assertions.assertThat(beforeSize).isEqualTo(dataSize);
     }
 
-
+    @Test
+    @Transactional
+    void extractTest() {
+    	pictureService.pictureExtract();
+    }
 }

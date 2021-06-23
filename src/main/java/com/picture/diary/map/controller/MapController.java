@@ -25,9 +25,9 @@ public class MapController {
 
     @GetMapping("/infowindow/{pictureId}")
     public String infowindowView(@PathVariable("pictureId") long pictureId, Model model) {
-    	Result<PictureDto> result = pictureService.findByPictureId(pictureId);
+    	PictureDto result = pictureService.findByPictureId(pictureId);
     	
-    	model.addAttribute("pictureDto", result.getResponseData());
+    	model.addAttribute("pictureDto", result);
     	
     	return "infowindow/infowindow";
     }

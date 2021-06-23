@@ -37,3 +37,22 @@ ul.group li {
     border: 1px solid #efefef;
     font-size: 15px;
 }
+
+.context-ul {
+	list-style: none;
+	padding: 0px 0px 0px 10px;
+}
+
+.context-menu {
+	width: 150px;
+	position: absolute;
+	z-index: 2;
+	background-color: #efefef;
+}
+
+.context-menu li {
+	padding: 5px 0px 5px 5px;
+    margin-bottom: 3px;
+    font-size: 15px;
+    cursor: pointer;
+}

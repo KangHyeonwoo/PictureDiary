@@ -1,7 +1,7 @@
 package com.picture.diary.extract.data;
 
 public enum Extensions {
-    HEIC,
+    //HEIC,
     JPG,
     JPEG,
     PNG,

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.picture.data.PictureDto;
 
 public interface PictureExtractorService {
 
@@ -23,17 +24,20 @@ public interface PictureExtractorService {
 	 */
 	PictureMetadata getPictureMetadata(PictureFile pictureFile);
 	
-	/** 사진 데이터 디렉토리로 이동
-	 * @param pictureFile
-	 * @return boolean
-	 */
-	boolean movePictureToDataPath(PictureFile pictureFile);
 	
-	/** 사진 임시 디렉토리로 이동
+	/** 파일 이동
 	 * @param pictureFile
-	 * @return boolean
+	 * @return
 	 */
-	boolean movePictureToTempPath(PictureFile pictureFile);
+	boolean movePictureFile(PictureFile pictureFile) ;
+	
+	
+	/** 중복확인
+	 * @param pictureFile
+	 * @param savedPictureList
+	 * @return
+	 */
+	boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList);
 	
 	//TODO 이미지 파일 삭제
 	
