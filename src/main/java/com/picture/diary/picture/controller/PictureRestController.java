@@ -7,10 +7,7 @@ import com.picture.diary.result.Status;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,4 +38,37 @@ public class PictureRestController {
         		.build(); 
     }
 
+    @PostMapping("///")
+	public Result<PictureDto> rename(@RequestBody PictureDto pictureDto) {
+		PictureDto result = pictureService.rename(pictureDto.getPictureId(), pictureDto.getPictureName());
+
+		return Result.<PictureDto>builder()
+				.status(Status.OK)
+				.responseData(result)
+				.build();
+	}
+
+	@PostMapping("////")
+	public Result<PictureDto> addGeometry(@RequestBody PictureDto pictureDto) {
+    	PictureDto result = pictureService.updateGeometry(
+    			pictureDto.getPictureId(),
+				pictureDto.getLatitude(),
+				pictureDto.getLongitude());
+
+		return Result.<PictureDto>builder()
+				.status(Status.OK)
+				.responseData(result)
+				.build();
+	}
+
+	@PostMapping("/////")
+	public Result<String> delete(@PathVariable("pictureId") long pictureId) {
+		pictureService.delete(pictureId);
+
+		String resultMessage = "";
+		return Result.<String>builder()
+				.status(Status.OK)
+				.responseData(resultMessage)
+				.build();
+	}
 }

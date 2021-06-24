@@ -28,4 +28,26 @@ public class PictureDto {
     private LocalDateTime createDt;
     private LocalDateTime updateDt;
 
+    public void rename(String pictureName) {
+        this.pictureName = pictureName;
+    }
+
+    public void updateGeometry(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public PictureEntity toEntity() {
+        return PictureEntity.builder()
+                .pictureId(this.pictureId)
+                .pictureName(this.pictureName)
+                .pictureOriginName(this.pictureOriginName)
+                .extension(this.extension)
+                .pictureSize(this.pictureSize)
+                .picturePath(this.picturePath)
+                .pictureDate(this.pictureDate)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .build();
+    }
 }

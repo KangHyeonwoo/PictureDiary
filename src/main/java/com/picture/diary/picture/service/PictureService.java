@@ -11,4 +11,10 @@ public interface PictureService {
 	List<PictureDto> findPictureList();
 
 	List<PictureDto> pictureExtract();
+
+	PictureDto rename(long pictureId, String pictureName);
+
+	PictureDto updateGeometry(long pictureId, double latitude, double longitude);
+
+	void delete(long pictureId);
 }

@@ -56,7 +56,7 @@ public class PictureEntity {
 
     @Builder
     public PictureEntity(long pictureId, String pictureName, String pictureOriginName, Extensions extension,
-                         long pictureSize, String picturePath, LocalDateTime pictureDate, Geometry geometry) {
+                         long pictureSize, String picturePath, LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
         this.pictureId = pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;
@@ -64,6 +64,8 @@ public class PictureEntity {
         this.pictureSize = pictureSize;
         this.picturePath = picturePath;
         this.pictureDate = pictureDate;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
         if(geometry != null) {
             this.latitude = geometry.getLatitude();

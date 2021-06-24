@@ -77,7 +77,6 @@ public class ExtractTest {
     }
 
     @Test
-    @Transactional
     void extractTest() {
     	pictureService.pictureExtract();
     }

@@ -9,11 +9,13 @@ import com.picture.diary.picture.data.PictureEntity;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PictureServiceImpl implements PictureService {
@@ -54,12 +56,11 @@ public class PictureServiceImpl implements PictureService {
         List<PictureDto> savedDtoList = savedList.stream()
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
-
+        log.info("picture extract success [saved list : {} , files list : {}]", savedDtoList.size(), pictureFileList.size());
         return savedDtoList;
     }
 
     public List<PictureDto> findPictureList() {
-
         List<PictureDto> pictureDtoList = pictureRepository.findAll().stream()
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
@@ -67,4 +68,30 @@ public class PictureServiceImpl implements PictureService {
         return pictureDtoList;
     }
 
+    public PictureDto rename(long pictureId, String pictureName) {
+        //pictureDto.
+        PictureDto pictureDto = pictureRepository.findByPictureId(pictureId).toDto();
+        pictureDto.rename(pictureName);
+        PictureEntity pictureEntity = pictureDto.toEntity();
+
+        PictureEntity saveEntity = pictureRepository.save(pictureEntity);
+
+        return saveEntity.toDto();
+    }
+
+    public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
+        PictureDto pictureDto = pictureRepository.findByPictureId(pictureId).toDto();
+        pictureDto.updateGeometry(latitude, longitude);
+        PictureEntity pictureEntity = pictureDto.toEntity();
+
+        PictureEntity saveEntity = pictureRepository.save(pictureEntity);
+
+        return saveEntity.toDto();
+    }
+
+    public void delete(long pictureId) {
+        PictureEntity pictureEntity = pictureRepository.findByPictureId(pictureId);
+
+        pictureRepository.delete(pictureEntity);
+    }
 }
