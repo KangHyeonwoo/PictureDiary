@@ -20,7 +20,7 @@ public class MapController {
     @GetMapping("/")
     public String mapView() {
 
-        return "map";
+        return "pictureMap";
     }
 
     @GetMapping("/infowindow/{pictureId}")

@@ -36,6 +36,7 @@ ul.group li {
     margin-bottom: 5px;
     border: 1px solid #efefef;
     font-size: 15px;
+    cursor: pointer;
 }
 
 .context-ul {

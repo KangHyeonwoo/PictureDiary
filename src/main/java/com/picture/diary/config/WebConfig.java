@@ -17,8 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		String filePath = "file://" + dataPath + "/";
-		//String filePath = "file:///" + dataPath + "/";
+		//String filePath = "file://" + dataPath + "/";
+		String filePath = "file:///" + dataPath + "/";
 		registry.addResourceHandler(requestUrl)
 				.addResourceLocations(filePath);
 	}
