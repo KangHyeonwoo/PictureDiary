@@ -38,7 +38,8 @@ class Toc {
 				.map(key => this[key]);
 		}
     }
-
+	static #WORKING_PICTURE_OBJ = {};
+	
     constructor() {
 		document.addEventListener('click', Toc.#removeContextMenu, false);
     }
@@ -124,6 +125,8 @@ class Toc {
 	
 	static #renderRename(pictureObj) {
 		console.log(pictureObj);
+		Toc.#WORKING_PICTURE_OBJ = pictureObj;
+		
 		const contents = document.getElementById(pictureObj.tocId);
 		
 		const div = document.createElement('div');
