@@ -1,10 +1,6 @@
 class Toc {
     #dataGroupId = 'data-group';
     #tempGroupId = 'temp-group';
-    #group = {
-		data : [],
-		temp : []
-	};
     static #CONTEXT_MENU = {
         rename : {
             type : 'all',
@@ -61,10 +57,8 @@ class Toc {
 		
 		if(pictureObj.hasGeometry) {
 			dataGroup.appendChild(li);
-			this.#group.data.push(pictureObj);
 		} else {
 			tempGroup.appendChild(li);
-			this.#group.temp.push(pictureObj);
 		}
 		
 		return li;
@@ -123,7 +117,7 @@ class Toc {
 	}
 	
 	static #renderRename(pictureObj) {
-		Toc.#closeRename();
+		Toc.closeRename();
 		
 		Toc.#WORKING_PICTURE_OBJ = pictureObj;
 		
@@ -136,7 +130,7 @@ class Toc {
 		text.id = 'rename';
 		text.addEventListener('keydown', function(e){
 			if(e.key == 'Escape') {
-				Toc.#closeRename();
+				Toc.closeRename();
 			}	
 		}, false);
 		
@@ -145,7 +139,6 @@ class Toc {
 		button.innerText = '확인';
 		button.addEventListener('click', function(event){
 			picture.rename(pictureObj, text.value);
-			Toc.#closeRename();
 		}, false)
 		
 		div.appendChild(text);
@@ -155,16 +148,16 @@ class Toc {
 		contents.appendChild(div);
 	}
 	
-	static #closeRename(pictureObj) {
-		pictureObj = (pictureObj == 'undefined' || Toc.#WORKING_PICTURE_OBJ);
-		if(Object.keys(pictureObj).length === 0 && pictureObj.constructor === Object) {
+	static closeRename(pictureObj) {
+		const data = (pictureObj || Toc.#WORKING_PICTURE_OBJ);
+		if(Object.keys(data).length === 0 && data.constructor === Object) {
 			return;
 		}
 		
-		const contents = document.getElementById(pictureObj.tocId);
+		const contents = document.getElementById(data.tocId);
 		if(contents.firstElementChild != null) {
 			contents.firstElementChild.remove();
-			contents.innerText = (pictureObj.pictureName == null ? pictureObj.pictureOriginName : pictureName);
+			contents.innerText = (data.pictureName == null ? data.pictureOriginName : data.pictureName);
 		}
 	}
 	

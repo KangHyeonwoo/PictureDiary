@@ -107,7 +107,10 @@ picture.rename = function(pictureObj, name) {
 	const url = '/picture/rename';
 	
 	Async.post(url, data, function(result){
-		debugger;
+	    const pictureObj = picture.findById(result.pictureId);
+	    pictureObj.pictureName = result.pictureName;
+
+        Toc.closeRename(pictureObj);
 	})
 }
 

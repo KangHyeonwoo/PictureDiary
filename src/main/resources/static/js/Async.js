@@ -44,17 +44,16 @@ class Async {
 			}
 		};
 	
-		const param = Async.#toParam(data);
-	
+		//const param = Async.#toParam(data);
 		xhttp.open('POST', url, true);
 		xhttp.setRequestHeader('Content-type', 'application/json');
-		xhttp.send(param);
+		xhttp.send(JSON.stringify(data));
 	}
 
 	static #toParam = function(data) {
 		let param = '';
 	
-		if (typeof data != 'Object') {
+		if (typeof data != 'object') {
 			return param;
 		}
 	
