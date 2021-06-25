@@ -2,11 +2,12 @@ package com.picture.diary.picture.controller;
 
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
-import com.picture.diary.result.Result;
-import com.picture.diary.result.Status;
+import com.picture.diary.response.BasicResponse;
+import com.picture.diary.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,56 +20,48 @@ public class PictureRestController {
     private final PictureService pictureService;
 
     @PostMapping("/extract")
-    public Result<List<PictureDto>> pictureExtract() {
+    public ResponseEntity<BasicResponse> pictureExtract() {
     	List<PictureDto> resultList = pictureService.pictureExtract();
     	
-        return Result.<List<PictureDto>>builder()
-        		.status(Status.OK)
-        		.responseData(resultList)
-        		.build();
+    	return ResponseEntity.ok()
+    			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
 
     @GetMapping("/list")
-    public Result<List<PictureDto>> findAllList() {
+    public ResponseEntity<BasicResponse> findAllList() {
     	List<PictureDto> resultList = pictureService.findPictureList();
         
-    	return Result.<List<PictureDto>>builder()
-        		.status(Status.OK)
-        		.responseData(resultList)
-        		.build(); 
+    	return ResponseEntity.ok()
+    			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
 
-    @PostMapping("///")
-	public Result<PictureDto> rename(@RequestBody PictureDto pictureDto) {
+    @PostMapping("/rename")
+	public ResponseEntity<BasicResponse> rename(@RequestBody PictureDto pictureDto) {
 		PictureDto result = pictureService.rename(pictureDto.getPictureId(), pictureDto.getPictureName());
 
-		return Result.<PictureDto>builder()
-				.status(Status.OK)
-				.responseData(result)
-				.build();
+		return ResponseEntity.ok()
+				.body(new SuccessResponse<PictureDto>(result));
 	}
 
-	@PostMapping("////")
-	public Result<PictureDto> addGeometry(@RequestBody PictureDto pictureDto) {
+	@PostMapping("/addGeometry")
+	public ResponseEntity<BasicResponse> addGeometry(@RequestBody PictureDto pictureDto) {
     	PictureDto result = pictureService.updateGeometry(
-    			pictureDto.getPictureId(),
-				pictureDto.getLatitude(),
-				pictureDto.getLongitude());
+				    			pictureDto.getPictureId(),
+								pictureDto.getLatitude(),
+								pictureDto.getLongitude());
 
-		return Result.<PictureDto>builder()
-				.status(Status.OK)
-				.responseData(result)
-				.build();
+		return ResponseEntity.ok()
+				.body(new SuccessResponse<PictureDto>(result));
 	}
 
-	@PostMapping("/////")
-	public Result<String> delete(@PathVariable("pictureId") long pictureId) {
+	@PostMapping("/{pictureId}/delete")
+	public ResponseEntity<BasicResponse> delete(@PathVariable("pictureId") long pictureId) {
 		pictureService.delete(pictureId);
-
 		String resultMessage = "";
-		return Result.<String>builder()
-				.status(Status.OK)
-				.responseData(resultMessage)
-				.build();
+		
+		return ResponseEntity.ok()
+				.body(new SuccessResponse<String>(resultMessage));
 	}
+	
+	
 }

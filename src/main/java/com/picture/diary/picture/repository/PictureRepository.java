@@ -1,10 +1,13 @@
 package com.picture.diary.picture.repository;
 
-import com.picture.diary.picture.data.PictureEntity;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.picture.diary.picture.data.PictureEntity;
 
 public interface PictureRepository extends JpaRepository<PictureEntity, Long> {
 
-	public PictureEntity findByPictureId(long pictureId);
+	public Optional<PictureEntity> findByPictureId(long pictureId);
 
 }

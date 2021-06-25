@@ -88,16 +88,40 @@ picture.getList = function(fnCallback) {
     })
 }
 
-picture.remove = function() {
-	console.log(1)
+picture.delete = function() {
+	const data = {
+		pictureId : pictureObj.pictureId,
+	}
+	const url = `/picture/${data.pictureId}/delete`;
+	
+	Async.post(url, data, function(result){
+		debugger;
+	})
 }
 
-picture.rename = function() {
-	console.log(2)
+picture.rename = function(pictureObj, name) {
+	const data = {
+		pictureId : pictureObj.pictureId,
+		pictureName : name
+	}
+	const url = '/picture/rename';
+	
+	Async.post(url, data, function(result){
+		debugger;
+	})
 }
 
 picture.addGeometry = function() {
-	console.log(3)
+	const data = {
+		pictureId : pictureObj.pictureId,
+		latitude : 0,
+		longitude : 0,
+	}
+	const url = '/picture/addGeometry';
+	
+	Async.post(url, data, function(result){
+		debugger;
+	})
 }
 
 map.init();

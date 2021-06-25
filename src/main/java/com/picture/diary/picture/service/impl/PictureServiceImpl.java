@@ -1,19 +1,23 @@
 package com.picture.diary.picture.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
+import com.picture.diary.picture.exception.PictureException;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,9 +29,10 @@ public class PictureServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
 
     public PictureDto findByPictureId(long pictureId) {
-    	PictureEntity pictureEntity = pictureRepository.findByPictureId(pictureId);
     	
-    	return pictureEntity.toDto();
+    	return pictureRepository.findByPictureId(pictureId)
+    			.map(PictureEntity::toDto)
+    			.orElseThrow(() -> new PictureException("picture not found."));
     }
     
     public List<PictureDto> pictureExtract() {
@@ -70,7 +75,7 @@ public class PictureServiceImpl implements PictureService {
 
     public PictureDto rename(long pictureId, String pictureName) {
         //pictureDto.
-        PictureDto pictureDto = pictureRepository.findByPictureId(pictureId).toDto();
+        PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.rename(pictureName);
         PictureEntity pictureEntity = pictureDto.toEntity();
 
@@ -80,7 +85,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
-        PictureDto pictureDto = pictureRepository.findByPictureId(pictureId).toDto();
+        PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.updateGeometry(latitude, longitude);
         PictureEntity pictureEntity = pictureDto.toEntity();
 
@@ -90,8 +95,9 @@ public class PictureServiceImpl implements PictureService {
     }
 
     public void delete(long pictureId) {
-        PictureEntity pictureEntity = pictureRepository.findByPictureId(pictureId);
+    	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
+    			.orElseThrow(() -> new IllegalArgumentException()));
 
-        pictureRepository.delete(pictureEntity);
+        pictureRepository.delete(pictureEntity.get());
     }
 }

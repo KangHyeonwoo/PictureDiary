@@ -11,7 +11,6 @@ class Toc {
             label : '이름 변경',
             onClick : function(pictureObj) {
 				Toc.#renderRename(pictureObj);
-				picture.rename(pictureObj);
             }
         },
         remove : {
@@ -62,10 +61,10 @@ class Toc {
 		
 		if(pictureObj.hasGeometry) {
 			dataGroup.appendChild(li);
-			this.#group.data.push(picture);
+			this.#group.data.push(pictureObj);
 		} else {
 			tempGroup.appendChild(li);
-			this.#group.temp.push(picture);
+			this.#group.temp.push(pictureObj);
 		}
 		
 		return li;
@@ -124,21 +123,29 @@ class Toc {
 	}
 	
 	static #renderRename(pictureObj) {
-		console.log(pictureObj);
+		Toc.#closeRename();
+		
 		Toc.#WORKING_PICTURE_OBJ = pictureObj;
 		
 		const contents = document.getElementById(pictureObj.tocId);
 		
 		const div = document.createElement('div');
+		div.className = 'rename-div';
 		const text = document.createElement('input');
 		text.type = 'text';
 		text.id = 'rename';
+		text.addEventListener('keydown', function(e){
+			if(e.key == 'Escape') {
+				Toc.#closeRename();
+			}	
+		}, false);
 		
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.innerText = '확인';
 		button.addEventListener('click', function(event){
-			console.log(event);
+			picture.rename(pictureObj, text.value);
+			Toc.#closeRename();
 		}, false)
 		
 		div.appendChild(text);
@@ -148,8 +155,17 @@ class Toc {
 		contents.appendChild(div);
 	}
 	
-	static #cancelRename() {
+	static #closeRename(pictureObj) {
+		pictureObj = (pictureObj == 'undefined' || Toc.#WORKING_PICTURE_OBJ);
+		if(Object.keys(pictureObj).length === 0 && pictureObj.constructor === Object) {
+			return;
+		}
 		
+		const contents = document.getElementById(pictureObj.tocId);
+		if(contents.firstElementChild != null) {
+			contents.firstElementChild.remove();
+			contents.innerText = (pictureObj.pictureName == null ? pictureObj.pictureOriginName : pictureName);
+		}
 	}
 	
 }

@@ -4,9 +4,7 @@ class Async {
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				const responseObj = JSON.parse(this.response);
-				if (responseObj.status == 'OK') {
-					fnCallback(responseObj.responseData);
-				}
+				fnCallback(responseObj.data);
 			}
 		};
 	
@@ -42,9 +40,7 @@ class Async {
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
 				const responseObj = JSON.parse(this.response);
-				if (responseObj.status == 'OK') {
-					fnCallback(responseObj.responseData);
-				}
+				fnCallback(responseObj.data);
 			}
 		};
 	

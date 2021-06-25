@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
-import com.picture.diary.result.Result;
 
 import lombok.RequiredArgsConstructor;
 
