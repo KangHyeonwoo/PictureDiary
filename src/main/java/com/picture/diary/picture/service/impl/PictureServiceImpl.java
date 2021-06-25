@@ -100,4 +100,10 @@ public class PictureServiceImpl implements PictureService {
 
         pictureRepository.delete(pictureEntity.get());
     }
+
+    public PictureDto save(PictureDto pictureDto) {
+        PictureEntity savedEntity = pictureRepository.save(pictureDto.toEntity());
+
+        return savedEntity.toDto();
+    }
 }

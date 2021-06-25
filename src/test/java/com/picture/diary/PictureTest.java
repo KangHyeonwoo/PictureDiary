@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.picture.diary.extract.data.Extensions;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -87,5 +89,25 @@ public class PictureTest {
     	
     	PictureDto pictureDto = pictureService.findByPictureId(pictureId);
     	Assertions.assertThat(pictureDto).isNull();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("DTO 객체 만들어서 저장하기(toEntity() 시 id값 널로 들어가는지 확인하기 위함)")
+    void saveTest2() {
+        String pictureOriginName = "TEST";
+        Extensions extension = Extensions.JPEG;
+        long pictureSize = 1;
+        String picturePath ="/test/";
+
+        PictureDto pictureDto = PictureDto.builder()
+                .pictureOriginName(pictureOriginName)
+                .extension(extension)
+                .pictureSize(pictureSize)
+                .picturePath(picturePath)
+                .build();
+
+        PictureDto savedDto = pictureService.save(pictureDto);
+        Assertions.assertThat(savedDto.getPictureId()).isGreaterThan(0);
     }
 }

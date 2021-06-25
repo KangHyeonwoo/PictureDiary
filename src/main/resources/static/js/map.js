@@ -114,17 +114,29 @@ picture.rename = function(pictureObj, name) {
 	})
 }
 
-picture.addGeometry = function() {
+picture.addGeometry = function(pictureObj) {
+    //alert(화면을 클릭해주세요.);
+
+    kakao.maps.event.addListener(map.obj, 'click', function(mouseEvent) {
+        const latlng = mouseEvent.latLng;
+
+        pictureObj.latitude = latlng.getLat();
+        pictureObj.longitude = latlng.getLng();
+
+        console.log(`${pictureObj.latitude}, ${pictureObj.longitude}`);
+    });
+
 	const data = {
 		pictureId : pictureObj.pictureId,
 		latitude : 0,
 		longitude : 0,
 	}
+	/*
 	const url = '/picture/addGeometry';
-	
 	Async.post(url, data, function(result){
 		debugger;
 	})
+	*/
 }
 
 map.init();

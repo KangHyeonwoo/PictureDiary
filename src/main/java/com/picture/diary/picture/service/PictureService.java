@@ -17,4 +17,6 @@ public interface PictureService {
 	PictureDto updateGeometry(long pictureId, double latitude, double longitude);
 
 	void delete(long pictureId);
+
+	PictureDto save(PictureDto pictureDto);
 }
