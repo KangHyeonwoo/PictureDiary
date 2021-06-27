@@ -17,6 +17,11 @@
     box-sizing: border-box;
 }
 
+#toc {
+    height: 800px;
+    overflow: scroll;
+}
+
 ul.group, ul.group-header {
     list-style: none;
     margin: 10px 0px 10px 5px;

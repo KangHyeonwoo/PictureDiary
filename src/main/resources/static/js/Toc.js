@@ -68,8 +68,12 @@ class Toc {
 		debugger;
 	}
 
-    remove(tocObj) {
+    remove(pictureObj) {
 		//TOC목록에서 제거(view)
+		const content = document.getElementById(pictureObj.tocId);
+		content.remove();
+
+		return document.getElementById(pictureObj.tocId) == null;
     }
 
 	static #addContextMenu(event, pictureObj) {

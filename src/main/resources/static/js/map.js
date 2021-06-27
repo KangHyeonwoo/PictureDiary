@@ -124,19 +124,22 @@ picture.addGeometry = function(pictureObj) {
         pictureObj.longitude = latlng.getLng();
 
         console.log(`${pictureObj.latitude}, ${pictureObj.longitude}`);
+
+        const data = {
+            pictureId : pictureObj.pictureId,
+            latitude : pictureObj.latitude,
+            longitude : pictureObj.longitude,
+        }
+
+        const url = '/picture/addGeometry';
+        Async.post(url, data, function(result){
+            console.log(result);
+            debugger;
+
+        })
     });
 
-	const data = {
-		pictureId : pictureObj.pictureId,
-		latitude : 0,
-		longitude : 0,
-	}
-	/*
-	const url = '/picture/addGeometry';
-	Async.post(url, data, function(result){
-		debugger;
-	})
-	*/
+
 }
 
 map.init();
