@@ -3,8 +3,12 @@ class Marker {
 	#position;
 	#infowindow;
 	#map;
-	
+	#dragImage;
+	#image;
 	constructor(pictureObj, map) {
+	    this.#image = 'http://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png';
+	    this.#dragImage = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png';
+
 		if(pictureObj.latitude == 0 || pictureObj.longitude == 0) {
 			throw new this.#MarkerCreateException('geometry must not empty');
 		}
@@ -54,13 +58,14 @@ class Marker {
 	}
 	
 	openInfowindow() {
+	    const that = this;
 		this.infowindow.open(this.#map, this.#marker);
 		
 		const markerMoveButton = document.getElementById('marker-move-button');
 		const markerDeleteButton = document.getElementById('marker-delete-button');
-		
+
 		markerMoveButton.addEventListener('click', event => {
-			console.log(1);
+			that.#startDrag();
 		})
 		
 		markerDeleteButton.addEventListener('click', event => {
@@ -82,7 +87,25 @@ class Marker {
 		
 		return infowindowContent;
 	}
-	
+
+	#startDrag() {
+	    this.#marker.setDraggable(true);
+        this.#marker.setImage(new kakao.maps.MarkerImage(
+            this.#dragImage,
+            new kakao.maps.Size(64, 69),
+            {offset: new kakao.maps.Point(27, 69)}
+        ));
+	}
+
+    #endDrag() {
+        this.#marker.setDraggable(false);
+    }
+
+    #stopDrag() {
+        this.#marker.setDraggable(false);
+        console.log(this.#marker.position);
+    }
+
 	get infowindow() {
 		return this.#infowindow;
 	}
