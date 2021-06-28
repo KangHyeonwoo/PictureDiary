@@ -5,7 +5,7 @@
     <title>Infowindow</title>
 </head>
 <body>
-	<div style="width:150px; height:150px">
+	<div style="width:200px; height:220px">
 		<table>
 			<tr><td th:text="${pictureDto.pictureId}"/></tr>
 			<tr>
@@ -13,6 +13,10 @@
 			</tr>
 			<tr><td th:text="${pictureDto.pictureDate}"/></tr>
 		</table>
+		<div>
+			<button type="button" id="marker-move-button">이동</button>
+			<button type="button" id="marker-delete-button">삭제</button>
+		</div>
 	</div>
 </body>
 </html>

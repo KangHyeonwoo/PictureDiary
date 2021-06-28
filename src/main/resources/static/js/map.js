@@ -26,7 +26,8 @@ map.init = function() {
 				marker.setMap();
 				marker.leftClicked(responseMarker => {
 					Marker.closeInfowindow(markerList);
-					responseMarker.infowindow.open(map.obj, responseMarker.marker);
+					//responseMarker.infowindow.open(map.obj, responseMarker.marker);
+					responseMarker.openInfowindow();
 				});
 				markerList.push(marker);
 				
@@ -34,7 +35,8 @@ map.init = function() {
 					map.obj.panTo(marker.position)
 					
 					Marker.closeInfowindow(markerList);
-					marker.infowindow.open(map.obj, marker.marker);
+					//marker.infowindow.open(map.obj, marker.marker);
+					responseMarker.openInfowindow();
 				})
 			}
 		})

@@ -48,9 +48,24 @@ class Marker {
 		});
 	}
 	
-	//remove
-	remove() {
+	//delete
+	delete() {
 		
+	}
+	
+	openInfowindow() {
+		this.infowindow.open(this.#map, this.#marker);
+		
+		const markerMoveButton = document.getElementById('marker-move-button');
+		const markerDeleteButton = document.getElementById('marker-delete-button');
+		
+		markerMoveButton.addEventListener('click', event => {
+			console.log(1);
+		})
+		
+		markerDeleteButton.addEventListener('click', event => {
+			console.log(2);
+		});
 	}
 	
 	static closeInfowindow(markerList) {
