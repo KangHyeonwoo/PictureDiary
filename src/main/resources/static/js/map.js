@@ -88,7 +88,7 @@ picture.getList = function(fnCallback) {
     })
 }
 
-picture.delete = function() {
+picture.remove = function(pictureObj) {
 	const data = {
 		pictureId : pictureObj.pictureId,
 	}
@@ -96,6 +96,9 @@ picture.delete = function() {
 	
 	Async.post(url, data, function(result){
 		debugger;
+		const contents = document.getElementById(pictureObj.tocId);
+		contents.remove();
+        console.log(Marker.findByPictureId(pictureObj.pictureId, markerList));
 	})
 }
 
@@ -132,9 +135,21 @@ picture.addGeometry = function(pictureObj) {
         }
 
         const url = '/picture/addGeometry';
-        Async.post(url, data, function(result){
-            console.log(result);
-            debugger;
+        Async.post(url, data, function(resultPictureObj){
+            const marker = new Marker(resultPictureObj, map.obj);
+            marker.setMap();
+            marker.leftClicked(responseMarker => {
+                Marker.closeInfowindow(markerList);
+                marker.openInfowindow();
+            });
+            markerList.push(marker);
+
+            contents.addEventListener('click', function(event){
+                map.obj.panTo(marker.position)
+
+                Marker.closeInfowindow(markerList);
+                marker.openInfowindow();
+            })
 
         })
     });

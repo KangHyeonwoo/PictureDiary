@@ -5,6 +5,7 @@ class Marker {
 	#map;
 	#dragImage;
 	#image;
+	#pictureId;
 	constructor(pictureObj, map) {
 	    this.#image = 'http://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png';
 	    this.#dragImage = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png';
@@ -28,7 +29,7 @@ class Marker {
         this.#marker = new kakao.maps.Marker({
              position: this.#position
         });
-		this.#marker.id = pictureObj.pictureId;
+		this.#pictureId = pictureObj.pictureId;
 		
 		this.#map = map;
 	}
@@ -78,7 +79,11 @@ class Marker {
 			marker.infowindow.close();
 		})
 	}
-	
+
+	static findById(pictureId, markerList) {
+        return markerList.find(e => e.pictureId == pictureId);
+	}
+
 	#infowindowContent(pictureObj) {
 		const url = '/infowindow/'+pictureObj.pictureId;
 		const data = {};
@@ -108,6 +113,10 @@ class Marker {
 
 	get infowindow() {
 		return this.#infowindow;
+	}
+
+	get tocId() {
+	    return this.#tocId;
 	}
 	
 	get marker() {

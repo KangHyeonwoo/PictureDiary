@@ -97,7 +97,7 @@ public class PictureServiceImpl implements PictureService {
     public void delete(long pictureId) {
     	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
     			.orElseThrow(() -> new IllegalArgumentException()));
-
+        //TODO 사진 이동 있어야 함
         pictureRepository.delete(pictureEntity.get());
     }
 
