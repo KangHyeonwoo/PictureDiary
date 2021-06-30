@@ -76,32 +76,33 @@ public class PictureServiceImpl implements PictureService {
     }
 
     public PictureDto rename(long pictureId, String pictureName) {
-        //pictureDto.
         PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.rename(pictureName);
-        PictureEntity pictureEntity = pictureDto.toEntity();
 
-        PictureEntity saveEntity = pictureRepository.save(pictureEntity);
-
-        return saveEntity.toDto();
+        return this.save(pictureDto);
     }
 
     public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
         PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.updateGeometry(latitude, longitude);
-        PictureEntity pictureEntity = pictureDto.toEntity();
 
-        PictureEntity saveEntity = pictureRepository.save(pictureEntity);
-
-        return saveEntity.toDto();
+        String fromPath = pictureDto.getPicturePath();
+        
+        //신규로 좌표를 추가하는 경우 해당 파일 data 디렉토리 이동
+        if(fromPath.contains(picturePathProperties.getFromPath())) {
+        	String toPath = picturePathProperties.getDataPath() + "/" + pictureDto.getPictureOriginName() + "." + pictureDto.getExtension();
+        	pictureExtractorService.movePictureFile(fromPath, toPath);
+        }
+        
+        return this.save(pictureDto);
     }
 
     public void delete(long pictureId) {
     	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
     			.orElseThrow(() -> new IllegalArgumentException()));
-        //TODO 사진 이동 있어야 함
     	PictureDto pictureDto = pictureEntity.get().toDto();
     	
+    	//파일 delete 디렉토리로 이동
     	String fromPath = pictureDto.getPicturePath();
     	String toPath = picturePathProperties.getDeletePath() + "/" + pictureDto.getPictureOriginName() + "." + pictureDto.getExtension();
     	pictureExtractorService.movePictureFile(fromPath, toPath);

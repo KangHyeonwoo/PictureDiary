@@ -16,6 +16,7 @@ map.init = function() {
     //1. map on
     this.on();
 
+	//2. pictures draw;
 	picture.getList(pictureList => {
 		pictureList.forEach(pictureObj => {
 			
@@ -39,6 +40,10 @@ map.init = function() {
 			}
 		})
 	})
+	
+	//3. button setting
+	const extractButton = document.getElementById('extract-button');
+	extractButton.addEventListener('click', picture.extract)
 }
 
 map.on = function() {
@@ -58,8 +63,32 @@ picture.extract = function() {
     const url = '/picture/extract';
     const data = {};
 
-    Async.post(url, data, function(result){
-        debugger;
+    Async.post(url, data, function(pictureList){
+        pictureList.forEach(pictureObj => {
+			pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
+			pictureObj.tocId = (pictureObj.hasGeometry ? 'temp-group_' + pictureObj.pictureId
+							 : 'data-group_' + pictureObj.pictureId);
+            picture.list.push(pictureObj);
+	
+			const contents = toc.add(pictureObj);
+			
+			if(pictureObj.hasGeometry) {
+				const marker = new Marker(pictureObj, map.obj);
+				marker.setMap();
+				marker.leftClicked(responseMarker => {
+					Marker.closeInfowindow(markerList);
+					marker.openInfowindow();
+				});
+				markerList.push(marker);
+				
+				contents.addEventListener('click', function(event){
+					map.obj.panTo(marker.position)
+					
+					Marker.closeInfowindow(markerList);
+					marker.openInfowindow();
+				})
+			}
+		})
     })
 }
 
@@ -144,6 +173,7 @@ picture.addGeometry = function(pictureObj) {
             });
             markerList.push(marker);
 
+			const contents = document.getElementById(pictureObj.tocId);
             contents.addEventListener('click', function(event){
                 map.obj.panTo(marker.position)
 
