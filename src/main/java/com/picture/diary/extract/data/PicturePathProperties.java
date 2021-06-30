@@ -24,6 +24,11 @@ public class PicturePathProperties {
      */
     private final String dataPath;
 
+    /**
+     * 삭제된 파일의 경로
+     */
+    private final String deletePath;
+    
     
     public String getFromPath(PictureFile pictureFile) {
     	
@@ -33,5 +38,10 @@ public class PicturePathProperties {
     public String getDataPath(PictureFile pictureFile) {
     	
     	return this.dataPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
+    }
+    
+    public String getDeletePath(PictureFile pictureFile) {
+    	
+    	return this.deletePath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
     }
 }

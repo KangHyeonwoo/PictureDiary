@@ -38,8 +38,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PictureExtractorServiceImpl implements PictureExtractorService {
 
-	private final PicturePathProperties picturePathProperties;
-	
     public List<PictureFile> getPictureList(String path) {
         Path folder = Paths.get(path);
         List<PictureFile> pictureFileList = new ArrayList<>();
@@ -111,12 +109,12 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	);
     }
     
-    public boolean movePictureFile(PictureFile pictureFile) {
-    	String from = pictureFile.getFilePath();
-    	String to = picturePathProperties.getDataPath(pictureFile);
+    public boolean movePictureFile(String fromFilePath, String toFilePath) {
+    	//String from = pictureFile.getFilePath();
+    	//String to = picturePathProperties.getDataPath(pictureFile);
     	
-    	Path fromPath = Paths.get(from);
-    	Path toPath = Paths.get(to);
+    	Path fromPath = Paths.get(fromFilePath);
+    	Path toPath = Paths.get(toFilePath);
     	CopyOption[] copyOptions = {};
     	
     	try {
@@ -124,7 +122,7 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 			return true;
 			
 		} catch (IOException e) {
-			log.error("Fail the move file. Move path [{} -> {}]", from, to);
+			log.error("Fail the move file. Move path [{} -> {}]", fromFilePath, toFilePath);
 			return false;
 		}
     }

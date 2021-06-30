@@ -26,10 +26,11 @@ public interface PictureExtractorService {
 	
 	
 	/** 파일 이동
-	 * @param pictureFile
+	 * @param String fromFilePath : 현재 파일 경로
+	 * @param String toFilePath : 파일 이동할 경로
 	 * @return
 	 */
-	boolean movePictureFile(PictureFile pictureFile) ;
+	boolean movePictureFile(String fromFilePath, String toFilePath) ;
 	
 	
 	/** 중복확인

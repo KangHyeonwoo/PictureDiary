@@ -66,7 +66,7 @@ public class ExtractTest {
 			return fileData;
 		})
     	.forEach(fileData -> {
-    		pictureExtractorService.movePictureFile(fileData);
+    		//pictureExtractorService.movePictureFile(fileData);
     	});
     	
     	

@@ -51,7 +51,9 @@ public class PictureServiceImpl implements PictureService {
                     pictureFile.addMetadata(metadata);
                     
                     //3. 디렉토리 이동
-                    return pictureExtractorService.movePictureFile(pictureFile);
+                    String fromPath = pictureFile.getFilePath();
+                    String toPath = picturePathProperties.getDataPath(pictureFile);
+                    return pictureExtractorService.movePictureFile(fromPath, toPath);
                 })
                 //4. DB에 저장하기 위해 entity 로 형변환
                 .map(pictureFile -> pictureFile.toEntity())
@@ -98,6 +100,12 @@ public class PictureServiceImpl implements PictureService {
     	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
     			.orElseThrow(() -> new IllegalArgumentException()));
         //TODO 사진 이동 있어야 함
+    	PictureDto pictureDto = pictureEntity.get().toDto();
+    	
+    	String fromPath = pictureDto.getPicturePath();
+    	String toPath = picturePathProperties.getDeletePath() + "/" + pictureDto.getPictureOriginName() + "." + pictureDto.getExtension();
+    	pictureExtractorService.movePictureFile(fromPath, toPath);
+    	
         pictureRepository.delete(pictureEntity.get());
     }
 
