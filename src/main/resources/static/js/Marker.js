@@ -3,12 +3,9 @@ class Marker {
 	#position;
 	#infowindow;
 	#map;
-	#image;
 	#pictureId;
 	
 	constructor(pictureObj, map) {
-	    this.#image = 'http://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png';
-
 		if(pictureObj.latitude == 0 || pictureObj.longitude == 0) {
 			throw new this.#MarkerCreateException('geometry must not empty');
 		}
@@ -53,8 +50,8 @@ class Marker {
 	}
 	
 	//delete
-	delete() {
-		
+	remove() {
+		this.#marker.setVisible(false);
 	}
 	
 	openInfowindow() {
@@ -79,7 +76,7 @@ class Marker {
 		})
 	}
 
-	static findById(pictureId, markerList) {
+	static findByPictureId(pictureId, markerList) {
         return markerList.find(e => e.pictureId == pictureId);
 	}
 

@@ -2,6 +2,7 @@ const toc = new Toc();
 const map = {};
 const picture = {};
 const markerList = [];
+picture.list = [];
 
 map.options = {
     divId : 'map',
@@ -57,7 +58,7 @@ map.on = function() {
     map.obj = new kakao.maps.Map(container, options);
 }
 
-picture.list = [];
+
 
 picture.extract = function() {
     const url = '/picture/extract';
@@ -65,9 +66,6 @@ picture.extract = function() {
 
     Async.post(url, data, function(pictureList){
         pictureList.forEach(pictureObj => {
-			pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
-			pictureObj.tocId = (pictureObj.hasGeometry ? 'temp-group_' + pictureObj.pictureId
-							 : 'data-group_' + pictureObj.pictureId);
             picture.list.push(pictureObj);
 	
 			const contents = toc.add(pictureObj);
@@ -106,12 +104,7 @@ picture.getList = function(fnCallback) {
     }
 
     Async.get(url, data, function(result) {
-        result.forEach(pictureObj => {
-			pictureObj.hasGeometry = (pictureObj.latitude != 0 && pictureObj.longitude != 0);
-			pictureObj.tocId = (pictureObj.hasGeometry ? 'temp-group_' + pictureObj.pictureId
-							 : 'data-group_' + pictureObj.pictureId);
-            picture.list.push(pictureObj);
-        });
+        result.forEach(pictureObj => picture.list.push(pictureObj));
 
         fnCallback(picture.list);
     })
@@ -124,10 +117,17 @@ picture.remove = function(pictureObj) {
 	const url = `/picture/${data.pictureId}/delete`;
 	
 	Async.post(url, data, function(result){
-		debugger;
+		//toc remove
 		const contents = document.getElementById(pictureObj.tocId);
 		contents.remove();
-        console.log(Marker.findByPictureId(pictureObj.pictureId, markerList));
+		
+		//marker remove
+		const marker = Marker.findByPictureId(pictureObj.pictureId, markerList);
+		marker.remove();
+		
+		//markerlist pop
+		const markerIndex = markerList.findIndex(e => e.pictureId === pictureObj.pictureId);
+		markerList.splice(markerIndex, 1);
 	})
 }
 
@@ -148,14 +148,11 @@ picture.rename = function(pictureObj, name) {
 
 picture.addGeometry = function(pictureObj) {
     //alert(화면을 클릭해주세요.);
-
     kakao.maps.event.addListener(map.obj, 'click', function(mouseEvent) {
         const latlng = mouseEvent.latLng;
 
         pictureObj.latitude = latlng.getLat();
         pictureObj.longitude = latlng.getLng();
-
-        console.log(`${pictureObj.latitude}, ${pictureObj.longitude}`);
 
         const data = {
             pictureId : pictureObj.pictureId,
@@ -165,7 +162,8 @@ picture.addGeometry = function(pictureObj) {
 
         const url = '/picture/addGeometry';
         Async.post(url, data, function(resultPictureObj){
-            const marker = new Marker(resultPictureObj, map.obj);
+            //add marker
+			const marker = new Marker(resultPictureObj, map.obj);
             marker.setMap();
             marker.leftClicked(responseMarker => {
                 Marker.closeInfowindow(markerList);
@@ -173,18 +171,29 @@ picture.addGeometry = function(pictureObj) {
             });
             markerList.push(marker);
 
-			const contents = document.getElementById(pictureObj.tocId);
+			toc.remove(pictureObj);
+			toc.add(resultPictureObj);
+			
+			const contents = document.getElementById(resultPictureObj.tocId);
             contents.addEventListener('click', function(event){
                 map.obj.panTo(marker.position)
 
                 Marker.closeInfowindow(markerList);
                 marker.openInfowindow();
             })
-
+			
+			//picture.list에 기존 객체 삭제 후 새로 추가하기
+			const idx = picture.list.findIndex(function(item){
+				return item.pictureId === pictureObj.pictureId;
+			});
+			if (idx > -1) {
+				picture.list.splice(idx, 1);
+			}
+			
+			picture.list.push(resultPictureObj);
+			
         })
     });
-
-
 }
 
 map.init();

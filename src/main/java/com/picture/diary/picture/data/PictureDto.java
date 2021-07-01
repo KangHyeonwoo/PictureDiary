@@ -29,6 +29,9 @@ public class PictureDto {
     private LocalDateTime createDt;
     private LocalDateTime updateDt;
 
+    private boolean hasGeometry;
+    private String tocId;
+    
     @Builder
     public PictureDto(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize,
                       String picturePath, LocalDateTime pictureDate, double latitude, double longitude,
@@ -44,6 +47,9 @@ public class PictureDto {
         this.longitude = longitude;
         this.createDt = createDt;
         this.updateDt = updateDt;
+        
+        this.hasGeometry = (this.latitude > 0 && this.longitude > 0);
+        this.tocId = this.hasGeometry ? "temp-group_" + this.pictureId : "data-group_" + this.pictureId;
     }
 
     public void rename(String pictureName) {
