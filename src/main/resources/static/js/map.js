@@ -144,12 +144,11 @@ picture.addGeometry = function(pictureObj) {
     //alert(화면을 클릭해주세요.);
 	kakao.maps.event.addListener(map.obj, 'click', picture.addTempMarker);
 	
-	//하...
-	/*
-	const data = {
+	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', function(latlng){
+		const data = {
             pictureId : pictureObj.pictureId,
-            latitude : latitude,
-            longitude : longitude,
+            latitude : latlng.getLat(),
+            longitude : latlng.getLng(),
         }
 
         const url = '/picture/addGeometry';
@@ -175,7 +174,7 @@ picture.addGeometry = function(pictureObj) {
 			picture.list.push(resultPictureObj);
 			
         })
-	*/
+	});
 }
 
 picture.addTempMarker = function(mouseEvent) {
@@ -189,7 +188,7 @@ picture.addTempMarker = function(mouseEvent) {
 	
 	tempMarker = new TempMarker(latitude, longitude, map.obj);
 	tempMarker.okButtonClick(function(){
-		
+		kakao.maps.event.trigger(map.obj, 'add-geometry-ok', latlng);
 	})
 	
 	tempMarker.cancelButtonClick(function(){
