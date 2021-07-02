@@ -42,12 +42,15 @@ class TempMarker {
 	
 	#infowindowContent() {
 		const div = document.createElement('div');
+		div.className = 'btn-group';
 		const okButton = document.createElement('button');
-		okButton.id = 'temp-marker-ok-button'
+		okButton.id = 'temp-marker-ok-button';
+		okButton.className = 'basic';
 		okButton.innerText = '확인';
 		
 		const cancelButton = document.createElement('button');
 		cancelButton.id = 'temp-marker-cancel-button'
+		cancelButton.className = 'cancel';
 		cancelButton.innerText = '취소';
 		
 		div.appendChild(okButton);

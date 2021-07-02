@@ -62,3 +62,33 @@ ul.group li {
     font-size: 15px;
     cursor: pointer;
 }
+
+button {
+	border: none;
+	cursor: pointer;
+}
+
+.btn-group button{
+	margin: 0 3px;
+	display: inline-block;
+	font-size: 15px;
+	font-weight: bold;
+	vertical-align: top;
+}
+
+.btn-group button.basic {
+	background: #008800;
+	color: #fff;
+}
+
+.btn-group button.cancel {
+	background: #fff;
+	border: 1px solid #008800;
+	box-sizing: border-box;
+	color: #008800;
+}
+
+.btn-group .w60 {
+	width: 60px;
+	height: 40px;
+}
