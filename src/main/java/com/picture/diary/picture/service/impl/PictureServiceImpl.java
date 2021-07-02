@@ -53,11 +53,18 @@ public class PictureServiceImpl implements PictureService {
                     //3. 디렉토리 이동
                     String fromPath = pictureFile.getFilePath();
                     String toPath = picturePathProperties.getDataPath(pictureFile);
+                    
                     return pictureExtractorService.movePictureFile(fromPath, toPath);
                 })
                 //4. DB에 저장하기 위해 entity 로 형변환
-                .map(pictureFile -> pictureFile.toEntity())
+                .map(pictureFile -> {
+                	String toPath = picturePathProperties.getDataPath(pictureFile);
+                	pictureFile.changeFilePath(toPath);
+                	
+                	return pictureFile.toEntity();
+                })
                 .collect(Collectors.toList());
+        
         //5. DB에 저장
         List<PictureEntity> savedList = pictureRepository.saveAll(pictureEntityList);
         List<PictureDto> savedDtoList = savedList.stream()

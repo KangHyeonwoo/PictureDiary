@@ -2,6 +2,7 @@ const toc = new Toc();
 const map = {};
 const picture = {};
 const markerList = [];
+let tempMarker;
 picture.list = [];
 
 map.options = {
@@ -24,20 +25,7 @@ map.init = function() {
 			const contents = toc.add(pictureObj);
 			
 			if(pictureObj.hasGeometry) {
-				const marker = new Marker(pictureObj, map.obj);
-				marker.setMap();
-				marker.leftClicked(responseMarker => {
-					Marker.closeInfowindow(markerList);
-					marker.openInfowindow();
-				});
-				markerList.push(marker);
-				
-				contents.addEventListener('click', function(event){
-					map.obj.panTo(marker.position)
-					
-					Marker.closeInfowindow(markerList);
-					marker.openInfowindow();
-				})
+				picture.addMarker(pictureObj, contents);
 			}
 		})
 	})
@@ -71,25 +59,29 @@ picture.extract = function() {
 			const contents = toc.add(pictureObj);
 			
 			if(pictureObj.hasGeometry) {
-				const marker = new Marker(pictureObj, map.obj);
-				marker.setMap();
-				marker.leftClicked(responseMarker => {
-					Marker.closeInfowindow(markerList);
-					marker.openInfowindow();
-				});
-				markerList.push(marker);
-				
-				contents.addEventListener('click', function(event){
-					map.obj.panTo(marker.position)
-					
-					Marker.closeInfowindow(markerList);
-					marker.openInfowindow();
-				})
+				picture.addMarker(pictureObj, contents);
 			}
 		})
     })
 }
 
+
+picture.addMarker = function(pictureObj, contents) {
+	const marker = new Marker(pictureObj, map.obj);
+	marker.setMap();
+	marker.leftClicked(responseMarker => {
+		Marker.closeInfowindow(markerList);
+		marker.openInfowindow();
+	});
+	markerList.push(marker);
+	
+	contents.addEventListener('click', function(event){
+		map.obj.panTo(marker.position)
+		
+		Marker.closeInfowindow(markerList);
+		marker.openInfowindow();
+	})
+}
 
 picture.findById = function(id) {
 	
@@ -123,7 +115,9 @@ picture.remove = function(pictureObj) {
 		
 		//marker remove
 		const marker = Marker.findByPictureId(pictureObj.pictureId, markerList);
-		marker.remove();
+		if(marker) {			
+			marker.remove();
+		}
 		
 		//markerlist pop
 		const markerIndex = markerList.findIndex(e => e.pictureId === pictureObj.pictureId);
@@ -148,39 +142,27 @@ picture.rename = function(pictureObj, name) {
 
 picture.addGeometry = function(pictureObj) {
     //alert(화면을 클릭해주세요.);
-    kakao.maps.event.addListener(map.obj, 'click', function(mouseEvent) {
-        const latlng = mouseEvent.latLng;
-
-        pictureObj.latitude = latlng.getLat();
-        pictureObj.longitude = latlng.getLng();
-
-        const data = {
+	kakao.maps.event.addListener(map.obj, 'click', picture.addTempMarker);
+	
+	//하...
+	/*
+	const data = {
             pictureId : pictureObj.pictureId,
-            latitude : pictureObj.latitude,
-            longitude : pictureObj.longitude,
+            latitude : latitude,
+            longitude : longitude,
         }
 
         const url = '/picture/addGeometry';
         Async.post(url, data, function(resultPictureObj){
-            //add marker
-			const marker = new Marker(resultPictureObj, map.obj);
-            marker.setMap();
-            marker.leftClicked(responseMarker => {
-                Marker.closeInfowindow(markerList);
-                marker.openInfowindow();
-            });
-            markerList.push(marker);
-
+			//toc 변경
+			const contents = document.getElementById(resultPictureObj.tocId);
+			
 			toc.remove(pictureObj);
 			toc.add(resultPictureObj);
 			
-			const contents = document.getElementById(resultPictureObj.tocId);
-            contents.addEventListener('click', function(event){
-                map.obj.panTo(marker.position)
-
-                Marker.closeInfowindow(markerList);
-                marker.openInfowindow();
-            })
+			//marker추가
+			picture.addMarker(resultPictureObj, contents);
+			
 			
 			//picture.list에 기존 객체 삭제 후 새로 추가하기
 			const idx = picture.list.findIndex(function(item){
@@ -193,7 +175,29 @@ picture.addGeometry = function(pictureObj) {
 			picture.list.push(resultPictureObj);
 			
         })
-    });
+	*/
+}
+
+picture.addTempMarker = function(mouseEvent) {
+	const latlng = mouseEvent.latLng;
+    const latitude = latlng.getLat();
+    const longitude = latlng.getLng();
+
+	if(typeof tempMarker !== 'undefined') {
+		tempMarker.remove();		
+	}
+	
+	tempMarker = new TempMarker(latitude, longitude, map.obj);
+	tempMarker.okButtonClick(function(){
+		
+	})
+	
+	tempMarker.cancelButtonClick(function(){
+		kakao.maps.event.removeListener(map.obj, 'click', picture.addTempMarker);
+		tempMarker.remove();
+	})
 }
 
 map.init();
+
+
