@@ -43,6 +43,7 @@ class TempMarker {
 	#infowindowContent() {
 		const div = document.createElement('div');
 		div.className = 'btn-group';
+		div.style.width = '140px';
 		const okButton = document.createElement('button');
 		okButton.id = 'temp-marker-ok-button';
 		okButton.className = 'basic';

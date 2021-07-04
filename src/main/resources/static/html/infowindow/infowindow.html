@@ -5,17 +5,19 @@
     <title>Infowindow</title>
 </head>
 <body>
-	<div style="width:200px; height:220px">
+	<div class="infowindow">
 		<table>
-			<tr><td th:text="${pictureDto.pictureId}"/></tr>
-			<tr>
-				<td><img th:src="|/picture/images/${pictureDto.pictureOriginName}.${pictureDto.extension}|" style="width:80px; height:80px;"/></td>
-			</tr>
-			<tr><td th:text="${pictureDto.pictureDate}"/></tr>
+			<tbody>
+				<tr class="title"><td th:text="${pictureDto.pictureId}"/></tr>
+				<tr>
+					<td><img class="picture" th:src="|/picture/images/${pictureDto.pictureOriginName}.${pictureDto.extension}|"/></td>
+				</tr>
+				<tr><td th:text="${pictureDto.pictureDate}"/></tr>
+			</tbody>
 		</table>
-		<div>
-			<button type="button" class="show" id="marker-move-button">이동</button>
-			<button type="button" class="show" id="marker-delete-button">삭제</button>
+		<div class="btn-group" style="width:190px;">
+			<button type="button" class="basic w80" id="marker-move-button">이동</button>
+			<button type="button" class="cancel w80" id="marker-delete-button">삭제</button>
 		</div>
 	</div>
 </body>
