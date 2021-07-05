@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.picture.diary.picture.data.InfowindowDto;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
 
@@ -24,9 +25,10 @@ public class MapController {
 
     @GetMapping("/infowindow/{pictureId}")
     public String infowindowView(@PathVariable("pictureId") long pictureId, Model model) {
-    	PictureDto result = pictureService.findByPictureId(pictureId);
     	
-    	model.addAttribute("pictureDto", result);
+    	InfowindowDto infowindow = pictureService.findInfowindowByPictureId(pictureId);
+    	
+    	model.addAttribute("infowindow", infowindow);
     	
     	return "infowindow/infowindow";
     }

@@ -5,11 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.picture.data.InfowindowDto;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
 import com.picture.diary.picture.exception.PictureException;
@@ -121,5 +123,18 @@ public class PictureServiceImpl implements PictureService {
         PictureEntity savedEntity = pictureRepository.save(pictureDto.toEntity());
 
         return savedEntity.toDto();
+    }
+    
+    public InfowindowDto findInfowindowByPictureId(long pictureId) {
+    	PictureDto pictureDto = this.findByPictureId(pictureId);
+    	String pictureName = (StringUtils.hasLength(pictureDto.getPictureName()) ? pictureDto.getPictureName() : pictureDto.getPictureOriginName());
+    	
+    	return InfowindowDto.builder()
+    			.pictureId(pictureDto.getPictureId())
+    			.pictureName(pictureName)
+    			.pictureDate(pictureDto.getPictureDate())
+    			.pictureOriginName(pictureDto.getPictureOriginName())
+    			.extension(pictureDto.getExtension())
+    			.build();
     }
 }
