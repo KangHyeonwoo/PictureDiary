@@ -145,6 +145,8 @@ picture.addGeometry = function(pictureObj) {
 	kakao.maps.event.addListener(map.obj, 'click', picture.addTempMarker);
 	
 	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', function(latlng){
+	    tempMarker.remove();
+
 		const data = {
             pictureId : pictureObj.pictureId,
             latitude : latlng.getLat(),
@@ -155,14 +157,12 @@ picture.addGeometry = function(pictureObj) {
         Async.post(url, data, function(resultPictureObj){
 			//toc 변경
 			const contents = document.getElementById(resultPictureObj.tocId);
-			
 			toc.remove(pictureObj);
 			toc.add(resultPictureObj);
 			
 			//marker추가
 			picture.addMarker(resultPictureObj, contents);
-			
-			
+
 			//picture.list에 기존 객체 삭제 후 새로 추가하기
 			const idx = picture.list.findIndex(function(item){
 				return item.pictureId === pictureObj.pictureId;
@@ -172,7 +172,7 @@ picture.addGeometry = function(pictureObj) {
 			}
 			
 			picture.list.push(resultPictureObj);
-			
+
         })
 	});
 }
