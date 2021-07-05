@@ -9,8 +9,9 @@
  - Exception Handler
  - HEIC -> JPG로 저장
  - 파일 이동 ? 복사 ?
- - marker.js , toc.js 필요해 보임
- - marker 마우스 오른쪽 버튼 클릭 이벤트 아니면 infowindow에 해당 기능들 추가하기
+ - Ajax -> fetch 바꾸는 작업 필요함
+  (https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch)
+ 
 
 메모
  - 노트북 이외의 컴퓨터로 개발할 경우를 대비 NAS 하나 필요할 것 같음. 파일서버, 디비서버가 필요함.
