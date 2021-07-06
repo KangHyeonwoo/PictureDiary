@@ -2,10 +2,12 @@
  *	지도에서 마커 위치 변경 및 새롭게 마커를 추가하는 경우 위치 확인용 임시 마커 생성 js 파일
  */
 class TempMarker {
+	#pictureId;
 	#marker;
 	#infowindow;
-		
-	constructor(latitude, longitude, map) {
+	
+	constructor(pictureId, latitude, longitude, map) {
+		this.#pictureId = pictureId;
 		const position = new kakao.maps.LatLng(latitude, longitude);
 		this.#marker = new kakao.maps.Marker({
 			position: position

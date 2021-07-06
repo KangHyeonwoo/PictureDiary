@@ -23,6 +23,7 @@ public class MapController {
         return "pictureMap";
     }
 
+    //TODO 삭제
     @GetMapping("/infowindow/{pictureId}")
     public String infowindowView(@PathVariable("pictureId") long pictureId, Model model) {
     	

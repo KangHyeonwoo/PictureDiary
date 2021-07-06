@@ -56,16 +56,18 @@ class Marker {
 	
 	openInfowindow() {
 	    const that = this;
-		this.infowindow.open(this.#map, this.#marker);
+		this.#infowindow.open(this.#map, this.#marker);
 		
 		const markerMoveButton = document.getElementById('marker-move-button');
 		const markerDeleteButton = document.getElementById('marker-delete-button');
 
 		markerMoveButton.addEventListener('click', event => {
-			that.#moveMarker();
+			event.preventDefault();
+			that.moveMarker();
 		})
 		
 		markerDeleteButton.addEventListener('click', event => {
+			event.preventDefault();
 			console.log(2);
 		});
 	}
@@ -89,12 +91,12 @@ class Marker {
 		return infowindowContent;
 	}
 
-	#moveMarker() {
+	moveMarker() {
 		console.log('move marker')
 	}
-
-	get infowindow() {
-		return this.#infowindow;
+	
+	closeMoveMarkerAction() {
+		
 	}
 
 	get pictureId() {

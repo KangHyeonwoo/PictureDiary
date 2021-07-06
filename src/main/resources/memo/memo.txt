@@ -11,7 +11,7 @@
  - 파일 이동 ? 복사 ?
  - Ajax -> fetch 바꾸는 작업 필요함
   (https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch)
- 
+ - pictureObj 에 picturePath 정제해야함. C:/ 이거 없애야함
 
 메모
  - 노트북 이외의 컴퓨터로 개발할 경우를 대비 NAS 하나 필요할 것 같음. 파일서버, 디비서버가 필요함.

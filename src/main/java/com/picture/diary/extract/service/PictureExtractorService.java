@@ -39,7 +39,4 @@ public interface PictureExtractorService {
 	 * @return
 	 */
 	boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList);
-	
-	//TODO 이미지 파일 삭제
-	
 }

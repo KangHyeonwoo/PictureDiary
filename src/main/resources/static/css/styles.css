@@ -56,7 +56,7 @@ ul.group li {
 
 .context-ul {
 	list-style: none;
-	padding: 0px 0px 0px 10px;
+	padding: 0px 5px 0px 5px;
 }
 
 .off {
@@ -64,10 +64,11 @@ ul.group li {
 }
 
 .context-menu {
-	width: 150px;
+	width: 100px;
 	position: absolute;
 	z-index: 2;
-	background-color: #efefef;
+	background-color: #fff;
+	border: 1px solid #008D62;
 }
 
 .context-menu li {
@@ -75,6 +76,11 @@ ul.group li {
     margin-bottom: 3px;
     font-size: 15px;
     cursor: pointer;
+}
+
+.context-menu li:hover {
+	background: #008D62;
+	color: #fff;
 }
 
 button {

@@ -33,6 +33,10 @@ map.init = function() {
 	//3. button setting
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
+	
+	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', picture.addGeometryOkHandler);
+	
+	
 }
 
 map.on = function() {
@@ -73,6 +77,7 @@ picture.addMarker = function(pictureObj, contents) {
 		Marker.closeInfowindow(markerList);
 		marker.openInfowindow();
 	});
+	
 	markerList.push(marker);
 	
 	contents.addEventListener('click', function(event){
@@ -141,60 +146,65 @@ picture.rename = function(pictureObj, name) {
 }
 
 picture.addGeometry = function(pictureObj) {
-    //alert(화면을 클릭해주세요.);
-	kakao.maps.event.addListener(map.obj, 'click', picture.addTempMarker);
 	
-	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', function(latlng){
-	    tempMarker.remove();
-
-		const data = {
-            pictureId : pictureObj.pictureId,
-            latitude : latlng.getLat(),
-            longitude : latlng.getLng(),
-        }
-
-        const url = '/picture/addGeometry';
-        Async.post(url, data, function(resultPictureObj){
-			//toc 변경
-			const contents = document.getElementById(resultPictureObj.tocId);
-			toc.remove(pictureObj);
-			toc.add(resultPictureObj);
-			
-			//marker추가
-			picture.addMarker(resultPictureObj, contents);
-
-			//picture.list에 기존 객체 삭제 후 새로 추가하기
-			const idx = picture.list.findIndex(function(item){
-				return item.pictureId === pictureObj.pictureId;
+	const addTempMarkerEventHandler = function(mouseEvent) {
+		const pictureId = pictureObj.pictureId;
+		const latlng = mouseEvent.latLng;
+	    const latitude = latlng.getLat();
+	    const longitude = latlng.getLng();
+	
+		if(typeof tempMarker !== 'undefined') {
+			tempMarker.remove();		
+		}
+		
+		tempMarker = new TempMarker(pictureId, latitude, longitude, map.obj);
+		tempMarker.okButtonClick(function(){
+			kakao.maps.event.trigger(map.obj, 'add-geometry-ok', {
+				'latlng' : latlng,
+				'pictureObj' : pictureObj
 			});
-			if (idx > -1) {
-				picture.list.splice(idx, 1);
-			}
-			
-			picture.list.push(resultPictureObj);
-
-        })
-	});
-}
-
-picture.addTempMarker = function(mouseEvent) {
-	const latlng = mouseEvent.latLng;
-    const latitude = latlng.getLat();
-    const longitude = latlng.getLng();
-
-	if(typeof tempMarker !== 'undefined') {
-		tempMarker.remove();		
+		})
+		
+		tempMarker.cancelButtonClick(function(){
+			kakao.maps.event.removeListener(map.obj, 'click', picture.addTempMarker);
+			tempMarker.remove();
+		})
 	}
 	
-	tempMarker = new TempMarker(latitude, longitude, map.obj);
-	tempMarker.okButtonClick(function(){
-		kakao.maps.event.trigger(map.obj, 'add-geometry-ok', latlng);
-	})
-	
-	tempMarker.cancelButtonClick(function(){
-		kakao.maps.event.removeListener(map.obj, 'click', picture.addTempMarker);
-		tempMarker.remove();
-	})
+	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
+}
+
+
+picture.addGeometryOkHandler = function(obj) {
+    tempMarker.remove();
+
+	const data = {
+        pictureId : pictureObj.pictureId,
+        latitude : latlng.getLat(),
+        longitude : latlng.getLng(),
+    }
+
+    const url = '/picture/addGeometry';
+    Async.post(url, data, function(resultPictureObj){
+		//toc 변경
+		const contents = document.getElementById(resultPictureObj.tocId);
+		toc.remove(pictureObj);
+		toc.add(resultPictureObj);
+		
+		//marker추가
+		picture.addMarker(resultPictureObj, contents);
+
+		//picture.list에 기존 객체 삭제 후 새로 추가하기
+		const idx = picture.list.findIndex(function(item){
+			return item.pictureId === pictureObj.pictureId;
+		});
+		if (idx > -1) {
+			picture.list.splice(idx, 1);
+		}
+		
+		picture.list.push(resultPictureObj);
+
+    })
 }
 
 map.init();

@@ -125,6 +125,7 @@ public class PictureServiceImpl implements PictureService {
         return savedEntity.toDto();
     }
     
+    //TODO 삭제
     public InfowindowDto findInfowindowByPictureId(long pictureId) {
     	PictureDto pictureDto = this.findByPictureId(pictureId);
     	String pictureName = (StringUtils.hasLength(pictureDto.getPictureName()) ? pictureDto.getPictureName() : pictureDto.getPictureOriginName());
