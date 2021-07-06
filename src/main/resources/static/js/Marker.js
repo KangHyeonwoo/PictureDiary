@@ -14,20 +14,30 @@ class Marker {
 		this.#position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
 		
 		//infowindow
+		/*
 		const infowindowContent = this.#infowindowContent(pictureObj);
         this.#infowindow = new kakao.maps.InfoWindow({
             position : this.#position,
             content : infowindowContent,
             removable : true
         });
-
+		*/
+		
 		//marker
-        this.#marker = new kakao.maps.Marker({
+        const marker = new kakao.maps.Marker({
              position: this.#position
         });
-		this.#pictureId = pictureObj.pictureId;
+		const that = this;
+		kakao.maps.event.addListener(marker, 'click', function() {
+			Marker.closeInfowindow(markerList);
+			that.openInfowindow();
+		});
 		
+		this.#infowindow = new Infowindow('default', map, marker, pictureObj);
+		
+		this.#pictureId = pictureObj.pictureId;
 		this.#map = map;
+		this.#marker = marker;
 	}
 	
 	//add
@@ -35,28 +45,14 @@ class Marker {
 		this.#marker.setMap(this.#map);
 	}
 	
-	leftClicked(fnCallback) {
-		const that = this;
-		kakao.maps.event.addListener(that.#marker, 'click', function() {
-			fnCallback(that)
-		});
-	}
-	
-	rightClicked(fnCallback) {
-		const that = this;
-		kakao.maps.event.addListener(that.#marker, 'rightclick', function() {
-			fnCallback(that)
-		});
-	}
-	
 	//delete
 	remove() {
 		this.#marker.setVisible(false);
 	}
-	
+/*
 	openInfowindow() {
 	    const that = this;
-		this.#infowindow.open(this.#map, this.#marker);
+		this.infowindow.open(this.#map, this.#marker);
 		
 		const markerMoveButton = document.getElementById('marker-move-button');
 		const markerDeleteButton = document.getElementById('marker-delete-button');
@@ -78,10 +74,21 @@ class Marker {
 		})
 	}
 
+
+	openInfowindow() {
+		this.#infowindow.open();
+	}
+*/	
+	static closeInfowindow(markerList) {
+		markerList.forEach(marker => {
+			marker.infowindow.close();
+		})
+	}
+	
 	static findByPictureId(pictureId, markerList) {
         return markerList.find(e => e.pictureId == pictureId);
 	}
-
+/*
 	#infowindowContent(pictureObj) {
 		const url = '/infowindow/'+pictureObj.pictureId;
 		const data = {};
@@ -90,13 +97,17 @@ class Marker {
 		
 		return infowindowContent;
 	}
-
+*/
 	moveMarker() {
 		console.log('move marker')
 	}
 	
 	closeMoveMarkerAction() {
 		
+	}
+
+	get infowindow() {
+		return this.#infowindow;
 	}
 
 	get pictureId() {

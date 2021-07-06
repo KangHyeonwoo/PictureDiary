@@ -73,18 +73,13 @@ picture.extract = function() {
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
 	marker.setMap();
-	marker.leftClicked(responseMarker => {
-		Marker.closeInfowindow(markerList);
-		marker.openInfowindow();
-	});
-	
 	markerList.push(marker);
 	
 	contents.addEventListener('click', function(event){
 		map.obj.panTo(marker.position)
 		
 		Marker.closeInfowindow(markerList);
-		marker.openInfowindow();
+		marker.infowindow.open();
 	})
 }
 

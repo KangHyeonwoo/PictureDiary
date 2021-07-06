@@ -11,20 +11,18 @@ class Infowindow {
 		this.#map = map;
 		this.#marker = marker
 		this.#pictureObj = pictureObj;
-	}
-	
-	open() {
-		//position
-		this.#position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
+
+		const position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
 		
-		//infowindow
 		const infowindowContent = this.#makeContents(pictureObj);
         this.#infowindow = new kakao.maps.InfoWindow({
-            position : this.#position,
+            position : position,
             content : infowindowContent,
             removable : true
         });
-
+	}
+	
+	open() {
 		this.#infowindow.open();
 	}
 	
