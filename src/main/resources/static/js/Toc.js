@@ -1,6 +1,8 @@
 class Toc {
     #dataGroupId = 'data-group';
     #tempGroupId = 'temp-group';
+
+	static Map = {};
     static #CONTEXT_MENU = {
         rename : {
             type : 'all',
@@ -13,7 +15,7 @@ class Toc {
             type : 'all',
             label : '파일 삭제',
             onClick : function(pictureObj) {
-				//picture.remove(pictureObj);
+				kakao.maps.event.trigger(Toc.Map, 'toc-contextmenu-picture-remove', pictureObj);
             }
         },
         addGeometry : {
@@ -21,6 +23,7 @@ class Toc {
             label : '좌표 추가',
             onClick : function(pictureObj) {
 				//picture.addGeometry(pictureObj);
+				kakao.maps.event.trigger(Toc.Map, 'toc-contextmenu-picture-addGeometry', pictureObj);
             }
         },
 		get : function(hasGeometry) {
@@ -48,6 +51,8 @@ class Toc {
                 }
             })
         })
+		
+		
     }
 
 

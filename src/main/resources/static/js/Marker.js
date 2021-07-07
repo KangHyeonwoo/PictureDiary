@@ -36,12 +36,13 @@ export default class Marker {
 			that.#infowindow.show();
 		});
 		
-		this.#pictureId = pictureObj.pictureId;
 		this.#map = map;
+		
+		this.#add();
 	}
 	
 	//add
-	add() {
+	#add() {
 		this.#marker.setMap(this.#map);
 		Marker.MarkerList.add(this);
 	}
@@ -60,14 +61,6 @@ export default class Marker {
 	
 	static findByPictureId(pictureId) {
         return Marker.MarkerList.list.find(e => e.pictureId == pictureId);
-	}
-	
-	moveMarker() {
-		console.log('move marker')
-	}
-	
-	closeMoveMarkerAction() {
-		
 	}
 
 	get infowindow() {

@@ -67,12 +67,14 @@ export default class Infowindow {
 			addMarkerButton.className = 'basic w80';
 			addMarkerButton.innerText = '확인';
 			addMarkerButton.addEventListener('click', e => {
+				//tempMarker-infowindow-ok-button
 				console.log('addMarkerButton click')
 			})
 			const addMarkerCancelButton = document.createElement('button');
 			addMarkerCancelButton.className = 'cancel w80';
 			addMarkerCancelButton.innerText = '취소';
 			addMarkerCancelButton.addEventListener('click', e => {
+				//tempMarker-infowindow-cancel-button
 				console.log('addMarkerCancelButton click')
 			})
 			
@@ -84,6 +86,7 @@ export default class Infowindow {
 			markerMoveButton.className = 'basic w80';
 			markerMoveButton.innerText = '이동';
 			markerMoveButton.addEventListener('click', e => {
+				//marker-infowindow-move-button
 				console.log('markerMoveButton click')
 			})
 			
@@ -91,6 +94,7 @@ export default class Infowindow {
 			markerDeleteButton.className = 'cancel w80';
 			markerDeleteButton.innerText = '삭제';
 			markerDeleteButton.addEventListener('click', e => {
+				//marker-infowindow-remove-button
 				console.log('markerDeleteButton click')
 			})
 			

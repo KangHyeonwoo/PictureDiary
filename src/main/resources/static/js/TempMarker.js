@@ -1,33 +1,29 @@
+import Infowindow from './Infowindow.js';
+
 /*
  *	지도에서 마커 위치 변경 및 새롭게 마커를 추가하는 경우 위치 확인용 임시 마커 생성 js 파일
  */
-class TempMarker {
-	#pictureId;
+export default class TempMarker {
 	#marker;
 	#infowindow;
 	
-	constructor(pictureId, latitude, longitude, map) {
-		this.#pictureId = pictureId;
+	constructor(pictureObj, latitude, longitude, map) {
 		const position = new kakao.maps.LatLng(latitude, longitude);
 		this.#marker = new kakao.maps.Marker({
 			position: position
 		})
 		
-		const infowindowContent = this.#infowindowContent();
-        this.#infowindow = new kakao.maps.InfoWindow({
-            position : position,
-            content : infowindowContent
-        });
-	
+		this.#infowindow = new Infowindow('temp', map, this.#marker, pictureObj);
+		
 		this.#marker.setMap(map);
-		this.#infowindow.open(map, this.#marker);
+		this.#infowindow.show();
 	}
 	
 	remove() {
 		this.#marker.setMap(null);
 		this.#infowindow.close();
 	}
-	
+	/*
 	okButtonClick(fnCallback) {
 		document.getElementById('temp-marker-ok-button').addEventListener('click', event => {
 			event.stopPropagation();
@@ -61,7 +57,7 @@ class TempMarker {
 		
 		return div;
 	}
-	
+	*/
 	get infowindow() {
 		return this.#infowindow;
 	}

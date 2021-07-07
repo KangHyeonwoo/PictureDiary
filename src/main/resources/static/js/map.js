@@ -1,9 +1,10 @@
 import Marker from './Marker.js';
+import TempMarker from './TempMarker.js';
 
-const toc = new Toc();
 const map = {};
 const picture = {};
 let tempMarker;
+const toc = new Toc();
 
 map.options = {
     divId : 'map',
@@ -17,6 +18,7 @@ map.options = {
 map.init = function() {
     //1. map on
     this.on();
+	Toc.Map = map.obj;
 	
 	//2. pictures draw;
 	picture.getList(pictureList => {
@@ -34,8 +36,12 @@ map.init = function() {
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
 	
-	//좌표 추가 > [확인] 버튼 클릭 이벤트
-	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', picture.addGeometryOkHandler);
+	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
+	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
+	
+	
+	//TOC 마우스 오른쪽 클릭 > 좌표 추가 > [확인] 버튼 클릭 이벤트
+	kakao.maps.event.addListener(map.obj, 'addGeometry-ok', picture.addGeometryOkHandler);
 }
 
 map.on = function() {
@@ -69,7 +75,6 @@ picture.extract = function() {
 
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
-	marker.add();
 	
 	contents.addEventListener('click', function(event){
 		map.obj.panTo(marker.position)
@@ -94,7 +99,24 @@ picture.getList = function(fnCallback) {
     })
 }
 
-picture.remove = function(pictureObj) {
+picture.rename = function(pictureObj, name) {
+	const data = {
+		pictureId : pictureObj.pictureId,
+		pictureName : name
+	}
+	const url = '/picture/rename';
+	
+	Async.post(url, data, function(result){
+	    const pictureObj = picture.findById(result.pictureId);
+	    pictureObj.pictureName = result.pictureName;
+
+        Toc.closeRename(pictureObj);
+	})
+}
+
+/** EVENT HANDLER **/
+
+picture.tocContextMenuRemoveHandler = function(pictureObj) {
 	const data = {
 		pictureId : pictureObj.pictureId,
 	}
@@ -112,23 +134,7 @@ picture.remove = function(pictureObj) {
 		}
 	})
 }
-
-picture.rename = function(pictureObj, name) {
-	const data = {
-		pictureId : pictureObj.pictureId,
-		pictureName : name
-	}
-	const url = '/picture/rename';
-	
-	Async.post(url, data, function(result){
-	    const pictureObj = picture.findById(result.pictureId);
-	    pictureObj.pictureName = result.pictureName;
-
-        Toc.closeRename(pictureObj);
-	})
-}
-
-picture.addGeometry = function(pictureObj) {
+picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const pictureId = pictureObj.pictureId;
 		const latlng = mouseEvent.latLng;
@@ -139,13 +145,14 @@ picture.addGeometry = function(pictureObj) {
 			tempMarker.remove();		
 		}
 		
-		tempMarker = new TempMarker(pictureId, latitude, longitude, map.obj);
+		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
 		
 		tempMarker.okButtonClick(function(){
-			kakao.maps.event.trigger(map.obj, 'add-geometry-ok', {
+			const paramObj = {
 				'latlng' : latlng,
 				'pictureObj' : pictureObj
-			});
+			}
+			kakao.maps.event.trigger(map.obj, 'addGeometry-ok', paramObj);
 		})
 		
 		tempMarker.cancelButtonClick(function(){
@@ -156,7 +163,6 @@ picture.addGeometry = function(pictureObj) {
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
-
 
 picture.addGeometryOkHandler = function(obj) {
     tempMarker.remove();
