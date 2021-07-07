@@ -66,6 +66,9 @@ class Toc {
 			Toc.#addContextMenu(event ,pictureObj);
 		})
 		
+		li.addEventListener('click', this.contentClickEventHandler);
+		li.addEventListener('contextmenu', this.contentClickEventHandler);
+		
 		if(pictureObj.hasGeometry) {
 			dataGroup.appendChild(li);
 		} else {
@@ -75,10 +78,6 @@ class Toc {
 		return li;
     }
 
-	clicked() {
-		debugger;
-	}
-
     remove(pictureObj) {
 		//TOC목록에서 제거(view)
 		const content = document.getElementById(pictureObj.tocId);
@@ -86,6 +85,17 @@ class Toc {
 
 		return document.getElementById(pictureObj.tocId) == null;
     }
+
+	contentClickEventHandler(event) {
+		const li = event.currentTarget;
+		
+		const contents = document.getElementsByClassName('toc-object');
+		Array.from(contents).forEach(content => {
+            content.classList.remove('selected');
+        })
+
+		li.classList.add('selected');
+	}
 
 	static #addContextMenu(event, pictureObj) {
 		const ctxMenuId = 'toc_context';
@@ -160,6 +170,8 @@ class Toc {
 		div.appendChild(button);
 		
 		contents.innerHTML = '';
+		contents.classList.remove('selected');
+		
 		contents.appendChild(div);
 	}
 	

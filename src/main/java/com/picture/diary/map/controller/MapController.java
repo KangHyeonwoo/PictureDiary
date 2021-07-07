@@ -15,22 +15,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MapController {
 
-	private final PictureService pictureService;
-	
     @GetMapping("/")
     public String mapView() {
 
         return "pictureMap";
-    }
-
-    //TODO 삭제
-    @GetMapping("/infowindow/{pictureId}")
-    public String infowindowView(@PathVariable("pictureId") long pictureId, Model model) {
-    	
-    	InfowindowDto infowindow = pictureService.findInfowindowByPictureId(pictureId);
-    	
-    	model.addAttribute("infowindow", infowindow);
-    	
-    	return "infowindow/infowindow";
     }
 }

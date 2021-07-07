@@ -54,6 +54,11 @@ ul.group li {
     line-height: 30px;
 }
 
+ul.group li.selected {
+	background-color: #008D62;
+	color: #fff;
+}
+
 .context-ul {
 	list-style: none;
 	padding: 0px 5px 0px 5px;

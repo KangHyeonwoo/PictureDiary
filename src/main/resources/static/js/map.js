@@ -1,9 +1,9 @@
+import Marker from './Marker.js';
+
 const toc = new Toc();
 const map = {};
 const picture = {};
-const markerList = [];
 let tempMarker;
-picture.list = [];
 
 map.options = {
     divId : 'map',
@@ -34,6 +34,7 @@ map.init = function() {
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
 	
+	//좌표 추가 > [확인] 버튼 클릭 이벤트
 	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', picture.addGeometryOkHandler);
 	
 	
@@ -58,8 +59,6 @@ picture.extract = function() {
 
     Async.post(url, data, function(pictureList){
         pictureList.forEach(pictureObj => {
-            picture.list.push(pictureObj);
-	
 			const contents = toc.add(pictureObj);
 			
 			if(pictureObj.hasGeometry) {
@@ -72,14 +71,13 @@ picture.extract = function() {
 
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
-	marker.setMap();
-	markerList.push(marker);
+	marker.add();
 	
 	contents.addEventListener('click', function(event){
 		map.obj.panTo(marker.position)
 		
-		Marker.closeInfowindow(markerList);
-		marker.infowindow.open();
+		Marker.closeAllInfowindow();
+		marker.infowindow.show()
 	})
 }
 
@@ -91,14 +89,10 @@ picture.findById = function(id) {
 picture.getList = function(fnCallback) {
     const url = '/picture/list';
     const data = {};
-    if(this.list.length > 0) {
-        fnCallback(this.list);
-    }
 
     Async.get(url, data, function(result) {
-        result.forEach(pictureObj => picture.list.push(pictureObj));
 
-        fnCallback(picture.list);
+        fnCallback(result);
     })
 }
 
@@ -114,14 +108,10 @@ picture.remove = function(pictureObj) {
 		contents.remove();
 		
 		//marker remove
-		const marker = Marker.findByPictureId(pictureObj.pictureId, markerList);
+		const marker = Marker.findByPictureId(pictureObj.pictureId);
 		if(marker) {			
 			marker.remove();
 		}
-		
-		//markerlist pop
-		const markerIndex = markerList.findIndex(e => e.pictureId === pictureObj.pictureId);
-		markerList.splice(markerIndex, 1);
 	})
 }
 
@@ -141,7 +131,6 @@ picture.rename = function(pictureObj, name) {
 }
 
 picture.addGeometry = function(pictureObj) {
-	
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const pictureId = pictureObj.pictureId;
 		const latlng = mouseEvent.latLng;
@@ -153,6 +142,7 @@ picture.addGeometry = function(pictureObj) {
 		}
 		
 		tempMarker = new TempMarker(pictureId, latitude, longitude, map.obj);
+		
 		tempMarker.okButtonClick(function(){
 			kakao.maps.event.trigger(map.obj, 'add-geometry-ok', {
 				'latlng' : latlng,
@@ -188,17 +178,6 @@ picture.addGeometryOkHandler = function(obj) {
 		
 		//marker추가
 		picture.addMarker(resultPictureObj, contents);
-
-		//picture.list에 기존 객체 삭제 후 새로 추가하기
-		const idx = picture.list.findIndex(function(item){
-			return item.pictureId === pictureObj.pictureId;
-		});
-		if (idx > -1) {
-			picture.list.splice(idx, 1);
-		}
-		
-		picture.list.push(resultPictureObj);
-
     })
 }
 

@@ -1,103 +1,67 @@
-class Marker {
+import Infowindow from './Infowindow.js';
+
+export default class Marker {
 	#marker = {};
 	#position;
 	#infowindow;
 	#map;
 	#pictureId;
+	static MarkerList = {
+		list : [],
+		add : function(marker) {
+			this.list.push(marker);
+		},
+		remove : function(marker) {
+			const index = this.list.findIndex(e => e.pictureId === marker.pictureId);
+			this.list.splice(index, 1);
+		}
+	};
 	
 	constructor(pictureObj, map) {
 		if(pictureObj.latitude == 0 || pictureObj.longitude == 0) {
 			throw new this.#MarkerCreateException('geometry must not empty');
 		}
 		
-		//position
 		this.#position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
-		
-		//infowindow
-		/*
-		const infowindowContent = this.#infowindowContent(pictureObj);
-        this.#infowindow = new kakao.maps.InfoWindow({
-            position : this.#position,
-            content : infowindowContent,
-            removable : true
-        });
-		*/
-		
-		//marker
-        const marker = new kakao.maps.Marker({
+		this.#map = map;
+        this.#marker = new kakao.maps.Marker({
              position: this.#position
         });
-		const that = this;
-		kakao.maps.event.addListener(marker, 'click', function() {
-			Marker.closeInfowindow(markerList);
-			that.openInfowindow();
-		});
+		this.#infowindow = new Infowindow('default', map, this.#marker, pictureObj);
+		this.#pictureId = pictureObj.pictureId;
 		
-		this.#infowindow = new Infowindow('default', map, marker, pictureObj);
+		const that = this;
+		kakao.maps.event.addListener(this.#marker, 'click', function() {
+			Marker.closeAllInfowindow();
+			that.#infowindow.show();
+		});
 		
 		this.#pictureId = pictureObj.pictureId;
 		this.#map = map;
-		this.#marker = marker;
 	}
 	
 	//add
-	setMap() {
+	add() {
 		this.#marker.setMap(this.#map);
+		Marker.MarkerList.add(this);
 	}
 	
 	//delete
 	remove() {
-		this.#marker.setVisible(false);
-	}
-/*
-	openInfowindow() {
-	    const that = this;
-		this.infowindow.open(this.#map, this.#marker);
-		
-		const markerMoveButton = document.getElementById('marker-move-button');
-		const markerDeleteButton = document.getElementById('marker-delete-button');
-
-		markerMoveButton.addEventListener('click', event => {
-			event.preventDefault();
-			that.moveMarker();
-		})
-		
-		markerDeleteButton.addEventListener('click', event => {
-			event.preventDefault();
-			console.log(2);
-		});
-	}
-	
-	static closeInfowindow(markerList) {
-		markerList.forEach(marker => {
-			marker.infowindow.close();
-		})
+		this.#marker.setMap(null);
+		Marker.MarkerList.remove(this);
 	}
 
-
-	openInfowindow() {
-		this.#infowindow.open();
-	}
-*/	
-	static closeInfowindow(markerList) {
-		markerList.forEach(marker => {
+	static closeAllInfowindow() {
+		Marker.MarkerList.list.forEach(marker => {
 			marker.infowindow.close();
 		})
 	}
 	
-	static findByPictureId(pictureId, markerList) {
-        return markerList.find(e => e.pictureId == pictureId);
+	static findByPictureId(pictureId) {
+        return Marker.MarkerList.list.find(e => e.pictureId == pictureId);
 	}
-/*
-	#infowindowContent(pictureObj) {
-		const url = '/infowindow/'+pictureObj.pictureId;
-		const data = {};
-		
-		const infowindowContent = Async.syncHtml(url, data);
-		
-		return infowindowContent;
-	}
-*/
+	
 	moveMarker() {
 		console.log('move marker')
 	}

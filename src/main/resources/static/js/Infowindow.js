@@ -1,9 +1,8 @@
-class Infowindow {
+export default class Infowindow {
 	#type;
 	#map;
 	#marker;
 	#pictureObj;
-	
 	#infowindow;
 	
 	constructor(type, map, marker, pictureObj) {
@@ -13,17 +12,15 @@ class Infowindow {
 		this.#pictureObj = pictureObj;
 
 		const position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
-		
-		const infowindowContent = this.#makeContents(pictureObj);
         this.#infowindow = new kakao.maps.InfoWindow({
             position : position,
-            content : infowindowContent,
+            content : this.#makeContents(pictureObj),
             removable : true
         });
 	}
 	
-	open() {
-		this.#infowindow.open();
+	show() {
+		this.#infowindow.open(this.#map, this.#marker);
 	}
 	
 	close() {
@@ -40,12 +37,12 @@ class Infowindow {
 		const tdPictureName = document.createElement('td');
 			  tdPictureName.innerText = (this.#pictureObj.pictureName ? this.#pictureObj.pictureName : 
 										this.#pictureObj.pictureOriginName);
-
+			  tdPictureName.className = "title";
 		const trImg = document.createElement('tr');
 		const tdImg = document.createElement('td');
 		const img = document.createElement('img');
 			  //임시. 바꿔야함
-			  img.src = '/Pictures/data/10746.JPEG';
+			  img.src = `/picture/images/${this.#pictureObj.pictureOriginName}.${this.#pictureObj.extension}`;
 			  img.className = 'picture';
 		const trDate = document.createElement('tr');
 		const tdDate = document.createElement('td');
@@ -62,20 +59,18 @@ class Infowindow {
 		trDate.appendChild(tdDate);
 		
 		const divButtonGroup = document.createElement('div');
-		divButtonGroup.style.width = '190px';
+		divButtonGroup.style.width = '180px';
+		divButtonGroup.className = 'btn-group';
 		
 		if(this.#type === 'temp') {
-			divButtonGroup.className = 'btn-group';
-			divButtonGroup.style.width = '140px';
-			
 			const addMarkerButton = document.createElement('button');
-			addMarkerButton.classList = ['basic', 'w80'];
+			addMarkerButton.className = 'basic w80';
 			addMarkerButton.innerText = '확인';
 			addMarkerButton.addEventListener('click', e => {
 				console.log('addMarkerButton click')
 			})
 			const addMarkerCancelButton = document.createElement('button');
-			addMarkerCancelButton.classList = ['cancel', 'w80'];
+			addMarkerCancelButton.className = 'cancel w80';
 			addMarkerCancelButton.innerText = '취소';
 			addMarkerCancelButton.addEventListener('click', e => {
 				console.log('addMarkerCancelButton click')
@@ -86,14 +81,14 @@ class Infowindow {
 		//default
 		} else {
 			const markerMoveButton = document.createElement('button');
-			markerMoveButton.classList = ['basic', 'w80'];
+			markerMoveButton.className = 'basic w80';
 			markerMoveButton.innerText = '이동';
 			markerMoveButton.addEventListener('click', e => {
 				console.log('markerMoveButton click')
 			})
 			
 			const markerDeleteButton = document.createElement('button');
-			markerDeleteButton.classList = ['cancel', 'w80'];
+			markerDeleteButton.className = 'cancel w80';
 			markerDeleteButton.innerText = '삭제';
 			markerDeleteButton.addEventListener('click', e => {
 				console.log('markerDeleteButton click')
@@ -102,5 +97,9 @@ class Infowindow {
 			divButtonGroup.appendChild(markerMoveButton);
 			divButtonGroup.appendChild(markerDeleteButton);
 		}
+		
+		tbody.appendChild(divButtonGroup);
+		
+		return divInfowindow;
 	}
 }

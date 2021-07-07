@@ -1,6 +1,5 @@
 package com.picture.diary.picture.service;
 
-import com.picture.diary.picture.data.InfowindowDto;
 import com.picture.diary.picture.data.PictureDto;
 
 import java.util.List;
@@ -20,6 +19,4 @@ public interface PictureService {
 	void delete(long pictureId);
 
 	PictureDto save(PictureDto pictureDto);
-	
-	InfowindowDto findInfowindowByPictureId(long pictureId);
 }
