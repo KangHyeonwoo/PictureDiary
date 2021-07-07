@@ -13,14 +13,14 @@ class Toc {
             type : 'all',
             label : '파일 삭제',
             onClick : function(pictureObj) {
-				picture.remove(pictureObj);
+				//picture.remove(pictureObj);
             }
         },
         addGeometry : {
             type : 'noGeometry',
             label : '좌표 추가',
             onClick : function(pictureObj) {
-				picture.addGeometry(pictureObj);
+				//picture.addGeometry(pictureObj);
             }
         },
 		get : function(hasGeometry) {
@@ -187,7 +187,6 @@ class Toc {
 			contents.innerText = (data.pictureName == null ? data.pictureOriginName : data.pictureName);
 		}
 	}
-	
 }
 
 

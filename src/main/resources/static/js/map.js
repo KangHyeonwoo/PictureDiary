@@ -17,7 +17,7 @@ map.options = {
 map.init = function() {
     //1. map on
     this.on();
-
+	
 	//2. pictures draw;
 	picture.getList(pictureList => {
 		pictureList.forEach(pictureObj => {
@@ -36,8 +36,6 @@ map.init = function() {
 	
 	//좌표 추가 > [확인] 버튼 클릭 이벤트
 	kakao.maps.event.addListener(map.obj, 'add-geometry-ok', picture.addGeometryOkHandler);
-	
-	
 }
 
 map.on = function() {
