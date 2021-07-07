@@ -13,6 +13,9 @@ export default class TempMarker {
 			position: position
 		})
 		
+		pictureObj.latitude = latitude;
+		pictureObj.longitude = longitude;
+		
 		this.#infowindow = new Infowindow('temp', map, this.#marker, pictureObj);
 		
 		this.#marker.setMap(map);

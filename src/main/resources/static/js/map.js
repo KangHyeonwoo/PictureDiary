@@ -146,7 +146,7 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 		}
 		
 		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
-		
+		/*
 		tempMarker.okButtonClick(function(){
 			const paramObj = {
 				'latlng' : latlng,
@@ -159,6 +159,7 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 			kakao.maps.event.removeListener(map.obj, 'click', picture.addTempMarker);
 			tempMarker.remove();
 		})
+		*/
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
