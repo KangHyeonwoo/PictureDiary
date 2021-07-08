@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5988d7ab8811489d6e51d45f8081269f"></script>
 <link href="/css/styles.css" type="text/css" rel="stylesheet" />
 <script src="/js/Async.js" defer></script>
@@ -18,6 +18,10 @@
                 <li>
                     <div class="btn-group">
                         <button type="button" id="extract-button" class="basic w200">파일 추출</button>
+                    </div>
+                    <div class="remark">
+                    	<span>파일 경로</span><br>
+                    	<span th:text="${path}"></span>
                     </div>
                 </li>
                 <li>

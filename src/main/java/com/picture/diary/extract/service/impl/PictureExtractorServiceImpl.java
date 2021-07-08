@@ -128,6 +128,11 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 		}
     }
     
+    public String getExtractFolderPath() {
+    	
+    	return picturePathProperties.getFromPath();
+    }
+    
     private Geometry getPictureGeometry(Metadata metadata) {
     	try {
     		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
@@ -152,5 +157,5 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     		return null;
     	}
     }
- 
+
 }

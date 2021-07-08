@@ -39,4 +39,7 @@ public interface PictureExtractorService {
 	 * @return
 	 */
 	boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList);
+	
+	
+	String getExtractFolderPath();
 }

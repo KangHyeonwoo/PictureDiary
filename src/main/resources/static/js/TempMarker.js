@@ -9,8 +9,14 @@ export default class TempMarker {
 	
 	constructor(pictureObj, latitude, longitude, map) {
 		const position = new kakao.maps.LatLng(latitude, longitude);
+		const imageSrc = '/img/marker1-2.png';
+    	const imageSize = new kakao.maps.Size(32, 32);
+    	const imageOption = {offset: new kakao.maps.Point(32, 32)};
+		const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+		
 		this.#marker = new kakao.maps.Marker({
-			position: position
+			position: position,
+			image: markerImage
 		})
 		
 		pictureObj.latitude = latitude;

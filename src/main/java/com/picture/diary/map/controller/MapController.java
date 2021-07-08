@@ -3,11 +3,8 @@ package com.picture.diary.map.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.picture.diary.picture.data.InfowindowDto;
-import com.picture.diary.picture.data.PictureDto;
-import com.picture.diary.picture.service.PictureService;
+import com.picture.diary.extract.service.PictureExtractorService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,9 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MapController {
 
+	private final PictureExtractorService pictureExtractService;
+	
     @GetMapping("/")
-    public String mapView() {
-
+    public String mapView(Model model) {
+    	String path = pictureExtractService.getExtractFolderPath();
+    	model.addAttribute("path", path);
         return "pictureMap";
     }
 }

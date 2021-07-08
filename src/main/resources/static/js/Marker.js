@@ -25,8 +25,15 @@ export default class Marker {
 		
 		this.#position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
 		this.#map = map;
+		
+		const imageSrc = '/img/marker1-1.png';
+    	const imageSize = new kakao.maps.Size(32, 32);
+    	const imageOption = {offset: new kakao.maps.Point(32, 32)};
+		const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+		
         this.#marker = new kakao.maps.Marker({
-             position: this.#position
+             position: this.#position,
+			 image: markerImage
         });
 		this.#infowindow = new Infowindow('default', map, this, pictureObj);
 		this.#pictureId = pictureObj.pictureId;
