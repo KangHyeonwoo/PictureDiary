@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @ToString
@@ -30,6 +31,7 @@ public class PictureDto {
 
     private boolean hasGeometry;
     private String tocId;
+    private String refinePictureDate;
     
     @Builder
     public PictureDto(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize,
@@ -48,6 +50,8 @@ public class PictureDto {
         
         this.hasGeometry = (this.latitude > 0 && this.longitude > 0);
         this.tocId = this.hasGeometry ? "data-group_" + this.pictureId : "temp-group_" + this.pictureId;
+        this.refinePictureDate = this.pictureDate == null ? "-" 
+        		: this.pictureDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void rename(String pictureName) {

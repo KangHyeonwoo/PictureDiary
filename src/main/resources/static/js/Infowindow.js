@@ -28,7 +28,7 @@ export default class Infowindow {
 		//set data in infowindow
 		this.#title.innerText = (this.#pictureObj.pictureName ? this.#pictureObj.pictureName : this.#pictureObj.pictureOriginName);
 		this.#image.src = `/picture/images/${this.#pictureObj.pictureOriginName}.${this.#pictureObj.extension}`;
-		this.#date.innerText = this.#pictureObj.pictureDate;
+		this.#date.innerText = this.#pictureObj.refinePictureDate;
 		
 		//show
 		this.#infowindow.open(this.#map, this.#marker.marker);

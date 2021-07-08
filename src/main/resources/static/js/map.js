@@ -184,9 +184,10 @@ picture.tempMarkerInfowindowOkButtonHandler = function(obj) {
 	tempMarker.remove();
 }
 
-//Temp Marker 인포윈도우 [닫기] 버튼 클릭 이벤트
+//Temp Marker 인포윈도우 [취소] 버튼 클릭 이벤트
 picture.tempMarkerInfowindowCloseButtonHandler = function(tempMarker) {
 	tempMarker.remove();
+	kakao.maps.event.removeListener(map.obj, 'click');
 }
 
 map.init();
