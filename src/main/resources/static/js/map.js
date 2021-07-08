@@ -36,12 +36,19 @@ map.init = function() {
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
 	
+	
+	//ContextMenu
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
 	
 	
 	//TOC 마우스 오른쪽 클릭 > 좌표 추가 > [확인] 버튼 클릭 이벤트
 	kakao.maps.event.addListener(map.obj, 'addGeometry-ok', picture.addGeometryOkHandler);
+	
+	//TempMarker > Infowindow
+	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
+	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
+	
 }
 
 map.on = function() {
@@ -124,8 +131,7 @@ picture.tocContextMenuRemoveHandler = function(pictureObj) {
 	
 	Async.post(url, data, function(result){
 		//toc remove
-		const contents = document.getElementById(pictureObj.tocId);
-		contents.remove();
+		toc.remove(pictureObj);
 		
 		//marker remove
 		const marker = Marker.findByPictureId(pictureObj.pictureId);
@@ -135,6 +141,8 @@ picture.tocContextMenuRemoveHandler = function(pictureObj) {
 	})
 }
 picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
+	Marker.closeAllInfowindow();
+	
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const pictureId = pictureObj.pictureId;
 		const latlng = mouseEvent.latLng;
@@ -184,6 +192,17 @@ picture.addGeometryOkHandler = function(obj) {
 		//marker추가
 		picture.addMarker(resultPictureObj, contents);
     })
+}
+
+picture.tempMarkerInfowindowOkButtonHandler = function(pictureObj) {
+	//파라미터 pictureOb
+	console.log(pictureObj);
+}
+
+//Temp Marker 인포윈도우 닫기 버튼 클릭 이벤트
+picture.tempMarkerInfowindowCloseButtonHandler = function(marker) {
+	marker.infowindow.close();
+	marker.marker.setMap(null);
 }
 
 map.init();

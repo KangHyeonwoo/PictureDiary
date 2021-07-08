@@ -8,19 +8,19 @@ export default class Infowindow {
 	constructor(type, map, marker, pictureObj) {
 		this.#type = type;
 		this.#map = map;
-		this.#marker = marker
+		this.#marker = marker;
 		this.#pictureObj = pictureObj;
 
 		const position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
         this.#infowindow = new kakao.maps.InfoWindow({
             position : position,
             content : this.#makeContents(pictureObj),
-            removable : true
+            removable : type != 'temp'
         });
 	}
 	
 	show() {
-		this.#infowindow.open(this.#map, this.#marker);
+		this.#infowindow.open(this.#map, this.#marker.marker);
 	}
 	
 	close() {
@@ -62,20 +62,24 @@ export default class Infowindow {
 		divButtonGroup.style.width = '180px';
 		divButtonGroup.className = 'btn-group';
 		
+		const map = this.#map;
+		const marker = this.#marker;
+		const pictureObj = this.#pictureObj;
+		
 		if(this.#type === 'temp') {
 			const addMarkerButton = document.createElement('button');
 			addMarkerButton.className = 'basic w80';
 			addMarkerButton.innerText = '확인';
 			addMarkerButton.addEventListener('click', e => {
-				//tempMarker-infowindow-ok-button
-				console.log('addMarkerButton click')
+				//tempMarker-infowindow-ok
+				kakao.maps.event.trigger(map, 'tempMarker-infowindow-ok', pictureObj);
 			})
 			const addMarkerCancelButton = document.createElement('button');
 			addMarkerCancelButton.className = 'cancel w80';
 			addMarkerCancelButton.innerText = '취소';
 			addMarkerCancelButton.addEventListener('click', e => {
-				//tempMarker-infowindow-cancel-button
-				console.log('addMarkerCancelButton click')
+				//tempMarker-infowindow-cancel
+				kakao.maps.event.trigger(map, 'tempMarker-infowindow-cancel', marker);
 			})
 			
 			divButtonGroup.appendChild(addMarkerButton);
@@ -84,7 +88,7 @@ export default class Infowindow {
 		} else {
 			const markerMoveButton = document.createElement('button');
 			markerMoveButton.className = 'basic w80';
-			markerMoveButton.innerText = '이동';
+			markerMoveButton.innerText = '위치 변경';
 			markerMoveButton.addEventListener('click', e => {
 				//marker-infowindow-move-button
 				console.log('markerMoveButton click')

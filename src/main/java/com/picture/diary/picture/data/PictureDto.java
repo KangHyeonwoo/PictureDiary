@@ -49,7 +49,7 @@ public class PictureDto {
         this.updateDt = updateDt;
         
         this.hasGeometry = (this.latitude > 0 && this.longitude > 0);
-        this.tocId = this.hasGeometry ? "temp-group_" + this.pictureId : "data-group_" + this.pictureId;
+        this.tocId = this.hasGeometry ? "data-group_" + this.pictureId : "temp-group_" + this.pictureId;
     }
 
     public void rename(String pictureName) {

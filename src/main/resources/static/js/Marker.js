@@ -1,11 +1,12 @@
 import Infowindow from './Infowindow.js';
 
 export default class Marker {
-	#marker = {};
+	#marker;
 	#position;
 	#infowindow;
 	#map;
 	#pictureId;
+	
 	static MarkerList = {
 		list : [],
 		add : function(marker) {
@@ -27,7 +28,7 @@ export default class Marker {
         this.#marker = new kakao.maps.Marker({
              position: this.#position
         });
-		this.#infowindow = new Infowindow('default', map, this.#marker, pictureObj);
+		this.#infowindow = new Infowindow('default', map, this, pictureObj);
 		this.#pictureId = pictureObj.pictureId;
 		
 		const that = this;

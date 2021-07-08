@@ -1,7 +1,9 @@
 class Toc {
     #dataGroupId = 'data-group';
     #tempGroupId = 'temp-group';
-
+	#dataCnt;
+	#tempCnt;
+	
 	static Map = {};
     static #CONTEXT_MENU = {
         rename : {
@@ -52,7 +54,10 @@ class Toc {
             })
         })
 		
-		
+		this.#dataCnt = document.getElementById('dataCnt');
+		this.#dataCnt.innerText = 0;
+		this.#tempCnt = document.getElementById('tempCnt');
+		this.#tempCnt.innerText = 0;
     }
 
 
@@ -76,8 +81,10 @@ class Toc {
 		
 		if(pictureObj.hasGeometry) {
 			dataGroup.appendChild(li);
+			this.#dataCnt.innerText = Number(this.#dataCnt.innerText) +1;
 		} else {
 			tempGroup.appendChild(li);
+			this.#tempCnt.innerText = Number(this.#tempCnt.innerText) +1;
 		}
 		
 		return li;
@@ -87,7 +94,13 @@ class Toc {
 		//TOC목록에서 제거(view)
 		const content = document.getElementById(pictureObj.tocId);
 		content.remove();
-
+		
+		if(content.id.includes('data')) {
+			this.#dataCnt.innerText = Number(this.#dataCnt.innerText) -1;
+		} else {
+			this.#tempCnt.innerText = Number(this.#tempCnt.innerText) -1;
+		}
+		
 		return document.getElementById(pictureObj.tocId) == null;
     }
 

@@ -110,8 +110,6 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     }
     
     public boolean movePictureFile(String fromFilePath, String toFilePath) {
-    	//String from = pictureFile.getFilePath();
-    	//String to = picturePathProperties.getDataPath(pictureFile);
     	
     	Path fromPath = Paths.get(fromFilePath);
     	Path toPath = Paths.get(toFilePath);
