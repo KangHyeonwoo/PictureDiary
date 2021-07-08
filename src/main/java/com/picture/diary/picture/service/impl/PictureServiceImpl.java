@@ -53,18 +53,13 @@ public class PictureServiceImpl implements PictureService {
                     pictureFile.addMetadata(metadata);
                     
                     //3. 디렉토리 이동
-                    String fromPath = pictureFile.getFilePath();
-                    String toPath = picturePathProperties.getDataPath(pictureFile);
+                    String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+                    String toPath = picturePathProperties.getDataPath(pictureFile.getFileName(), pictureFile.getExtension());
                     
                     return pictureExtractorService.movePictureFile(fromPath, toPath);
                 })
                 //4. DB에 저장하기 위해 entity 로 형변환
-                .map(pictureFile -> {
-                	String toPath = picturePathProperties.getDataPath(pictureFile);
-                	pictureFile.changeFilePath(toPath);
-                	
-                	return pictureFile.toEntity();
-                })
+                .map(PictureFile::toEntity)
                 .collect(Collectors.toList());
         
         //5. DB에 저장
@@ -95,11 +90,11 @@ public class PictureServiceImpl implements PictureService {
         PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.updateGeometry(latitude, longitude);
 
-        String fromPath = pictureDto.getPicturePath();
+        String fromPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
         
         //신규로 좌표를 추가하는 경우 해당 파일 data 디렉토리 이동
         if(fromPath.contains(picturePathProperties.getFromPath())) {
-        	String toPath = picturePathProperties.getDataPath() + "/" + pictureDto.getPictureOriginName() + "." + pictureDto.getExtension();
+        	String toPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
         	pictureExtractorService.movePictureFile(fromPath, toPath);
         }
         
@@ -112,8 +107,8 @@ public class PictureServiceImpl implements PictureService {
     	PictureDto pictureDto = pictureEntity.get().toDto();
     	
     	//파일 delete 디렉토리로 이동
-    	String fromPath = pictureDto.getPicturePath();
-    	String toPath = picturePathProperties.getDeletePath() + "/" + pictureDto.getPictureOriginName() + "." + pictureDto.getExtension();
+    	String fromPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
+    	String toPath = picturePathProperties.getDeletePath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
     	pictureExtractorService.movePictureFile(fromPath, toPath);
     	
         pictureRepository.delete(pictureEntity.get());

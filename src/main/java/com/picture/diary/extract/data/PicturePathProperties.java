@@ -30,18 +30,18 @@ public class PicturePathProperties {
     private final String deletePath;
     
     
-    public String getFromPath(PictureFile pictureFile) {
+    public String getFromPath(String fileName, Extensions extension) {
     	
-    	return this.fromPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
+    	return this.fromPath + "/" + fileName + "." + extension;
     }
     
-    public String getDataPath(PictureFile pictureFile) {
+    public String getDataPath(String fileName, Extensions extension) {
     	
-    	return this.dataPath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
+    	return this.dataPath + "/" + fileName + "." + extension;
     }
     
-    public String getDeletePath(PictureFile pictureFile) {
+    public String getDeletePath(String fileName, Extensions extension) {
     	
-    	return this.deletePath + "/" + pictureFile.getFileName() + "." + pictureFile.getExtension();
+    	return this.deletePath + "/" + fileName + "." + extension;
     }
 }

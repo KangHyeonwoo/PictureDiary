@@ -41,10 +41,6 @@ map.init = function() {
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
 	
-	
-	//TOC 마우스 오른쪽 클릭 > 좌표 추가 > [확인] 버튼 클릭 이벤트
-	kakao.maps.event.addListener(map.obj, 'addGeometry-ok', picture.addGeometryOkHandler);
-	
 	//TempMarker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
@@ -140,11 +136,11 @@ picture.tocContextMenuRemoveHandler = function(pictureObj) {
 		}
 	})
 }
+
 picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 	Marker.closeAllInfowindow();
 	
 	const addTempMarkerEventHandler = function(mouseEvent) {
-		const pictureId = pictureObj.pictureId;
 		const latlng = mouseEvent.latLng;
 	    const latitude = latlng.getLat();
 	    const longitude = latlng.getLng();
@@ -154,35 +150,21 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 		}
 		
 		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
-		/*
-		tempMarker.okButtonClick(function(){
-			const paramObj = {
-				'latlng' : latlng,
-				'pictureObj' : pictureObj
-			}
-			kakao.maps.event.trigger(map.obj, 'addGeometry-ok', paramObj);
-		})
-		
-		tempMarker.cancelButtonClick(function(){
-			kakao.maps.event.removeListener(map.obj, 'click', picture.addTempMarker);
-			tempMarker.remove();
-		})
-		*/
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
-picture.addGeometryOkHandler = function(obj) {
-    tempMarker.remove();
-
+picture.tempMarkerInfowindowOkButtonHandler = function(obj) {
+	const pictureObj = obj.pictureObj;
+	const tempMarker = obj.tempMarker;
+	const url = '/picture/addGeometry';
 	const data = {
         pictureId : pictureObj.pictureId,
-        latitude : latlng.getLat(),
-        longitude : latlng.getLng(),
+        latitude : pictureObj.latitude,
+        longitude : pictureObj.longitude,
     }
 
-    const url = '/picture/addGeometry';
     Async.post(url, data, function(resultPictureObj){
 		//toc 변경
 		const contents = document.getElementById(resultPictureObj.tocId);
@@ -192,17 +174,13 @@ picture.addGeometryOkHandler = function(obj) {
 		//marker추가
 		picture.addMarker(resultPictureObj, contents);
     })
-}
-
-picture.tempMarkerInfowindowOkButtonHandler = function(pictureObj) {
-	//파라미터 pictureOb
-	console.log(pictureObj);
+	
+	tempMarker.remove();
 }
 
 //Temp Marker 인포윈도우 닫기 버튼 클릭 이벤트
-picture.tempMarkerInfowindowCloseButtonHandler = function(marker) {
-	marker.infowindow.close();
-	marker.marker.setMap(null);
+picture.tempMarkerInfowindowCloseButtonHandler = function(tempMarker) {
+	tempMarker.remove();
 }
 
 map.init();

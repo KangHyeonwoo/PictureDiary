@@ -34,9 +34,6 @@ public class PictureEntity {
     @Column(nullable = false)
     private long pictureSize;
 
-    @Column(nullable = false)
-    private String picturePath;
-
     @Column
     private LocalDateTime pictureDate;
 
@@ -56,13 +53,12 @@ public class PictureEntity {
 
     @Builder
     public PictureEntity(long pictureId, String pictureName, String pictureOriginName, Extensions extension,
-                         long pictureSize, String picturePath, LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
+                         long pictureSize, LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
         this.pictureId = pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;
         this.extension = extension;
         this.pictureSize = pictureSize;
-        this.picturePath = picturePath;
         this.pictureDate = pictureDate;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -80,7 +76,6 @@ public class PictureEntity {
                 .pictureOriginName(this.pictureOriginName)
                 .extension(this.extension)
                 .pictureSize(this.pictureSize)
-                .picturePath(this.picturePath)
                 .pictureDate(this.pictureDate)
                 .latitude(this.latitude)
                 .longitude(this.longitude)

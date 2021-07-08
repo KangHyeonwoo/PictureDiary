@@ -72,7 +72,10 @@ export default class Infowindow {
 			addMarkerButton.innerText = '확인';
 			addMarkerButton.addEventListener('click', e => {
 				//tempMarker-infowindow-ok
-				kakao.maps.event.trigger(map, 'tempMarker-infowindow-ok', pictureObj);
+				kakao.maps.event.trigger(map, 'tempMarker-infowindow-ok', {
+					pictureObj : pictureObj,
+					tempMarker : marker
+				});
 			})
 			const addMarkerCancelButton = document.createElement('button');
 			addMarkerCancelButton.className = 'cancel w80';

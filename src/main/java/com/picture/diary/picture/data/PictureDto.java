@@ -22,7 +22,6 @@ public class PictureDto {
     private String pictureOriginName;
     private Extensions extension;
     private long pictureSize;
-    private String picturePath;
     private LocalDateTime pictureDate;
     private double latitude;
     private double longitude;
@@ -34,14 +33,13 @@ public class PictureDto {
     
     @Builder
     public PictureDto(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize,
-                      String picturePath, LocalDateTime pictureDate, double latitude, double longitude,
+                      LocalDateTime pictureDate, double latitude, double longitude,
                       LocalDateTime createDt, LocalDateTime updateDt) {
         this.pictureId =pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;
         this.extension = extension;
         this.pictureSize = pictureSize;
-        this.picturePath = picturePath;
         this.pictureDate = pictureDate;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -68,7 +66,6 @@ public class PictureDto {
                 .pictureOriginName(this.pictureOriginName)
                 .extension(this.extension)
                 .pictureSize(this.pictureSize)
-                .picturePath(this.picturePath)
                 .pictureDate(this.pictureDate)
                 .latitude(this.latitude)
                 .longitude(this.longitude)

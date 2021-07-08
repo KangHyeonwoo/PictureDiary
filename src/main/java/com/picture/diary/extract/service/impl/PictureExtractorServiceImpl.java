@@ -38,6 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PictureExtractorServiceImpl implements PictureExtractorService {
 
+	private final PicturePathProperties picturePathProperties;
+	
     public List<PictureFile> getPictureList(String path) {
         Path folder = Paths.get(path);
         List<PictureFile> pictureFileList = new ArrayList<>();
@@ -69,7 +71,8 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	Metadata metadata = null;
     	
         String fileName = pictureFile.getFileName();
-        String path = pictureFile.getFilePath();
+        String path = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+        
 
         try {
             is = new FileInputStream(path);

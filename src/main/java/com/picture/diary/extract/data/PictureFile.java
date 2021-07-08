@@ -27,11 +27,6 @@ public class PictureFile {
      * 파일 크기
      */
     private long fileSize;
-
-    /**
-     * 파일 경로
-     */
-    private String filePath;
     
     /**
      * 메타데이터
@@ -44,15 +39,10 @@ public class PictureFile {
         this.fileName = file.getName().split(SplitParts.DOT.getValue())[0];
         this.extension = Extensions.findOf(fileName);
         this.fileSize = file.length();
-        this.filePath = file.getPath();
     }
     
     public void addMetadata(PictureMetadata pictureMetadata) {
     	this.pictureMetadata = pictureMetadata;
-    }
-    
-    public void changeFilePath(String path) {
-    	this.filePath = path;
     }
     
     public PictureEntity toEntity() {
@@ -60,7 +50,6 @@ public class PictureFile {
                 .pictureOriginName(this.fileName)
                 .extension(this.extension)
                 .pictureSize(this.fileSize)
-                .picturePath(this.filePath)
                 .pictureDate(pictureMetadata.getPictureDate())
                 .geometry(pictureMetadata.getGeometry())
                 .build();

@@ -15,7 +15,6 @@ create table picture (
     picture_origin_name varchar(20) not null,
     extension varchar(10) not null,
     picture_size int not null,
-    picture_path varchar(100) not null,
     picture_date timestamp,
     latitude double,
     longitude double,
@@ -24,7 +23,7 @@ create table picture (
 );
 
 # 기타
- - JS 환경에서 MySQL 서버 접속
+ - JS 환경에서 MySQL 서버 접속 (Window)
   1. \connect mysql://root@localhost:3306
   2. 패스워드 입력
   3. \sql
