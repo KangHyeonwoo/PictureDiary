@@ -5,6 +5,11 @@ export default class Infowindow {
 	#pictureObj;
 	#infowindow;
 	
+	//infowindow body
+	#title;
+	#image;
+	#date;
+	
 	constructor(type, map, marker, pictureObj) {
 		this.#type = type;
 		this.#map = map;
@@ -14,12 +19,18 @@ export default class Infowindow {
 		const position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
         this.#infowindow = new kakao.maps.InfoWindow({
             position : position,
-            content : this.#makeContents(pictureObj),
+            content : this.#makeContentsHtml(pictureObj),
             removable : type != 'temp'
         });
 	}
 	
 	show() {
+		//set data in infowindow
+		this.#title.innerText = (this.#pictureObj.pictureName ? this.#pictureObj.pictureName : this.#pictureObj.pictureOriginName);
+		this.#image.src = `/picture/images/${this.#pictureObj.pictureOriginName}.${this.#pictureObj.extension}`;
+		this.#date.innerText = this.#pictureObj.pictureDate;
+		
+		//show
 		this.#infowindow.open(this.#map, this.#marker.marker);
 	}
 	
@@ -27,7 +38,7 @@ export default class Infowindow {
 		this.#infowindow.close();
 	}
 	
-	#makeContents() {
+	#makeContentsHtml() {
 		const divInfowindow = document.createElement('div');
 			  divInfowindow.className = 'infowindow';
 		
@@ -35,18 +46,17 @@ export default class Infowindow {
 		const tbody = document.createElement('tbody');
 		const trTitle = document.createElement('tr');
 		const tdPictureName = document.createElement('td');
-			  tdPictureName.innerText = (this.#pictureObj.pictureName ? this.#pictureObj.pictureName : 
-										this.#pictureObj.pictureOriginName);
 			  tdPictureName.className = "title";
 		const trImg = document.createElement('tr');
 		const tdImg = document.createElement('td');
 		const img = document.createElement('img');
-			  //임시. 바꿔야함
-			  img.src = `/picture/images/${this.#pictureObj.pictureOriginName}.${this.#pictureObj.extension}`;
 			  img.className = 'picture';
 		const trDate = document.createElement('tr');
 		const tdDate = document.createElement('td');
-			  tdDate.innerText = this.#pictureObj.pictureDate;
+		
+		this.#title = tdPictureName;
+		this.#image = img;
+		this.#date = tdDate;
 		
 		divInfowindow.appendChild(table);
 		table.appendChild(tbody);

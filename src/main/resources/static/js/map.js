@@ -79,6 +79,12 @@ picture.extract = function() {
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
 	
+	kakao.maps.event.addListener(marker.marker, 'click', function(e) {
+	    const param = {};
+		param.currentTarget = contents;
+		toc.contentClickEventHandler(param);
+	})
+	
 	contents.addEventListener('click', function(event){
 		map.obj.panTo(marker.position)
 		
@@ -178,7 +184,7 @@ picture.tempMarkerInfowindowOkButtonHandler = function(obj) {
 	tempMarker.remove();
 }
 
-//Temp Marker 인포윈도우 닫기 버튼 클릭 이벤트
+//Temp Marker 인포윈도우 [닫기] 버튼 클릭 이벤트
 picture.tempMarkerInfowindowCloseButtonHandler = function(tempMarker) {
 	tempMarker.remove();
 }
