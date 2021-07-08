@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 		//String filePath = "file://" + dataPath + "/";
 		String filePath = "file:///" + dataPath + "/";
 		registry.addResourceHandler(requestUrl)
-				.addResourceLocations(filePath);
+				.addResourceLocations(filePath)
+				.setCachePeriod(60 * 60 * 24 * 365);
 	}
 }
