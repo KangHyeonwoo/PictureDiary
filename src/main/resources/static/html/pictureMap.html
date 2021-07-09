@@ -4,7 +4,6 @@
 <link href="/css/styles.css" type="text/css" rel="stylesheet" />
 <script src="/js/Async.js" defer></script>
 <script src="/js/Toc.js" defer></script>
-<script src="/js/Address.js" defer></script>
 <script type="module" src="/js/map.js" defer></script>
 <head>
     <meta charset="UTF-8">
@@ -39,7 +38,12 @@
             </ul>
         </div>
     </div>
-    <div class="right" id="map"></div>
+    <div class="right" id="map">
+    	<div class="map-search">
+    		<input type="text" id="address-search-text">
+    		<button type="button" id="address-search-button">검색</button>
+    	</div>
+    </div>
 </div>
 </body>
 </html>

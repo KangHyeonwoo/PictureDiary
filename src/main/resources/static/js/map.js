@@ -1,5 +1,6 @@
 import Marker from './Marker.js';
 import TempMarker from './TempMarker.js';
+import Address from './Address.js';
 
 const map = {};
 const picture = {};
@@ -45,6 +46,7 @@ map.init = function() {
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
 	
+	picture.search('서울 아트빌');
 }
 
 map.on = function() {
@@ -188,6 +190,16 @@ picture.tempMarkerInfowindowOkButtonHandler = function(obj) {
 picture.tempMarkerInfowindowCloseButtonHandler = function(tempMarker) {
 	tempMarker.remove();
 	kakao.maps.event.removeListener(map.obj, 'click');
+}
+
+picture.search = function(keyword) {
+	Address.search(keyword)
+		.then(addressList => {
+			console.log(addressList);
+		})
+		.catch(error => {
+			console.log(error);
+		})
 }
 
 map.init();
