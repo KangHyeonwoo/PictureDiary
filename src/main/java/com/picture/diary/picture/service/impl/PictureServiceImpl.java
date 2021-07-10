@@ -5,13 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.service.PictureExtractorService;
-import com.picture.diary.picture.data.InfowindowDto;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
 import com.picture.diary.picture.exception.PictureException;
