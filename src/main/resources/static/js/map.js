@@ -46,7 +46,10 @@ map.init = function() {
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
 	
-	picture.search('서울 아트빌');
+	//picture.search('서울 아트빌');
+
+	const addressSearchButton = document.getElementById('address-search-button');
+	addressSearchButton.addEventListener('click', picture.searchAddress)
 }
 
 map.on = function() {
@@ -192,7 +195,9 @@ picture.tempMarkerInfowindowCloseButtonHandler = function(tempMarker) {
 	kakao.maps.event.removeListener(map.obj, 'click');
 }
 
-picture.search = function(keyword) {
+picture.searchAddress = function() {
+    const keyword = document.getElementById('address-search-text').value;
+
 	Address.search(keyword)
 		.then(addressList => {
 			console.log(addressList);
