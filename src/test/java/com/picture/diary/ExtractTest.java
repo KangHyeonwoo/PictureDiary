@@ -92,9 +92,10 @@ public class ExtractTest {
     }
     
     //https://github.com/apache/commons-imaging/blob/master/src/test/java/org/apache/commons/imaging/examples/WriteExifMetadataExample.java
-    
+    //https://stackoverflow.com/questions/40241030/write-exif-data-to-tiff-file-using-apache-commons-imaging
+    //https://stackoverflow.com/questions/36868013/editing-jpeg-exif-data-with-java
     @Test
-    @DisplayName("GPS 좌표가 있는 경우 GPS 갱신 -> JPEG만 먼저 테스트 Extensions enum에서 처리해야함")
+    @DisplayName("GPS 좌표가 있는 경우 GPS 갱신 -> JPEG만 먼저 테스트 Extensions enum에서 처리해야함, HEIC도 테스트 필요함")
     void updateGeometry() {
 //    	String path = "C:/Users/KHW-IPC/Pictures/test/geometry_test2.jpeg";
     	String path = "C:/Users/KHW-IPC/Pictures/test/IMG_1889.JPG";
