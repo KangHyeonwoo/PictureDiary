@@ -18,6 +18,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.Extensions;
@@ -64,15 +65,11 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
         return pictureFileList;
     }
 
-    public PictureMetadata getPictureMetadata(PictureFile pictureFile) {
+    public PictureMetadata getPictureMetadata(String path) {
     	PictureMetadata pictureMetadata = new PictureMetadata();
 
     	FileInputStream is = null;
     	Metadata metadata = null;
-    	
-        String fileName = pictureFile.getFileName();
-        String path = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
-        
 
         try {
             is = new FileInputStream(path);
@@ -82,12 +79,13 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
             LocalDateTime pictureDate = this.getPictureDate(metadata);
 
             pictureMetadata = PictureMetadata.builder()
+            		.metadata(metadata)
                     .geometry(geometry)
                     .pictureDate(pictureDate)
                     .build();
 
         } catch (ImageProcessingException ie) {
-            log.error("Fail to load metadata. File name [{}]", fileName);
+            log.error("Fail to load metadata. File path [{}]", path);
         } catch (IOException ie) {
             log.error("IOException occur.");
         } finally {
@@ -133,11 +131,38 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	return picturePathProperties.getFromPath();
     }
     
+    public boolean setPictureGeometry(String path, Geometry geometry) {
+    	FileInputStream is = null;
+    	Metadata metadata = null;
+    	boolean isSuccess = false;
+    	
+    	try {
+    		is = new FileInputStream(path);
+            metadata = ImageMetadataReader.readMetadata(is);
+	    	GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+	    	
+	    	//gpsDirectory.setDouble(GpsDirectory.TAG_LATITUDE, geometry.getLatitude());
+	    	//gpsDirectory.setDouble(GpsDirectory.TAG_LONGITUDE, geometry.getLongitude());
+	    	
+	    	GeoLocation geoLocation = gpsDirectory.getGeoLocation();
+	    	System.out.println("****************");
+	    	System.out.println(geoLocation.getLatitude() + ", " + geoLocation.getLongitude());
+	    	
+	    	isSuccess = true;
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		log.error(e.toString());
+    		log.error("Fail to set geometry. File Path [{}]", path);
+    	}
+    	
+    	return isSuccess;
+    }
+    
     private Geometry getPictureGeometry(Metadata metadata) {
     	try {
     		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             GeoLocation location = gpsDirectory.getGeoLocation();
-
+            
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
 
@@ -151,7 +176,7 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	try {
     		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             Date pictureDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-
+            
             return DateUtils.convertToLocalDateTimeViaInstant(pictureDate);
     	} catch (NullPointerException e) {
     		return null;

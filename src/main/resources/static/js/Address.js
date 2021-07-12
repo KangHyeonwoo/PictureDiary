@@ -2,6 +2,11 @@ export default class Address {
 	static #ps = new kakao.maps.services.Places();
 	static #geocoder = new kakao.maps.services.Geocoder();
 	
+	static #errorMessage = {
+		ZERO_RESULT : '검색 결과가 존재하지 않습니다.',
+		ERROR : '검색 결과 중 오류가 발생했습니다.'
+	}
+	
 	static search(keyword) {
 		return new Promise(
 			function(resolve, reject) {
@@ -15,9 +20,9 @@ export default class Address {
 						
 						resolve(data);
 					} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-						reject('검색 결과가 존재하지 않습니다.');
+						reject(Address.#errorMessage.ZERO_RESULT);
 					} else if (status === kakao.maps.services.Status.ERROR) {
-						reject('검색 결과 중 오류가 발생했습니다.');
+						reject(Address.#errorMessage.ERROR);
 					}
 				});
 			}
@@ -25,16 +30,20 @@ export default class Address {
 	}
 	
 	static searchCoords(lat, lng) {
-		Address.#geocoder.coord2RegionCode(lng, lat, function(result, status){
-			if (status === kakao.maps.services.Status.OK) {
-		        for(var i = 0; i < result.length; i++) {
-		            if (result[i].region_type === 'H') {
-						console.log(result[i].address_name);
-		                break;
-		            }
-		        }
-		    } 
-		});
+		return new Promise(
+			function(resolve, reject) {
+				Address.#geocoder.coord2RegionCode(lng, lat, function(result, status){
+					if (status === kakao.maps.services.Status.OK) {
+						resolve(result.find(region => region.region_type === 'H'));
+						
+				    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+						reject(Address.#errorMessage.ZERO_RESULT);
+					} else if (status === kakao.maps.services.Status.ERROR) {
+						reject(Address.#errorMessage.ERROR);
+					}
+				});
+			}
+		);
 	}
 	
 }

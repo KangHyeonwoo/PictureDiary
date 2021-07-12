@@ -46,12 +46,13 @@ public class PictureServiceImpl implements PictureService {
         		.filter(pictureFile -> !pictureExtractorService.doubleCheck(pictureFile, savedPictureList))
                 .filter(pictureFile -> {
                 	
+                	String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+                	
                     //2. 메타데이터 추출
-                    PictureMetadata metadata = pictureExtractorService.getPictureMetadata(pictureFile);
+                    PictureMetadata metadata = pictureExtractorService.getPictureMetadata(fromPath);
                     pictureFile.addMetadata(metadata);
                     
                     //3. 디렉토리 이동
-                    String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
                     String toPath = picturePathProperties.getDataPath(pictureFile.getFileName(), pictureFile.getExtension());
                     
                     return pictureExtractorService.movePictureFile(fromPath, toPath);

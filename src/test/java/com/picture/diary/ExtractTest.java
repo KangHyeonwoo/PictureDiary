@@ -1,11 +1,17 @@
 package com.picture.diary;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
+import org.apache.commons.imaging.ImageFormat;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.common.ImageMetadata;
+import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +35,7 @@ public class ExtractTest {
     PictureService pictureService;
     
     
-    @Test
+    //@Test
     void getMetadataListTest() {
         String path = picturePathProperties.getFromPath();
 
@@ -41,7 +47,10 @@ public class ExtractTest {
 
             //2. get Metadata in FileData
             List<PictureMetadata> metadataList = fileDataList.stream()
-                    .map(pictureExtractorService::getPictureMetadata)
+                    .map(fileData -> {
+                    	String fromPath = picturePathProperties.getFromPath(fileData.getFileName(), fileData.getExtension());
+                    	return pictureExtractorService.getPictureMetadata(fromPath);
+                    })
                     .collect(Collectors.toList());
 
             //3. list size select
@@ -51,7 +60,7 @@ public class ExtractTest {
         }
     }
     
-    @Test
+    //@Test
     void moveFileTest() throws Exception {
     	String path = picturePathProperties.getFromPath();
     	
@@ -60,7 +69,8 @@ public class ExtractTest {
     	
     	fileDataList.stream()
     	.map(fileData -> {
-			PictureMetadata pictureMetadata = pictureExtractorService.getPictureMetadata(fileData);
+    		String fromPath = picturePathProperties.getFromPath(fileData.getFileName(), fileData.getExtension());
+			PictureMetadata pictureMetadata = pictureExtractorService.getPictureMetadata(fromPath);
 			fileData.addMetadata(pictureMetadata);
 			
 			return fileData;
@@ -76,8 +86,30 @@ public class ExtractTest {
     	Assertions.assertThat(beforeSize).isEqualTo(dataSize);
     }
 
-    @Test
+    //@Test
     void extractTest() {
     	pictureService.pictureExtract();
+    }
+    
+    //https://github.com/apache/commons-imaging/blob/master/src/test/java/org/apache/commons/imaging/examples/WriteExifMetadataExample.java
+    
+    @Test
+    @DisplayName("GPS 좌표가 있는 경우 GPS 갱신 -> JPEG만 먼저 테스트 Extensions enum에서 처리해야함")
+    void updateGeometry() {
+//    	String path = "C:/Users/KHW-IPC/Pictures/test/geometry_test2.jpeg";
+    	String path = "C:/Users/KHW-IPC/Pictures/test/IMG_1889.JPG";
+    	File file = new File(path);
+    	try {
+			final ImageMetadata metadata = Imaging.getMetadata(file);
+			final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+			
+			if(null != jpegMetadata) {
+				System.out.println(jpegMetadata.getExif().getGPS().getLatitudeAsDegreesNorth());
+				System.out.println(jpegMetadata.getExif().getGPS().getLongitudeAsDegreesEast());
+			}
+		} catch (ImageReadException | IOException e) {
+			e.printStackTrace();
+		}
+    	
     }
 }

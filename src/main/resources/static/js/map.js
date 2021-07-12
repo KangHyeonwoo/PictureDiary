@@ -93,7 +93,6 @@ picture.addMarker = function(pictureObj, contents) {
 		
 		Marker.closeAllInfowindow();
 		marker.infowindow.show();
-		
 	})
 }
 
