@@ -1,8 +1,8 @@
 export default class Address {
 	static #ps = new kakao.maps.services.Places();
+	static #geocoder = new kakao.maps.services.Geocoder();
 	
 	static search(keyword) {
-		
 		return new Promise(
 			function(resolve, reject) {
 				if (!keyword.replace(/^\s+|\s+$/g, '')) {
@@ -23,6 +23,20 @@ export default class Address {
 			}
 		);
 	}
+	
+	static searchCoords(lat, lng) {
+		Address.#geocoder.coord2RegionCode(lng, lat, function(result, status){
+			if (status === kakao.maps.services.Status.OK) {
+		        for(var i = 0; i < result.length; i++) {
+		            if (result[i].region_type === 'H') {
+						console.log(result[i].address_name);
+		                break;
+		            }
+		        }
+		    } 
+		});
+	}
+	
 }
 
 

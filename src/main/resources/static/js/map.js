@@ -33,7 +33,7 @@ map.init = function() {
 		})
 	})
 	
-	//3. button setting
+	//3. extract button setting
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
 	
@@ -46,8 +46,6 @@ map.init = function() {
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
 	
-	//picture.search('서울 아트빌');
-
 	const addressSearchButton = document.getElementById('address-search-button');
 	addressSearchButton.addEventListener('click', picture.searchAddress)
 }
@@ -94,13 +92,9 @@ picture.addMarker = function(pictureObj, contents) {
 		map.obj.panTo(marker.position)
 		
 		Marker.closeAllInfowindow();
-		marker.infowindow.show()
+		marker.infowindow.show();
+		
 	})
-}
-
-picture.findById = function(id) {
-	
-    return this.list.find(e => e.pictureId == id);
 }
 
 picture.getList = function(fnCallback) {
