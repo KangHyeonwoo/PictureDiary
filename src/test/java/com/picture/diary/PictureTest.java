@@ -51,7 +51,9 @@ public class PictureTest {
         List<PictureFile> pictureList = pictureExtractorService.getPictureList(path);
         List<PictureEntity> pictureEntityList = pictureList.stream()
                 .map(pictureFile -> {
-                    PictureMetadata metadata = pictureExtractorService.getPictureMetadata(pictureFile);
+                	String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+                	
+                    PictureMetadata metadata = pictureExtractorService.getPictureMetadata(fromPath);
                     pictureFile.addMetadata(metadata);
 
                     return pictureFile;
@@ -104,7 +106,6 @@ public class PictureTest {
                 .pictureOriginName(pictureOriginName)
                 .extension(extension)
                 .pictureSize(pictureSize)
-                .picturePath(picturePath)
                 .build();
 
         PictureDto savedDto = pictureService.save(pictureDto);

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
@@ -87,17 +88,12 @@ public class PictureServiceImpl implements PictureService {
 
     public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
         PictureDto pictureDto = this.findByPictureId(pictureId);
+        pictureExtractorService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
+        
         pictureDto.updateGeometry(latitude, longitude);
-
-        String fromPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
         
-        //신규로 좌표를 추가하는 경우 해당 파일 data 디렉토리 이동
-        if(fromPath.contains(picturePathProperties.getFromPath())) {
-        	String toPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-        	pictureExtractorService.movePictureFile(fromPath, toPath);
-        }
+        return this.save(pictureDto);        	
         
-        return this.save(pictureDto);
     }
 
     public void delete(long pictureId) {

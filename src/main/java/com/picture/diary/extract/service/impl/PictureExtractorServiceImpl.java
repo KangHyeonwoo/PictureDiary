@@ -1,35 +1,44 @@
 package com.picture.diary.extract.service.impl;
 
-import java.io.FileInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.common.ImageMetadata;
+import org.apache.commons.imaging.common.RationalNumber;
+import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
+import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
+import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
+import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
+import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
 import org.springframework.stereotype.Service;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.lang.GeoLocation;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.exif.GpsDirectory;
 import com.picture.diary.extract.data.Extensions;
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.data.SplitParts;
+import com.picture.diary.extract.exception.PictureExtractException;
+import static com.picture.diary.extract.exception.PictureExtractExceptionTypes.*;
 import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.picture.data.PictureDto;
-import com.picture.diary.utils.DateUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,40 +76,29 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 
     public PictureMetadata getPictureMetadata(String path) {
     	PictureMetadata pictureMetadata = new PictureMetadata();
-
-    	FileInputStream is = null;
-    	Metadata metadata = null;
-
+    	File file = new File(path);
+    	
         try {
-            is = new FileInputStream(path);
-            metadata = ImageMetadataReader.readMetadata(is);
-
-            Geometry geometry = this.getPictureGeometry(metadata);
-            LocalDateTime pictureDate = this.getPictureDate(metadata);
+        	final ImageMetadata metadata = Imaging.getMetadata(file);
+        	final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+        	
+            Geometry geometry = this.getPictureGeometry(jpegMetadata);
+            LocalDateTime pictureDate = this.getPictureDate(jpegMetadata);
 
             pictureMetadata = PictureMetadata.builder()
-            		.metadata(metadata)
                     .geometry(geometry)
                     .pictureDate(pictureDate)
                     .build();
 
-        } catch (ImageProcessingException ie) {
+        } catch (ImageReadException ie) {
             log.error("Fail to load metadata. File path [{}]", path);
         } catch (IOException ie) {
             log.error("IOException occur.");
-        } finally {
-			if(is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+        }
         
         return pictureMetadata;
     }
-    
+
     public boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList) {
     	
     	return savedPictureList.stream()
@@ -131,56 +129,83 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	return picturePathProperties.getFromPath();
     }
     
-    public boolean setPictureGeometry(String path, Geometry geometry) {
-    	FileInputStream is = null;
-    	Metadata metadata = null;
-    	boolean isSuccess = false;
+    public void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureExtractException{
+    	//1. declaration
+    	String path = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
+    	String tempPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName() + "_temp", pictureDto.getExtension());
     	
-    	try {
-    		is = new FileInputStream(path);
-            metadata = ImageMetadataReader.readMetadata(is);
-	    	GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-	    	
-	    	//gpsDirectory.setDouble(GpsDirectory.TAG_LATITUDE, geometry.getLatitude());
-	    	//gpsDirectory.setDouble(GpsDirectory.TAG_LONGITUDE, geometry.getLongitude());
-	    	
-	    	GeoLocation geoLocation = gpsDirectory.getGeoLocation();
-	    	System.out.println("****************");
-	    	System.out.println(geoLocation.getLatitude() + ", " + geoLocation.getLongitude());
-	    	
-	    	isSuccess = true;
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		log.error(e.toString());
-    		log.error("Fail to set geometry. File Path [{}]", path);
-    	}
-    	
-    	return isSuccess;
+    	//2. open inputStream
+    	try(FileOutputStream fos = new FileOutputStream(tempPath);
+    			OutputStream os = new BufferedOutputStream(fos)) {
+    		File inputFile = new File(path);
+    		TiffOutputSet outputSet = null;
+    		
+    		//3. read metadata
+    		final ImageMetadata metadata = Imaging.getMetadata(inputFile);
+    		final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+    		if (null != jpegMetadata) {
+                final TiffImageMetadata exif = jpegMetadata.getExif();
+
+                if (null != exif) {
+                    outputSet = exif.getOutputSet();
+                }
+    		}
+    		if (null == outputSet) {
+                outputSet = new TiffOutputSet();
+            }
+    		
+    		//4. gps metadata setting
+            final TiffOutputDirectory exifDirectory = outputSet.getOrCreateExifDirectory();
+            exifDirectory.removeField(ExifTagConstants.EXIF_TAG_APERTURE_VALUE);
+            exifDirectory.add(ExifTagConstants.EXIF_TAG_APERTURE_VALUE, new RationalNumber(3, 10));
+            
+            outputSet.setGPSInDegrees(geometry.getLongitude(), geometry.getLatitude());
+            
+            //5. metadata write
+    		new ExifRewriter().updateExifMetadataLossless(inputFile, os, outputSet);
+    		
+    		//6. old file remove
+    		Files.delete(Paths.get(path));
+    		
+    		//7. temp file to origin file
+    		Files.move(Paths.get(tempPath), Paths.get(path));
+    		
+    	} catch (ImageReadException e) {
+    		log.error("Metadata read failed. File Path [{}]", path);
+    		throw new PictureExtractException(METADATA_READ_FAILED);
+    	} catch (FileNotFoundException e) {
+    		log.error("File not found. File Path [{}]", path);
+    		throw new PictureExtractException(FILE_NOT_FOUND);
+		} catch (IOException e) {
+			log.error("IOEception occured.");
+			throw new PictureExtractException(ETC_EXCEPTION);
+		} catch (ImageWriteException e) {
+			log.error("Metadata write failed. File Path [{}]", path);
+			throw new PictureExtractException(METADATA_WRITE_FAILED);
+		}
     }
     
-    private Geometry getPictureGeometry(Metadata metadata) {
+    private Geometry getPictureGeometry(JpegImageMetadata metadata) {
     	try {
-    		GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-            GeoLocation location = gpsDirectory.getGeoLocation();
-            
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
+    		double latitude = metadata.getExif().getGPS().getLatitudeAsDegreesNorth();
+			double longitude = metadata.getExif().getGPS().getLongitudeAsDegreesEast();
 
             return new Geometry(latitude, longitude);
-    	} catch (NullPointerException e) {
+    	} catch (ImageReadException | NullPointerException e) {
     		return null;
     	}
     }
-
-    private LocalDateTime getPictureDate(Metadata metadata) {
+    
+    private LocalDateTime getPictureDate(JpegImageMetadata metadata) {
+    	String pictureDate = "";
     	try {
-    		ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-            Date pictureDate = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-            
-            return DateUtils.convertToLocalDateTimeViaInstant(pictureDate);
-    	} catch (NullPointerException e) {
+    		pictureDate = metadata.getExif().getFieldValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL)[0];
+			//Convert
+    		DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
+    	     
+            return LocalDateTime.parse(pictureDate, inputFormat);
+    	} catch (ImageReadException | NullPointerException e) {
     		return null;
     	}
     }
-
 }

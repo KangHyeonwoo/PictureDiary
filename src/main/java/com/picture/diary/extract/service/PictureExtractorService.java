@@ -6,6 +6,7 @@ import java.util.List;
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.extract.exception.PictureExtractException;
 import com.picture.diary.picture.data.PictureDto;
 
 /**
@@ -49,5 +50,5 @@ public interface PictureExtractorService {
 	 */
 	String getExtractFolderPath();
 	
-	boolean setPictureGeometry(String path, Geometry geometry);
+	void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureExtractException;
 }
