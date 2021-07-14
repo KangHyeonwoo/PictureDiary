@@ -61,9 +61,9 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 	private final PicturePathProperties picturePathProperties;
 	private final PictureExtractUtils pictureExtractUtils;
 	
-    public List<PictureFile> getPictureList(String path) {
-        Path folder = Paths.get(path);
-        List<PictureFile> pictureFileList = new ArrayList<>();
+	public List<PictureFile> getPictureList(String path) {
+		Path folder = Paths.get(path);
+		List<PictureFile> pictureFileList = new ArrayList<>();
 
 		try {
 			pictureFileList = Files.walk(folder)
@@ -82,37 +82,37 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 			log.error("can not find path [{}]", path);
 		}
 
-        return pictureFileList;
+		return pictureFileList;
     }
 
-    public PictureMetadata getPictureMetadata(String path) {
-    	PictureMetadata pictureMetadata = new PictureMetadata();
-    	File file = new File(path);
-    	
-        try {
-        	pictureExtractUtils.removeDuplicatedApp13SegMents(path);
-        	
-        	final ImageMetadata metadata = Imaging.getMetadata(file);
-        	final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-        	
-            Geometry geometry = this.getPictureGeometry(jpegMetadata);
-            LocalDateTime pictureDate = this.getPictureDate(jpegMetadata);
+	public PictureMetadata getPictureMetadata(String path) {
+		PictureMetadata pictureMetadata = new PictureMetadata();
+		File file = new File(path);
 
-            pictureMetadata = PictureMetadata.builder()
-                    .geometry(geometry)
-                    .pictureDate(pictureDate)
-                    .build();
+		try {
+			pictureExtractUtils.removeDuplicatedApp13SegMents(path);
+        	
+			final ImageMetadata metadata = Imaging.getMetadata(file);
+			final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+        	
+			Geometry geometry = this.getPictureGeometry(jpegMetadata);
+			LocalDateTime pictureDate = this.getPictureDate(jpegMetadata);
 
-        } catch (ImageReadException ie) {
-            log.error("Fail to load metadata. File path [{}]", path);
-        } catch (IOException ie) {
-            log.error("IOException occur.");
-        }
+			pictureMetadata = PictureMetadata.builder()
+				.geometry(geometry)
+				.pictureDate(pictureDate)
+				.build();
+
+		} catch (ImageReadException ie) {
+			log.error("Fail to load metadata. File path [{}]", path);
+		} catch (IOException ie) {
+			log.error("IOException occur.");
+		}
         
-        return pictureMetadata;
-    }
+		return pictureMetadata;
+	}
 
-    public boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList) {
+	public boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList) {
     	
     	return savedPictureList.stream()
     			.anyMatch(savedPicture -> 
@@ -128,19 +128,19 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     	CopyOption[] copyOptions = {};
     	
     	try {
-			Files.move(fromPath, toPath, copyOptions);
-			return true;
+    		Files.move(fromPath, toPath, copyOptions);
+    		return true;
 			
-		} catch (IOException e) {
-			log.error("Fail the move file. Move path [{} -> {}]", fromFilePath, toFilePath);
-			return false;
-		}
-    }
+    	} catch (IOException e) {
+    		log.error("Fail the move file. Move path [{} -> {}]", fromFilePath, toFilePath);
+    		return false;
+    	}
+	}
     
-    public String getExtractFolderPath() {
+	public String getExtractFolderPath() {
     	
-    	return picturePathProperties.getFromPath();
-    }
+		return picturePathProperties.getFromPath();
+	}
     
     public void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureExtractException{
     	//1. declaration
@@ -176,11 +176,11 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
             this.updateMetadata(path, outputSet);
             
     	} catch (ImageReadException e) {
-    		log.error("Metadata read failed. File Path [{}]", path);
-    		throw new PictureExtractException(METADATA_READ_FAILED);
-    	} catch (FileNotFoundException e) {
-    		log.error("File not found. File Path [{}]", path);
-    		throw new PictureExtractException(FILE_NOT_FOUND);
+			log.error("Metadata read failed. File Path [{}]", path);
+			throw new PictureExtractException(METADATA_READ_FAILED);
+		} catch (FileNotFoundException e) {
+			log.error("File not found. File Path [{}]", path);
+			throw new PictureExtractException(FILE_NOT_FOUND);
 		} catch (IOException e) {
 			log.error("IOEception occured.");
 			throw new PictureExtractException(ETC_EXCEPTION);
