@@ -288,7 +288,7 @@ public class ExtractTest {
     void readHasNotGeometryFileAndSetGeometry() {
     	
     	//10750
-    	long fileId = 11;
+    	long fileId = 44;
     	
     	PictureDto pictureDto = pictureService.findByPictureId(fileId);
     	//좌표정보 없어야 함

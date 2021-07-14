@@ -3,6 +3,7 @@ package com.picture.diary.extract.util;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,56 +18,75 @@ import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
 import org.apache.commons.imaging.formats.jpeg.JpegConstants;
 import org.apache.commons.imaging.formats.jpeg.JpegUtils;
 import org.apache.commons.imaging.formats.jpeg.iptc.IptcParser;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.picture.data.PictureDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PictureExtractUtils {
 	
 	private final PicturePathProperties picturePathProperties;
 	
 	private static final SegmentFilter PHOTOSHOP_APP13_SEGMENT_FILTER = segment -> segment.isPhotoshopApp13Segment();
 	
-	public List<JFIFPiece> findApp13Segments(PictureDto pictureDto) throws ImageReadException, IOException {
-		String path = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-		
-		File src = new File(path);
-		final ByteSource byteSource = new ByteSourceFile(src);
-		final JFIFPieces jfifPieces = this.analyzeJFIF(byteSource);
-		final List<JFIFPiece> oldPieces = jfifPieces.pieces;
-		
-        return this.findPhotoshopApp13Segments(oldPieces);
+	public boolean removeDuplicatedApp13SegMents(String path) {
+		return this.removeDuplicatedApp13SegMentsExcludeIndex(path, 0);
 	}
 	
-	public void removeApp13SegMentsExcludeIndex(PictureDto pictureDto, int excludeSegmentsIndex) throws ImageReadException, IndexOutOfBoundsException, IOException {
-		String path = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-		String tempPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName() + "_temp", pictureDto.getExtension());
+	/**
+	 *  App13 Segment 삭제
+	 *  
+	 * @param pictureDto
+	 * @param excludeSegmentsIndex
+	 * @throws ImageReadException
+	 * @throws IndexOutOfBoundsException
+	 * @throws IOException
+	 */
+	public boolean removeDuplicatedApp13SegMentsExcludeIndex(String path, int excludeSegmentsIndex) {
+		final String tempPath = FilenameUtils.getBaseName(path) + "_temp." + FilenameUtils.getExtension(path);
 		
 		File src = new File(path);
-		
-		final ByteSource byteSource = new ByteSourceFile(src);
-		final JFIFPieces jfifPieces = this.analyzeJFIF(byteSource);
-        final List<JFIFPiece> oldPieces = jfifPieces.pieces;
-        final List<JFIFPiece> photoshopApp13Segments = this.findPhotoshopApp13Segments(oldPieces);
-        
-        for(JFIFPiece piece : photoshopApp13Segments) {
-        	oldPieces.remove(piece);        	
-        }
-        
-        oldPieces.add(photoshopApp13Segments.get(excludeSegmentsIndex));
-
 		try (FileOutputStream fos = new FileOutputStream(new File(tempPath));
-            OutputStream os = new BufferedOutputStream(fos)){
+	            OutputStream os = new BufferedOutputStream(fos)){
+			
+			final ByteSource byteSource = new ByteSourceFile(src);
+			final JFIFPieces jfifPieces = this.analyzeJFIF(byteSource);
+	        final List<JFIFPiece> oldPieces = jfifPieces.pieces;
+	        final List<JFIFPiece> photoshopApp13Segments = this.findPhotoshopApp13Segments(oldPieces);
+	        
+	        if(photoshopApp13Segments.size() == 1) {
+	        	return false;
+	        }
+	        
+	        for(JFIFPiece piece : photoshopApp13Segments) {
+	        	oldPieces.remove(piece);        	
+	        }
+	        
+	        oldPieces.add(photoshopApp13Segments.get(excludeSegmentsIndex));
+			
 			this.writeSegments(os, oldPieces);
 
 			Files.delete(Paths.get(path));
 			Files.move(Paths.get(tempPath), Paths.get(path));
+			
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		} catch (FileNotFoundException e) {
+			log.error("Photoshop App13 Segment failed to remove. Not found File. File path [{}]" + path);
+			return false;
+		} catch (IOException | ImageReadException e) {
+			log.error("Photoshop App13 Segment failed to remove. File path [{}]" + path);
+			return false;
 		}
+		
+		return true;
 	}
 	
 	private void writeSegments(final OutputStream outputStream,
@@ -85,7 +105,6 @@ public class PictureExtractUtils {
         final List<JFIFPiece> segmentPieces = new ArrayList<>();
 
         final JpegUtils.Visitor visitor = new JpegUtils.Visitor() {
-            // return false to exit before reading image data.
             @Override
             public boolean beginSOS() {
                 return true;
@@ -96,7 +115,6 @@ public class PictureExtractUtils {
                 pieces.add(new JFIFPieceImageData(markerBytes, imageData));
             }
 
-            // return false to exit traversal.
             @Override
             public boolean visitSegment(final int marker, final byte[] markerBytes,
                     final int segmentLength, final byte[] segmentLengthBytes,

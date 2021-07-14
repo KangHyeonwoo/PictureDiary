@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import com.picture.diary.extract.exception.PictureExtractException;
+import com.picture.diary.extract.exception.PictureExtractExceptionTypes;
+
 /**
  * application.properties > file.path.*
  */
@@ -44,4 +47,5 @@ public class PicturePathProperties {
     	
     	return this.deletePath + "/" + fileName + "." + extension;
     }
+    
 }

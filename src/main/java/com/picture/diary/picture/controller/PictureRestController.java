@@ -37,7 +37,6 @@ public class PictureRestController {
 
     @PostMapping("/rename")
 	public ResponseEntity<BasicResponse> rename(@RequestBody PictureDto pictureDto) {
-		System.out.println("pictureDto = " + pictureDto);
 		PictureDto result = pictureService.rename(pictureDto.getPictureId(), pictureDto.getPictureName());
 
 		return ResponseEntity.ok()
