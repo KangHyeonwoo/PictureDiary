@@ -142,6 +142,7 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     		
     		//3. read metadata
     		final ImageMetadata metadata = Imaging.getMetadata(inputFile);
+    		
     		final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
     		if (null != jpegMetadata) {
                 final TiffImageMetadata exif = jpegMetadata.getExif();
@@ -171,6 +172,7 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     		Files.move(Paths.get(tempPath), Paths.get(path));
     		
     	} catch (ImageReadException e) {
+    		e.printStackTrace();
     		log.error("Metadata read failed. File Path [{}]", path);
     		throw new PictureExtractException(METADATA_READ_FAILED);
     	} catch (FileNotFoundException e) {

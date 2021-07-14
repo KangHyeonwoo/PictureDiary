@@ -212,7 +212,8 @@ public class ExtractTest {
     @Test
     @DisplayName("좌표 조회")
     public void selectGeometry() {
-    	String path = "C:/Users/KHW-IPC/Pictures/test/no_geometry.JPG";
+    	//String path = "C:/Users/KHW-IPC/Pictures/test/no_geometry.JPG";
+    	String path = "C:/Users/KHW-IPC/Pictures/test/SEGMENT_ISSUE_IMG_1754_RESULT.JPG";
     	File file = new File(path);
     	try {
 			final ImageMetadata metadata = Imaging.getMetadata(file);
@@ -233,7 +234,7 @@ public class ExtractTest {
     @Test
     @DisplayName("날짜 조회 - 날짜 있는 경우")
     public void selectDate() {
-    	String path = "C:/Users/KHW-IPC/Pictures/test/no_geometry.JPG";
+    	String path = "C:/Users/KHW-IPC/Pictures/test/SEGMENT_ISSUE_IMG_1754_RESULT.JPG";
     	File file = new File(path);
     	try {
 			final ImageMetadata metadata = Imaging.getMetadata(file);
@@ -303,4 +304,5 @@ public class ExtractTest {
     	//좌표정보 있어야 함.
     	assertThat(afterPictureDto.isHasGeometry()).isEqualTo(true);
     }
+    
 }
