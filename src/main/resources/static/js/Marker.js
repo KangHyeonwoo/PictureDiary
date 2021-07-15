@@ -5,7 +5,7 @@ export default class Marker {
 	#position;
 	#infowindow;
 	#map;
-	#pictureId;
+	#pictureObj;
 	
 	static MarkerList = {
 		list : [],
@@ -36,7 +36,7 @@ export default class Marker {
 			 image: markerImage
         });
 		this.#infowindow = new Infowindow('default', map, this, pictureObj);
-		this.#pictureId = pictureObj.pictureId;
+		this.#pictureObj = pictureObj;
 		
 		const that = this;
 		kakao.maps.event.addListener(this.#marker, 'click', function() {
@@ -55,10 +55,16 @@ export default class Marker {
 		Marker.MarkerList.add(this);
 	}
 	
-	//delete
+	//remove
 	remove() {
 		this.#marker.setMap(null);
 		Marker.MarkerList.remove(this);
+		this.infowindow.close();
+	}
+	
+	hide() {
+		this.#marker.setMap(null);
+		this.infowindow.close();
 	}
 
 	static closeAllInfowindow() {
@@ -68,15 +74,15 @@ export default class Marker {
 	}
 	
 	static findByPictureId(pictureId) {
-        return Marker.MarkerList.list.find(e => e.pictureId == pictureId);
+        return Marker.MarkerList.list.find(e => e.pictureObj.pictureId == pictureId);
 	}
 
 	get infowindow() {
 		return this.#infowindow;
 	}
 
-	get pictureId() {
-	    return this.#pictureId;
+	get pictureObj() {
+	    return this.#pictureObj;
 	}
 	
 	get marker() {

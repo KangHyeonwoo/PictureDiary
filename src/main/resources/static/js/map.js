@@ -42,6 +42,9 @@ map.init = function() {
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
 	
+	//Marker > Infowindow
+	kakao.maps.event.addListener(map.obj, 'marker-infowindow-move-button', picture.markerInfowindowMoveGeometryHandler);
+	
 	//TempMarker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
 	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
@@ -121,6 +124,10 @@ picture.rename = function(pictureObj, name) {
 	})
 }
 
+picture.moveGeomtry = function() {
+	
+}
+
 /** EVENT HANDLER **/
 
 picture.tocContextMenuRemoveHandler = function(pictureObj) {
@@ -143,6 +150,38 @@ picture.tocContextMenuRemoveHandler = function(pictureObj) {
 
 picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 	Marker.closeAllInfowindow();
+	
+	const addTempMarkerEventHandler = function(mouseEvent) {
+		const latlng = mouseEvent.latLng;
+	    const latitude = latlng.getLat();
+	    const longitude = latlng.getLng();
+	
+		if(typeof tempMarker !== 'undefined') {
+			tempMarker.remove();		
+		}
+		
+		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
+	}
+	
+	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
+}
+
+picture.markerInfowindowMoveGeometryHandler = function(obj) {
+	const pictureObj = obj.pictureObj;
+	//const marker = obj.marker;
+	const marker = Marker.findByPictureId(pictureObj.pictureId);
+	
+	console.log(pictureObj);
+	console.log(marker);
+	/**
+	1. marker off
+	2. mouse click
+	3. temp marker 생성(확인, 이동 취소)
+	4. 확인 -> server save / tempmarker remove /marker remove / markerlist removecheck /new marker insert
+	5. 이동 취소 -> tempmarker remove / marker on 
+	*/
+	
+	marker.hide();
 	
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const latlng = mouseEvent.latLng;

@@ -36,7 +36,6 @@ import org.apache.commons.imaging.formats.tiff.write.TiffImageWriterLossless;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 
 import com.picture.diary.extract.data.Extensions;

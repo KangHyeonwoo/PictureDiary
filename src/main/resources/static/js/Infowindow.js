@@ -104,7 +104,7 @@ export default class Infowindow {
 			markerMoveButton.innerText = '위치 변경';
 			markerMoveButton.addEventListener('click', e => {
 				//marker-infowindow-move-button
-				console.log('markerMoveButton click')
+				kakao.maps.event.trigger(map, 'marker-infowindow-move-button', marker);
 			})
 			
 			const markerDeleteButton = document.createElement('button');
