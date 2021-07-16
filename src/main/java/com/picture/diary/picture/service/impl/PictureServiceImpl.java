@@ -103,7 +103,9 @@ public class PictureServiceImpl implements PictureService {
          * 같은 메소드 타는데 속도가 차이나는 이유가 뭘까
          * setPictureGeometry > getOrCreateExifDirectory() 얘의 차이일 수 있겠다.
          * 없으면 새로 만들고 있으면 기존거 다 조회해야하니까
-         * 무조건 속도 개선해야함 4초는 오바야
+         * 속도 개선 방안 1
+         *  - DB만 먼저 갱신해서 지도에는 데이터 이동한 것 처럼 보이고, 그 다음에 파일 메타데이터 변경하기
+         * 
          */
         //TODO 원본 데이터 유지 위해 잠깐 주석
         //pictureExtractorService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
