@@ -4,12 +4,11 @@ import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
 import com.picture.diary.response.BasicResponse;
-import com.picture.diary.response.ErrorResponse;
 import com.picture.diary.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pictures")
 @RequiredArgsConstructor
+@Slf4j
 public class PictureRestController {
 
     private final PictureService pictureService;
@@ -38,6 +38,13 @@ public class PictureRestController {
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
 
+	@DeleteMapping("/{pictureId}")
+	public ResponseEntity<BasicResponse> deletePicture(@PathVariable("pictureId") long pictureId) {
+		pictureService.delete(pictureId);
+		
+		return ResponseEntity.ok().body(new SuccessResponse<String>());
+	}
+	
     @PatchMapping("/{pictureId}/pictureName")
 	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, @RequestBody PictureDto pictureDto) {
     	PictureDto result = pictureService.rename(pictureId, pictureDto.getPictureName());
@@ -53,12 +60,5 @@ public class PictureRestController {
 								geometry.getLongitude());
 		
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
-	}
-
-	@DeleteMapping("/{pictureId}")
-	public ResponseEntity<BasicResponse> deletePicture(@PathVariable("pictureId") long pictureId) {
-		pictureService.delete(pictureId);
-		
-		return ResponseEntity.ok().body(new SuccessResponse<String>());
 	}
 }

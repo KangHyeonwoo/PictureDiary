@@ -95,7 +95,18 @@ public class PictureServiceImpl implements PictureService {
 
     public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
         PictureDto pictureDto = this.findByPictureId(pictureId);
-        pictureExtractorService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
+        
+        //TODO 여기 속도 개선 필요함
+        /**
+         * 새로 좌표 추가하면 빨리 되는데
+         * 기존에 좌표가 있는 경우 느림
+         * 같은 메소드 타는데 속도가 차이나는 이유가 뭘까
+         * setPictureGeometry > getOrCreateExifDirectory() 얘의 차이일 수 있겠다.
+         * 없으면 새로 만들고 있으면 기존거 다 조회해야하니까
+         * 무조건 속도 개선해야함 4초는 오바야
+         */
+        //TODO 원본 데이터 유지 위해 잠깐 주석
+        //pictureExtractorService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
         
         pictureDto.updateGeometry(latitude, longitude);
         
@@ -118,7 +129,7 @@ public class PictureServiceImpl implements PictureService {
 
     public PictureDto save(PictureDto pictureDto) {
         PictureEntity savedEntity = pictureRepository.save(pictureDto.toEntity());
-
+        
         return savedEntity.toDto();
     }
 }
