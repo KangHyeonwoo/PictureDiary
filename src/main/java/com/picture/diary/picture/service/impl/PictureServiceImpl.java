@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Objects;
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
@@ -45,24 +46,30 @@ public class PictureServiceImpl implements PictureService {
         
         List<PictureEntity> pictureEntityList = pictureFileList.stream()
         		.filter(pictureFile -> !pictureExtractorService.doubleCheck(pictureFile, savedPictureList))
-                .filter(pictureFile -> {
-                	
-                	String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
-                	
-                    //2. 메타데이터 추출
+        		.map(pictureFile -> {
+        			String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+        			//2. 메타데이터 추출
+        			//	- 메타데이터 중 속성정보가 하나도 없으면 new PictureMetadata()를 리턴함.
+        			//  - 메타데이터 추출 중 오류 발생하면 metadata는 null을 리턴함.
                     PictureMetadata metadata = pictureExtractorService.getPictureMetadata(fromPath);
                     pictureFile.addMetadata(metadata);
                     
-                    //3. 디렉토리 이동
+                    return pictureFile;
+        		})
+        		//3. 메타데이터 추출 중 오류 발생한 데이터는 추출 목록에서 제거
+        		.filter(pictureFile -> pictureFile.getPictureMetadata() != null)
+                .filter(pictureFile -> {
+                	String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+                    //4. 디렉토리 이동
                     String toPath = picturePathProperties.getDataPath(pictureFile.getFileName(), pictureFile.getExtension());
                     
                     return pictureExtractorService.movePictureFile(fromPath, toPath);
                 })
-                //4. DB에 저장하기 위해 entity 로 형변환
+                //5. 파일 이동 성공한 데이터들을 entity 로 형변환
                 .map(PictureFile::toEntity)
                 .collect(Collectors.toList());
         
-        //5. DB에 저장
+        //6. DB에 저장
         List<PictureEntity> savedList = pictureRepository.saveAll(pictureEntityList);
         List<PictureDto> savedDtoList = savedList.stream()
                 .map(PictureEntity::toDto)

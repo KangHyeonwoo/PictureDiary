@@ -181,7 +181,11 @@ class Toc {
 		button.type = 'button';
 		button.innerText = '확인';
 		button.addEventListener('click', function(event){
-			picture.rename(pictureObj, text.value);
+			//picture.rename(pictureObj, text.value);
+			kakao.maps.event.trigger(Toc.Map, 'toc-contextmenu-picture-rename', {
+				pictureObj : pictureObj, 
+				pictureName : text.value	
+			});
 		}, false)
 		
 		div.appendChild(text);

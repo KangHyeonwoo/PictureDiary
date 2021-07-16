@@ -85,10 +85,11 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
     }
 
 	public PictureMetadata getPictureMetadata(String path) {
-		PictureMetadata pictureMetadata = new PictureMetadata();
 		File file = new File(path);
 
 		try {
+			PictureMetadata pictureMetadata = new PictureMetadata();
+			
 			pictureExtractUtils.removeDuplicatedApp13SegMents(path);
         	
 			final ImageMetadata metadata = Imaging.getMetadata(file);
@@ -101,14 +102,14 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 				.geometry(geometry)
 				.pictureDate(pictureDate)
 				.build();
-
+			return pictureMetadata;
 		} catch (ImageReadException ie) {
 			log.error("Fail to load metadata. File path [{}]", path);
+			return null;
 		} catch (IOException ie) {
 			log.error("IOException occur.");
+			return null;
 		}
-        
-		return pictureMetadata;
 	}
 
 	public boolean doubleCheck(PictureFile pictureFile, List<PictureDto> savedPictureList) {

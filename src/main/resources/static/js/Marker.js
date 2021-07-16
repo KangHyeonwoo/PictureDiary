@@ -20,7 +20,7 @@ export default class Marker {
 	
 	constructor(pictureObj, map) {
 		if(pictureObj.latitude == 0 || pictureObj.longitude == 0) {
-			throw new this.#MarkerCreateException('geometry must not empty');
+			throw this.#MarkerCreateException('geometry must not empty');
 		}
 		
 		this.#position = new kakao.maps.LatLng(pictureObj.latitude, pictureObj.longitude);
@@ -60,6 +60,10 @@ export default class Marker {
 		this.#marker.setMap(null);
 		Marker.MarkerList.remove(this);
 		this.infowindow.close();
+	}
+	
+	show() {
+		this.#marker.setMap(this.#map);
 	}
 	
 	hide() {

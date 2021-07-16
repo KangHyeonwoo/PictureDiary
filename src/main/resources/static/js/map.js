@@ -1,6 +1,7 @@
 import Marker from './Marker.js';
 import TempMarker from './TempMarker.js';
 import Address from './Address.js';
+import HttpRequest from './HttpRequest.js';
 
 const map = {};
 const picture = {};
@@ -22,16 +23,8 @@ map.init = function() {
 	Toc.Map = map.obj;
 	
 	//2. pictures draw;
-	picture.getList(pictureList => {
-		pictureList.forEach(pictureObj => {
-			
-			const contents = toc.add(pictureObj);
-			
-			if(pictureObj.hasGeometry) {
-				picture.addMarker(pictureObj, contents);
-			}
-		})
-	})
+	HttpRequest.get('/pictures')
+		.then(pictureList => pictureList.forEach(picture.add))
 	
 	//3. extract button setting
 	const extractButton = document.getElementById('extract-button');
@@ -41,6 +34,7 @@ map.init = function() {
 	//ContextMenu
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
+	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-rename', picture.tocContextMenuRenameHandler)
 	
 	//Marker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'marker-infowindow-move-button', picture.markerInfowindowMoveGeometryHandler);
@@ -65,20 +59,17 @@ map.on = function() {
 
 
 picture.extract = function() {
-    const url = '/picture/extract';
-    const data = {};
-
-    Async.post(url, data, function(pictureList){
-        pictureList.forEach(pictureObj => {
-			const contents = toc.add(pictureObj);
-			
-			if(pictureObj.hasGeometry) {
-				picture.addMarker(pictureObj, contents);
-			}
-		})
-    })
+	HttpRequest.post('pictures/extract')
+		.then(pictureList => pictureList.forEach(picture.add))
 }
 
+picture.add = function(pictureObj) {
+	const contents = toc.add(pictureObj);
+
+	if(pictureObj.hasGeometry) {
+		picture.addMarker(pictureObj, contents);
+	}
+}
 
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
@@ -113,30 +104,6 @@ picture.addMarker = function(pictureObj, contents) {
 	})
 }
 
-picture.getList = function(fnCallback) {
-    const url = '/picture/list';
-    const data = {};
-
-    Async.get(url, data, function(result) {
-
-        fnCallback(result);
-    })
-}
-
-picture.rename = function(pictureObj, name) {
-	const data = {
-		pictureId : pictureObj.pictureId,
-		pictureName : name
-	}
-	const url = '/picture/rename';
-	
-	Async.post(url, data, function(result){
-	    const pictureObj = picture.findById(result.pictureId);
-	    pictureObj.pictureName = result.pictureName;
-
-        Toc.closeRename(pictureObj);
-	})
-}
 
 picture.moveGeomtry = function() {
 	
@@ -145,21 +112,19 @@ picture.moveGeomtry = function() {
 /** EVENT HANDLER **/
 
 picture.tocContextMenuRemoveHandler = function(pictureObj) {
-	const data = {
-		pictureId : pictureObj.pictureId,
-	}
-	const url = `/picture/${data.pictureId}/delete`;
 	
-	Async.post(url, data, function(result){
-		//toc remove
-		toc.remove(pictureObj);
-		
-		//marker remove
-		const marker = Marker.findByPictureId(pictureObj.pictureId);
-		if(marker) {			
-			marker.remove();
-		}
-	})
+	HttpRequest.delete(`/pictures/${pictureObj.pictureId}`)
+		.then(result => {
+			//toc remove
+			toc.remove(pictureObj);
+			
+			//marker remove
+			const marker = Marker.findByPictureId(pictureObj.pictureId);
+			if(marker) {			
+				marker.remove();
+			}
+		})
+		.catch(error => console.error(error.message));
 }
 
 picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
@@ -197,6 +162,23 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
+picture.tocContextMenuRenameHandler= function(paramObj) {
+	const url = `/pictures/${paramObj.pictureObj.pictureId}/pictureName`;
+	const data = {
+		pictureName : paramObj.pictureName
+	}
+	HttpRequest.patch(url, data)
+		.then(result => {
+			Toc.closeRename(paramObj.pictureObj);
+			
+			const tocElement = document.getElementById(result.tocId);
+			tocElement.innerText = result.pictureName
+		})
+		.catch(error => {
+			console.log(error)
+		});
+}
+
 picture.markerInfowindowMoveGeometryHandler = function(obj) {
 	const pictureObj = obj.pictureObj;
 	const marker = Marker.findByPictureId(pictureObj.pictureId);
@@ -205,7 +187,7 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 	1. marker off
 	2. mouse click
 	3. temp marker 생성(확인, 이동 취소)
-	4. 확인 -> server save / tempmarker remove /marker remove / markerlist removecheck /new marker insert
+	4. 확인 -> server save / tempmarker remove /marker remove /new marker insert
 	5. 이동 취소 -> tempmarker remove / marker on 
 	*/
 	
@@ -231,34 +213,51 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 		tempMarker.infowindow.setButton({
 			name : '취소',
 			location : 'right',
-			onclickEvent : () => console.log('hi2')
+			onclickEvent : () => picture.tempMarkerInfowindowMoveCancelButtonHandler(marker, tempMarker)
 		});
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
+picture.tempMarkerInfowindowMoveOkButtonHandler = function(marker, tempMarker) {
+	//1. server save	
+	//2. tempmarker remove
+	//3. marker remove
+	//4. new marker insert
+}
+
+picture.tempMarkerInfowindowMoveCancelButtonHandler = function(marker, tempMarker) {
+	//1. tempmarker remove
+	tempMarker.remove();
+	
+	//2. marker on
+	marker.show();
+}
+
 picture.tempMarkerInfowindowOkButtonHandler = function(obj) {
 	const pictureObj = obj.pictureObj;
 	const tempMarker = obj.tempMarker;
-	const url = '/picture/addGeometry';
-	const data = {
-        pictureId : pictureObj.pictureId,
-        latitude : pictureObj.latitude,
+	const geometry = {
+		latitude : pictureObj.latitude,
         longitude : pictureObj.longitude,
-    }
-
-    Async.post(url, data, function(resultPictureObj){
-		//toc 변경
-		const contents = document.getElementById(resultPictureObj.tocId);
-		toc.remove(pictureObj);
-		toc.add(resultPictureObj);
-		
-		//marker추가
-		picture.addMarker(resultPictureObj, contents);
-    })
+	}
 	
-	tempMarker.remove();
+	HttpRequest.patch(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
+		.then(resultPictureObj => {
+			tempMarker.remove();
+			
+			//toc 변경
+			const contents = document.getElementById(resultPictureObj.tocId);
+			toc.remove(pictureObj);
+			toc.add(resultPictureObj);
+			
+			//marker추가
+			picture.addMarker(resultPictureObj, contents);
+		})
+		.catch(error => {
+			console.error(error.message)
+		});
 }
 
 //Temp Marker 인포윈도우 [취소] 버튼 클릭 이벤트
