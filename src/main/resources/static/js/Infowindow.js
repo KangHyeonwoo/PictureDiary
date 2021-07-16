@@ -9,6 +9,7 @@ export default class Infowindow {
 	#title;
 	#image;
 	#date;
+	#divButtonGroup;
 	
 	constructor(type, map, marker, pictureObj) {
 		this.#type = type;
@@ -36,6 +37,19 @@ export default class Infowindow {
 	
 	close() {
 		this.#infowindow.close();
+	}
+	
+	setButton(buttonObj) {
+		const buttonName = buttonObj.name;
+		let className = (buttonObj.location === 'right' ? 'cancel' : 'basic');
+			className += ' w80';
+		
+		const button = document.createElement('button');
+		button.className = className;
+		button.innerText = buttonName;
+		button.addEventListener('click', buttonObj.onclickEvent)
+		
+		this.#divButtonGroup.appendChild(button);
 	}
 	
 	#makeContentsHtml() {
@@ -71,54 +85,8 @@ export default class Infowindow {
 		const divButtonGroup = document.createElement('div');
 		divButtonGroup.style.width = '180px';
 		divButtonGroup.className = 'btn-group';
-		
-		const map = this.#map;
-		const marker = this.#marker;
-		const pictureObj = this.#pictureObj;
-		
-		if(this.#type === 'temp') {
-			const addMarkerButton = document.createElement('button');
-			addMarkerButton.className = 'basic w80';
-			addMarkerButton.innerText = '확인';
-			addMarkerButton.addEventListener('click', e => {
-				//tempMarker-infowindow-ok
-				kakao.maps.event.trigger(map, 'tempMarker-infowindow-ok', {
-					pictureObj : pictureObj,
-					tempMarker : marker
-				});
-			})
-			const addMarkerCancelButton = document.createElement('button');
-			addMarkerCancelButton.className = 'cancel w80';
-			addMarkerCancelButton.innerText = '취소';
-			addMarkerCancelButton.addEventListener('click', e => {
-				//tempMarker-infowindow-cancel
-				kakao.maps.event.trigger(map, 'tempMarker-infowindow-cancel', marker);
-			})
-			
-			divButtonGroup.appendChild(addMarkerButton);
-			divButtonGroup.appendChild(addMarkerCancelButton);
-		//default
-		} else {
-			const markerMoveButton = document.createElement('button');
-			markerMoveButton.className = 'basic w80';
-			markerMoveButton.innerText = '위치 변경';
-			markerMoveButton.addEventListener('click', e => {
-				//marker-infowindow-move-button
-				kakao.maps.event.trigger(map, 'marker-infowindow-move-button', marker);
-			})
-			
-			const markerDeleteButton = document.createElement('button');
-			markerDeleteButton.className = 'cancel w80';
-			markerDeleteButton.innerText = '삭제';
-			markerDeleteButton.addEventListener('click', e => {
-				//marker-infowindow-remove-button
-				console.log('markerDeleteButton click')
-			})
-			
-			divButtonGroup.appendChild(markerMoveButton);
-			divButtonGroup.appendChild(markerDeleteButton);
-		}
-		
+		this.#divButtonGroup = divButtonGroup;
+
 		tbody.appendChild(divButtonGroup);
 		
 		return divInfowindow;

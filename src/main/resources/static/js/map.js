@@ -45,9 +45,7 @@ map.init = function() {
 	//Marker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'marker-infowindow-move-button', picture.markerInfowindowMoveGeometryHandler);
 	
-	//TempMarker > Infowindow
-	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-ok', picture.tempMarkerInfowindowOkButtonHandler);
-	kakao.maps.event.addListener(map.obj, 'tempMarker-infowindow-cancel', picture.tempMarkerInfowindowCloseButtonHandler);
+	//TempMarker > Move Geometry > Infowindow
 	
 	const addressSearchButton = document.getElementById('address-search-button');
 	addressSearchButton.addEventListener('click', picture.searchAddress)
@@ -85,9 +83,25 @@ picture.extract = function() {
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
 	
+	marker.infowindow.setButton({
+		name : '위치 변경',
+		location : 'left',
+		onclickEvent : () => picture.markerInfowindowMoveGeometryHandler(marker)
+	})
+	
+	marker.infowindow.setButton({
+		name : '삭제',
+		location : 'right',
+		onclickEvent : function(onclickParam) {
+			console.log('left button clicked : ' + onclickParam)
+		}
+	});
+	
+	//Marker Click Event
 	kakao.maps.event.addListener(marker.marker, 'click', function(e) {
 	    const param = {};
 		param.currentTarget = contents;
+		
 		toc.contentClickEventHandler(param);
 	})
 	
@@ -161,6 +175,23 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 		}
 		
 		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
+		
+		const tempMarkerOkButtonParam = {
+			pictureObj : pictureObj,
+			tempMarker : tempMarker
+		}
+		
+		tempMarker.infowindow.setButton({
+			name : '확인',
+			location : 'left',
+			onclickEvent : () => picture.tempMarkerInfowindowOkButtonHandler(tempMarkerOkButtonParam)
+		});
+		
+		tempMarker.infowindow.setButton({
+			name : '취소',
+			location : 'right',
+			onclickEvent : () => picture.tempMarkerInfowindowCloseButtonHandler(tempMarker)
+		});
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
@@ -168,11 +199,8 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 
 picture.markerInfowindowMoveGeometryHandler = function(obj) {
 	const pictureObj = obj.pictureObj;
-	//const marker = obj.marker;
 	const marker = Marker.findByPictureId(pictureObj.pictureId);
 	
-	console.log(pictureObj);
-	console.log(marker);
 	/**
 	1. marker off
 	2. mouse click
@@ -193,6 +221,18 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 		}
 		
 		tempMarker = new TempMarker(pictureObj, latitude, longitude, map.obj);
+		
+		tempMarker.infowindow.setButton({
+			name : '확인',
+			location : 'left',
+			onclickEvent : () => console.log('hi1')
+		});
+		
+		tempMarker.infowindow.setButton({
+			name : '취소',
+			location : 'right',
+			onclickEvent : () => console.log('hi2')
+		});
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
