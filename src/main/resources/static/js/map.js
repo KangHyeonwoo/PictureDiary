@@ -192,7 +192,6 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 	4. 확인 -> server save / tempmarker remove /marker remove /new marker insert
 	5. 이동 취소 -> tempmarker remove / marker on 
 	*/
-	
 	marker.hide();
 	
 	const addTempMarkerEventHandler = function(mouseEvent) {

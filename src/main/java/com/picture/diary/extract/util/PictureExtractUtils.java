@@ -22,7 +22,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
 import com.picture.diary.extract.data.PicturePathProperties;
-import com.picture.diary.picture.data.PictureDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,6 @@ public class PictureExtractUtils {
 	/**
 	 *  App13 Segment 삭제
 	 *  
-	 * @param pictureDto
 	 * @param excludeSegmentsIndex
 	 * @throws ImageReadException
 	 * @throws IndexOutOfBoundsException
