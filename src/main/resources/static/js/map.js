@@ -73,7 +73,7 @@ picture.add = function(pictureObj) {
 
 picture.addMarker = function(pictureObj, contents) {
 	const marker = new Marker(pictureObj, map.obj);
-	
+
 	marker.infowindow.setButton({
 		name : '위치 변경',
 		location : 'left',
