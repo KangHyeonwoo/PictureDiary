@@ -13,7 +13,7 @@ export default class Marker {
 			this.list.push(marker);
 		},
 		remove : function(marker) {
-			const index = this.list.findIndex(e => e.pictureId === marker.pictureId);
+			const index = this.list.findIndex(e => e.pictureObj.pictureId === marker.pictureObj.pictureId);
 			this.list.splice(index, 1);
 		}
 	};
@@ -51,14 +51,14 @@ export default class Marker {
 	
 	//add
 	#add() {
-		this.#marker.setMap(this.#map);
 		Marker.MarkerList.add(this);
+		this.#marker.setMap(this.#map);
 	}
 	
 	//remove
 	remove() {
-		this.#marker.setMap(null);
 		Marker.MarkerList.remove(this);
+		this.#marker.setMap(null);
 		this.infowindow.close();
 	}
 	

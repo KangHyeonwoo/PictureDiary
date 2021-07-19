@@ -17,6 +17,8 @@ map.options = {
     level : 9,
 }
 
+map.geometry = {};
+
 map.init = function() {
     //1. map on
     this.on();
@@ -29,7 +31,6 @@ map.init = function() {
 	//3. extract button setting
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
-	
 	
 	//ContextMenu
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
@@ -54,6 +55,13 @@ map.on = function() {
     };
 
     map.obj = new kakao.maps.Map(container, options);
+	kakao.maps.event.addListener(map.obj, 'click', mouseEvent => {
+		const latlng = mouseEvent.latLng;
+		map.geometry.latitude = latlng.getLat();
+		map.geometry.longitude = latlng.getLng();
+		
+		console.log(`latitude : ${map.geometry.latitude} , longitude : ${map.geometry.longitude}`)
+	});
 }
 
 
@@ -159,6 +167,8 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 			location : 'right',
 			onclickEvent : () => picture.tempMarkerAddGeometryCancelButtonHandler(tempMarker)
 		});
+		
+		kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
