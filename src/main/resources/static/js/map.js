@@ -60,7 +60,7 @@ map.on = function() {
 		map.geometry.latitude = latlng.getLat();
 		map.geometry.longitude = latlng.getLng();
 		
-		console.log(`latitude : ${map.geometry.latitude} , longitude : ${map.geometry.longitude}`)
+		//console.log(`latitude : ${map.geometry.latitude} , longitude : ${map.geometry.longitude}`)
 	});
 }
 
@@ -277,13 +277,14 @@ picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
 		.then(resultPictureObj => {
 			tempMarker.remove();
 			
-			//toc 변경
-			const contents = document.getElementById(resultPictureObj.tocId);
+			//toc 삭제
 			toc.remove(pictureObj);
-			toc.add(resultPictureObj);
 			
-			//marker추가
-			picture.addMarker(resultPictureObj, contents);
+			//picture 추가
+			picture.add(resultPictureObj);
+			
+			//eventListner 삭제
+			
 		})
 		.catch(error => {
 			console.error(error.message)
