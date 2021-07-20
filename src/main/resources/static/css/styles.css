@@ -33,6 +33,11 @@ ul.group, ul.group-header {
     width: 100%;
 }
 
+.group .toc-object {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .group-cnt {
 	font-weight: normal;
 	color: #787878; 
