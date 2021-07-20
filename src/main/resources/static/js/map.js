@@ -40,8 +40,20 @@ map.init = function() {
 	//Marker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'marker-infowindow-move-button', picture.markerInfowindowMoveGeometryHandler);
 	
-	//TempMarker > Move Geometry > Infowindow
+	//Address > Search Center Location
+	const addressSearchText = document.getElementById('address-search-text');
 	
+	//Center location of map on first load
+	Address.searchCenterLocation(map.obj)
+			.then(address => addressSearchText.placeholder = address);
+	
+	//Center location of map on mouse move or mouse zoom
+	kakao.maps.event.addListener(map.obj, 'idle', () => {
+		Address.searchCenterLocation(map.obj)
+			.then(address => addressSearchText.placeholder = address);
+	});
+	
+	//Address > Search	
 	const addressSearchButton = document.getElementById('address-search-button');
 	addressSearchButton.addEventListener('click', picture.searchAddress)
 }
@@ -63,8 +75,6 @@ map.on = function() {
 		//console.log(`latitude : ${map.geometry.latitude} , longitude : ${map.geometry.longitude}`)
 	});
 }
-
-
 
 picture.extract = function() {
 	HttpRequest.post('pictures/extract')
@@ -171,7 +181,7 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 		kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 	}
 	
-	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
+	kakao.maps.event.addListener(map.obj, 'click', mouseEvent => addTempMarkerEventHandler(mouseEvent, pictureObj));
 }
 
 picture.tocContextMenuRenameHandler= function(paramObj) {
@@ -200,7 +210,7 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 	2. mouse click
 	3. temp marker 생성(확인, 이동 취소)
 	4. 확인 -> server save / tempmarker remove /marker remove /new marker insert
-	5. 이동 취소 -> tempmarker remove / marker on 
+	5. 이동 취소 -> tempmarker remove / marker on / map click event remove
 	*/
 	marker.hide();
 	
@@ -218,20 +228,20 @@ picture.markerInfowindowMoveGeometryHandler = function(obj) {
 		tempMarker.infowindow.setButton({
 			name : '확인',
 			location : 'left',
-			onclickEvent : () => picture.tempMarkerMarkerMoveOkButtonHandler(marker, tempMarker)
+			onclickEvent : () => picture.tempMarkerMarkerMoveOkButtonHandler(marker, tempMarker, addTempMarkerEventHandler)
 		});
 		
 		tempMarker.infowindow.setButton({
 			name : '취소',
 			location : 'right',
-			onclickEvent : () => picture.markerMoveCancelButtonHandler(marker, tempMarker)
+			onclickEvent : () => picture.markerMoveCancelButtonHandler(marker, tempMarker, addTempMarkerEventHandler)
 		});
 	}
 	
 	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
-picture.tempMarkerMarkerMoveOkButtonHandler = function(marker, tempMarker) {
+picture.tempMarkerMarkerMoveOkButtonHandler = function(marker, tempMarker, addTempMarkerEventHandler) {
 	const pictureObj = marker.pictureObj;
 	const position = tempMarker.marker.getPosition();
 	const geometry = {
@@ -249,20 +259,23 @@ picture.tempMarkerMarkerMoveOkButtonHandler = function(marker, tempMarker) {
 			//4. new marker insert
 			const contents = document.getElementById(resultPictureObj.tocId);
 			picture.addMarker(resultPictureObj, contents);
+			//5. remove map event listener
+			kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 		})
 		.catch(error => {
 			console.error(error.message)
 		});
-	
-	
 }
 
-picture.markerMoveCancelButtonHandler = function(marker, tempMarker) {
+picture.markerMoveCancelButtonHandler = function(marker, tempMarker, addTempMarkerEventHandler) {
 	//1. tempmarker remove
 	tempMarker.remove();
 	
 	//2. marker on
 	marker.show();
+	
+	//3. remove map event listener
+	kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
 picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
@@ -300,7 +313,7 @@ picture.tempMarkerAddGeometryCancelButtonHandler = function(tempMarker) {
 picture.searchAddress = function() {
     const keyword = document.getElementById('address-search-text').value;
 
-	Address.search(keyword)
+	Address.searchKeyword(keyword)
 		.then(addressList => {
 			console.log(addressList);
 		})

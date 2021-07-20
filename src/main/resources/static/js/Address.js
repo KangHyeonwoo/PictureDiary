@@ -7,7 +7,7 @@ export default class Address {
 		ERROR : '검색 결과 중 오류가 발생했습니다.'
 	}
 	
-	static search(keyword) {
+	static searchKeyword(keyword) {
 		return new Promise(
 			function(resolve, reject) {
 				if (!keyword.replace(/^\s+|\s+$/g, '')) {
@@ -29,7 +29,7 @@ export default class Address {
 		);
 	}
 	
-	static searchCoords(lat, lng) {
+	static searchLocation(lat, lng) {
 		return new Promise(
 			function(resolve, reject) {
 				Address.#geocoder.coord2RegionCode(lng, lat, function(result, status){
@@ -45,6 +45,19 @@ export default class Address {
 			}
 		);
 	}
+	
+	static searchCenterLocation(map) {
+		const center = map.getCenter();
+		const latitude = center.getLat();
+		const longitude = center.getLng();
+		
+		return Address.searchLocation(latitude, longitude)
+			.then(result => `${result.region_1depth_name} ${result.region_2depth_name} ${result.region_3depth_name}`)
+			.catch(error => {
+				console.log(error);
+			})
+	}
+	
 	
 }
 
