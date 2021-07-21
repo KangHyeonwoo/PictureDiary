@@ -24,15 +24,15 @@ map.init = function() {
     this.on();
 	Toc.Map = map.obj;
 	
-	//2. pictures draw;
+	//2. pictures draw
 	HttpRequest.get('/pictures')
 		.then(pictureList => pictureList.forEach(picture.add))
 	
-	//3. extract button setting
+	//3. Extract Button
 	const extractButton = document.getElementById('extract-button');
 	extractButton.addEventListener('click', picture.extract)
 	
-	//ContextMenu
+	//TOC > ContextMenu
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
 	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-rename', picture.tocContextMenuRenameHandler)
@@ -43,11 +43,18 @@ map.init = function() {
 	//Address > Search Center Location
 	const addressSearchText = document.getElementById('address-search-text');
 	
-	//Center location of map on first load
+	addressSearchText.addEventListener('keyup', event => {
+		if(event.keyCode === 13) {
+			event.preventDefault();
+			picture.searchAddress();
+		}
+	})
+	
+	//Address > Center location of map on first load
 	Address.searchCenterLocation(map.obj)
 			.then(address => addressSearchText.placeholder = address);
 	
-	//Center location of map on mouse move or mouse zoom
+	//Address > Center location of map on mouse move or mouse zoom
 	kakao.maps.event.addListener(map.obj, 'idle', () => {
 		Address.searchCenterLocation(map.obj)
 			.then(address => addressSearchText.placeholder = address);
@@ -196,11 +203,11 @@ picture.tocContextMenuRenameHandler= function(paramObj) {
 		});
 }
 
-picture.markerInfowindowMoveGeometryHandler = function(obj) {
+picture.markerInfowindowMoveGeometryHandler = function(marker) {
 	marker.hide();
 	
-	const pictureObj = obj.pictureObj;
-	const marker = Marker.findByPictureId(pictureObj.pictureId);
+	const pictureObj = marker.pictureObj;
+	//const marker = Marker.findByPictureId(pictureObj.pictureId);
 	
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const latlng = mouseEvent.latLng;

@@ -34,6 +34,17 @@ export default class HttpRequest {
 		}
 	}
 	
+	static async put(url, data) {
+		const method = 'PUT';
+		const res = await HttpRequest.#send(method, url, data);
+		
+		if (res.count > 0) {
+			return res.data;
+		} else {
+			throw Error(res.message);
+		}
+	}
+	
 	static async delete(url, data) {
 		const method = 'DELETE';
 		const res = await HttpRequest.#send(method, url, data);

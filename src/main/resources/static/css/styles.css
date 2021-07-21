@@ -116,6 +116,22 @@ button {
 	cursor: pointer;
 }
 
+.map-search input {
+	width: 220px;
+	height: 25px;
+    border: 1px solid #787878;
+    padding-left: 5px;
+}
+
+.map-search button {
+	width: 50px;
+	height: 28px;
+	border: 1px solid #008D62;
+	background: #008D62;
+	color: #fff;
+	font-weight: bold;
+}
+
 .btn-group {
     margin: 5px;
     text-align: center;
