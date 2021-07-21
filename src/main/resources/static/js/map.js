@@ -124,13 +124,9 @@ picture.addMarker = function(pictureObj, contents) {
 	})
 }
 
-
-picture.moveGeomtry = function() {
-	
-}
-
-/** EVENT HANDLER **/
-
+/***********************************/
+/********** EVENT HANDLER **********/
+/***********************************/
 picture.tocContextMenuRemoveHandler = function(pictureObj) {
 	
 	HttpRequest.delete(`/pictures/${pictureObj.pictureId}`)
@@ -175,13 +171,12 @@ picture.tocContextMenuAddGeometryHandler = function(pictureObj) {
 		tempMarker.infowindow.setButton({
 			name : '취소',
 			location : 'right',
-			onclickEvent : () => picture.tempMarkerAddGeometryCancelButtonHandler(tempMarker)
+			onclickEvent : () => picture.tempMarkerAddGeometryCancelButtonHandler(tempMarker, addTempMarkerEventHandler)
 		});
 		
-		kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 	}
 	
-	kakao.maps.event.addListener(map.obj, 'click', mouseEvent => addTempMarkerEventHandler(mouseEvent, pictureObj));
+	kakao.maps.event.addListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
 picture.tocContextMenuRenameHandler= function(paramObj) {
@@ -189,7 +184,7 @@ picture.tocContextMenuRenameHandler= function(paramObj) {
 	const data = {
 		pictureName : paramObj.pictureName
 	}
-	HttpRequest.patch(url, data)
+	HttpRequest.put(url, data)
 		.then(result => {
 			Toc.closeRename(paramObj.pictureObj);
 			
@@ -202,17 +197,10 @@ picture.tocContextMenuRenameHandler= function(paramObj) {
 }
 
 picture.markerInfowindowMoveGeometryHandler = function(obj) {
+	marker.hide();
+	
 	const pictureObj = obj.pictureObj;
 	const marker = Marker.findByPictureId(pictureObj.pictureId);
-	
-	/**
-	1. marker off
-	2. mouse click
-	3. temp marker 생성(확인, 이동 취소)
-	4. 확인 -> server save / tempmarker remove /marker remove /new marker insert
-	5. 이동 취소 -> tempmarker remove / marker on / map click event remove
-	*/
-	marker.hide();
 	
 	const addTempMarkerEventHandler = function(mouseEvent) {
 		const latlng = mouseEvent.latLng;
@@ -250,7 +238,7 @@ picture.tempMarkerMarkerMoveOkButtonHandler = function(marker, tempMarker, addTe
 	}
 	
 	//1. server save
-	HttpRequest.patch(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
+	HttpRequest.put(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
 		.then(resultPictureObj => {
 			//2. tempmarker remove
 			tempMarker.remove();
@@ -286,7 +274,7 @@ picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
         longitude : pictureObj.longitude,
 	}
 	
-	HttpRequest.patch(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
+	HttpRequest.put(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
 		.then(resultPictureObj => {
 			tempMarker.remove();
 			
@@ -295,9 +283,6 @@ picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
 			
 			//picture 추가
 			picture.add(resultPictureObj);
-			
-			//eventListner 삭제
-			
 		})
 		.catch(error => {
 			console.error(error.message)
@@ -305,9 +290,9 @@ picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
 }
 
 //Temp Marker 인포윈도우 [취소] 버튼 클릭 이벤트
-picture.tempMarkerAddGeometryCancelButtonHandler = function(tempMarker) {
+picture.tempMarkerAddGeometryCancelButtonHandler = function(tempMarker, addTempMarkerEventHandler) {
 	tempMarker.remove();
-	kakao.maps.event.removeListener(map.obj, 'click');
+	kakao.maps.event.removeListener(map.obj, 'click', addTempMarkerEventHandler);
 }
 
 picture.searchAddress = function() {

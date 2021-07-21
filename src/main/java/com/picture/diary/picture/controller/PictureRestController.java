@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/pictures")
 @RequiredArgsConstructor
-@Slf4j
 public class PictureRestController {
 
     private final PictureService pictureService;
@@ -45,14 +44,14 @@ public class PictureRestController {
 		return ResponseEntity.ok().body(new SuccessResponse<String>());
 	}
 	
-    @PatchMapping("/{pictureId}/pictureName")
+    @PutMapping("/{pictureId}/pictureName")
 	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, @RequestBody PictureDto pictureDto) {
     	PictureDto result = pictureService.rename(pictureId, pictureDto.getPictureName());
     	
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
 
-	@PatchMapping("/{pictureId}/geometry")
+	@PutMapping("/{pictureId}/geometry")
 	public ResponseEntity<BasicResponse> addGeometry(@PathVariable("pictureId") long pictureId, @RequestBody Geometry geometry) {
 		PictureDto result = pictureService.updateGeometry(
 				    			pictureId,
