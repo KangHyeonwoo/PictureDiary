@@ -97,6 +97,7 @@ public class PictureServiceImpl implements PictureService {
         PictureDto pictureDto = this.findByPictureId(pictureId);
         
         //TODO 여기 속도 개선 필요함
+        
         /**
          * 새로 좌표 추가하면 빨리 되는데
          * 기존에 좌표가 있는 경우 느림
