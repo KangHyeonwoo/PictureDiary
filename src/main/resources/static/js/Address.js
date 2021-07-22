@@ -12,6 +12,7 @@ export default class Address {
 			function(resolve, reject) {
 				if (!keyword.replace(/^\s+|\s+$/g, '')) {
 			        reject('키워드를 입력해주세요');
+					return;
 			    }
 				
 				Address.#ps.keywordSearch(keyword, function(data, status, pagination) {

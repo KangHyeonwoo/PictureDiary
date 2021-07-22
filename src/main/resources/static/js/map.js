@@ -2,6 +2,7 @@ import Marker from './Marker.js';
 import TempMarker from './TempMarker.js';
 import Address from './Address.js';
 import HttpRequest from './HttpRequest.js';
+import Toast from './Toast.js';
 
 const map = {};
 const picture = {};
@@ -44,7 +45,7 @@ map.init = function() {
 	const addressSearchText = document.getElementById('address-search-text');
 	
 	addressSearchText.addEventListener('keyup', event => {
-		if(event.keyCode === 13) {
+		if(event.code === 'Enter') {
 			event.preventDefault();
 			picture.searchAddress();
 		}
@@ -307,8 +308,8 @@ picture.searchAddress = function() {
 		.then(addressList => {
 			console.log(addressList);
 		})
-		.catch(error => {
-			console.log(error);
+		.catch(errorMessage => {
+			Toast.show(errorMessage);
 		})
 }
 
