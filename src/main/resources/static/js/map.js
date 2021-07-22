@@ -108,9 +108,7 @@ picture.addMarker = function(pictureObj, contents) {
 	marker.infowindow.setButton({
 		name : '삭제',
 		location : 'right',
-		onclickEvent : function(onclickParam) {
-			console.log('left button clicked : ' + onclickParam)
-		}
+		onclickEvent : () => picture.tocContextMenuRemoveHandler(pictureObj)
 	});
 	
 	//Marker Click Event
