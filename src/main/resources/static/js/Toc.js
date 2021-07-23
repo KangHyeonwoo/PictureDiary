@@ -46,10 +46,11 @@ class Toc {
         const groupTitles = document.getElementsByClassName('group-title');
         Array.from(groupTitles).forEach(title => {
             title.addEventListener('click', event => {
-                if(title.nextElementSibling.classList.contains('off')) {
-                    title.nextElementSibling.classList.remove('off');
+				const group = title.parentElement.getElementsByClassName('group')[0];
+                if(group.classList.contains('off')) {
+                    group.classList.remove('off');
                 } else {
-                    title.nextElementSibling.classList.add('off');
+                    group.classList.add('off');
                 }
             })
         })
