@@ -20,6 +20,17 @@
     box-sizing: border-box;
 }
 
+input {
+	width: 220px;
+	height: 25px;
+    border: 1px solid #787878;
+    padding-left: 5px;
+}
+
+input:focus {
+	outline: none;
+}
+
 #toc {
     height: 800px;
     overflow: scroll;
@@ -68,7 +79,7 @@ ul.group-header li {
 }
 
 ul.group li {
-    height: 25px;
+    height: 26px;
     padding: 5px 0px 5px 10px;
     margin-bottom: 5px;
     border: 1px solid #efefef;
@@ -85,6 +96,20 @@ ul.group li.selected {
 .context-ul {
 	list-style: none;
 	padding: 0px 5px 0px 5px;
+}
+
+.rename-div input {
+	width: 160px;
+	height: 22px;
+}
+
+.rename-div button {
+	width:50px;
+	height:25px;
+	border: 1px solid #008D62;
+	background: #008D62;
+	color: #fff;
+	margin-left: 2px;
 }
 
 .off {
@@ -114,17 +139,6 @@ ul.group li.selected {
 button {
 	border: none;
 	cursor: pointer;
-}
-
-.map-search input {
-	width: 220px;
-	height: 25px;
-    border: 1px solid #787878;
-    padding-left: 5px;
-}
-
-.map-search input:focus {
-	outline: none;
 }
 
 .map-search button {
