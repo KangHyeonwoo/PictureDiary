@@ -199,8 +199,7 @@ picture.tocContextMenuRenameHandler= function(paramObj) {
 			
 			if(paramObj.pictureObj.hasGeometry) {
 				const marker = Marker.findByPictureId(result.pictureId);
-				marker.remove();
-				marker.add();
+				marker.infowindow.changeTitle(result.pictureName);
 			}
 		})
 		.catch(error => {

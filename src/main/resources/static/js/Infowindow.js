@@ -52,6 +52,11 @@ export default class Infowindow {
 		this.#divButtonGroup.appendChild(button);
 	}
 	
+	changeTitle(title) {
+		this.#title.innerText = title;
+		this.#pictureObj.pictureName = title;
+	}
+	
 	#makeContentsHtml() {
 		const divInfowindow = document.createElement('div');
 			  divInfowindow.className = 'infowindow';
