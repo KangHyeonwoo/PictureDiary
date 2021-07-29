@@ -93,10 +93,7 @@ export default class Address {
 	                    '   <span class="jibun gray">' +  places.address_name  + '</span>';
 	    } else {
 	        itemStr += '    <span>' +  places.address_name  + '</span>'; 
-	    }
-	                 
-	      itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-	                '</div>';           
+	    }      
 	
 	    el.innerHTML = itemStr;
 	    el.className = 'item';

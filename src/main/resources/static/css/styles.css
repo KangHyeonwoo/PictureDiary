@@ -145,10 +145,14 @@ button {
 }
 
 .map-search, .map-search * {
-	margin: 0;
+	margin: 5px 0px 0px 0px;
 	padding: 0;
 	font-family: 'Malgun Gothic',dotum,'돋움',sans-serif;
 	font-size: 12px;
+}
+
+#placesList {
+	box-shadow: 0px 0px 3px 0px #000;
 }
 
 #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
@@ -159,7 +163,7 @@ button {
 #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
 #placesList .item span {display: block;margin-top:4px;}
 #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-#placesList .item .info{padding:10px 0 10px 55px;}
+#placesList .item .info{padding:3px 0 10px 10px;}
 #placesList .info .gray {color:#8a8a8a;}
 #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
 #placesList .info .tel {color:#009900;}
