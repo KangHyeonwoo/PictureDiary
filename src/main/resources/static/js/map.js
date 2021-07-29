@@ -311,9 +311,10 @@ picture.searchAddress = function() {
 
 	Address.searchKeyword(keyword)
 		.then(addressList => {
-			console.log(addressList);
+			Address.displayPlaces(addressList);
 		})
 		.catch(errorMessage => {
+			console.log(errorMessage);
 			Toast.show(errorMessage);
 		})
 }

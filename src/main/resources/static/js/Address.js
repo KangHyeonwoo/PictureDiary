@@ -60,7 +60,25 @@ export default class Address {
 	}
 	
 	static displayPlaces(places) {
+		const listEl = document.getElementById('placesList');
+		const menuEl = document.getElementById('menu_wrap');
+		const fragment = document.createDocumentFragment();
 		
+		Address.removeAllChildNodes(listEl);
+		
+		for(let i=0; i< places.length; i++) {
+			const itemEl = Address.getItem(i, places[i]);
+			
+			(title => {
+				
+				console.log(title);
+			})(places[i].place_name);
+			
+			fragment.appendChild(itemEl);
+		}
+		
+		listEl.appendChild(fragment);
+		menuEl.scrollTop = 0;
 	}
 	
 	static getItem(index, places) {
@@ -116,6 +134,11 @@ export default class Address {
 		paginationEl.appendChild(fragment);
 	}
 	
+	static removeAllChildNodes(el) {
+		while (el.hasChildNodes()) {
+			el.removeChild(el.lastChild);
+		}
+	}
 }
 
 
