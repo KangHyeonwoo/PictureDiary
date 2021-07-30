@@ -310,11 +310,16 @@ picture.searchAddress = function() {
     const keyword = document.getElementById('address-search-text').value;
 
 	Address.searchKeyword(keyword)
-		.then(addressList => {
-			Address.displayPlaces(addressList);
+		.then(data => {
+			console.log('*******')
+			console.log(data.addressList);
+			console.log(data.pagination);
+			console.log('*******')
+			Address.displayPlaces(data.addressList);
+			Address.displayPagination(data.pagination);
 		})
 		.catch(errorMessage => {
-			console.log(errorMessage);
+			//console.log(errorMessage);
 			Toast.show(errorMessage);
 		})
 }

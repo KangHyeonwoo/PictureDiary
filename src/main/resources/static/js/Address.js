@@ -17,9 +17,10 @@ export default class Address {
 				
 				Address.#ps.keywordSearch(keyword, function(data, status, pagination) {
 					if(status === kakao.maps.services.Status.OK) {
-						console.log(pagination);
-						
-						resolve(data);
+						resolve({
+							addressList : data,
+							pagination : pagination
+						});
 					} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 						reject(Address.#errorMessage.ZERO_RESULT);
 					} else if (status === kakao.maps.services.Status.ERROR) {
