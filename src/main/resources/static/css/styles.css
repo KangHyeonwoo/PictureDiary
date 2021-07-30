@@ -330,3 +330,7 @@ button {
     visibility: visible;
     transform: translate(-50%, 0)
 }
+
+.hidden {
+	display: none !important;
+}

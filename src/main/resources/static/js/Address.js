@@ -68,12 +68,14 @@ export default class Address {
 		Address.removeAllChildNodes(listEl);
 		
 		for(let i=0; i< places.length; i++) {
-			const itemEl = Address.getItem(i, places[i]);
+			const itemEl = Address.getItem(places[i]);
 			
-			(title => {
-				
-				console.log(title);
-			})(places[i].place_name);
+			(place => {
+				//itemEl.onclick = function(event){console.log(place)};
+				itemEl.onclick = () => {
+					console.log(place);
+				}
+			})(places[i]);
 			
 			fragment.appendChild(itemEl);
 		}
@@ -82,10 +84,9 @@ export default class Address {
 		menuEl.scrollTop = 0;
 	}
 	
-	static getItem(index, places) {
+	static getItem(places) {
 		const el = document.createElement('li');
 		let itemStr = 
-				'<span class="markerbg marker_' + (index+1) + '"></span>' +
 	                '<div class="info">' +
 	                '   <h5>' + places.place_name + '</h5>';
 	
@@ -94,8 +95,8 @@ export default class Address {
 	                    '   <span class="jibun gray">' +  places.address_name  + '</span>';
 	    } else {
 	        itemStr += '    <span>' +  places.address_name  + '</span>'; 
-	    }      
-	
+	    }
+		itemStr += '		<span class="hidden location">' + places.x + ' ' + places.y +  '</span>'
 	    el.innerHTML = itemStr;
 	    el.className = 'item';
 

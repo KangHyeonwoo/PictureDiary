@@ -311,12 +311,12 @@ picture.searchAddress = function() {
 
 	Address.searchKeyword(keyword)
 		.then(data => {
-			console.log('*******')
-			console.log(data.addressList);
-			console.log(data.pagination);
-			console.log('*******')
 			Address.displayPlaces(data.addressList);
 			Address.displayPagination(data.pagination);
+		})
+		.then(data => {
+			console.log('여기는 뭐나옴?')
+			console.log(data);
 		})
 		.catch(errorMessage => {
 			//console.log(errorMessage);
