@@ -71,7 +71,7 @@ export default class Address {
 			const itemEl = Address.getItem(places[i]);
 			
 			(place => {
-				//itemEl.onclick = function(event){console.log(place)};
+			    //TODO css 적용하기
 				itemEl.onclick = () => {
 					console.log(place);
 				}

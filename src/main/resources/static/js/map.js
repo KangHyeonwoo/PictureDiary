@@ -79,8 +79,6 @@ map.on = function() {
 		const latlng = mouseEvent.latLng;
 		map.geometry.latitude = latlng.getLat();
 		map.geometry.longitude = latlng.getLng();
-		
-		//console.log(`latitude : ${map.geometry.latitude} , longitude : ${map.geometry.longitude}`)
 	});
 }
 
@@ -314,12 +312,21 @@ picture.searchAddress = function() {
 			Address.displayPlaces(data.addressList);
 			Address.displayPagination(data.pagination);
 		})
-		.then(data => {
-			console.log('여기는 뭐나옴?')
-			console.log(data);
+		.then(() => {
+		    const placeList = document.getElementById('placesList');
+		    const items = placeList.getElementsByClassName('item');
+
+		    for(let i=0; i<items.length; i++) {
+		        items[i].onclick = event => {
+                    const location = event.currentTarget.getElementsByClassName('location')[0].innerHTML;
+                    const latitude = location.split(' ')[0];
+                    const longitude = location.split(' ')[1];
+
+                    console.log(`latitude : ${latitude} , longitude : ${longitude}`)
+		        }
+		    }
 		})
 		.catch(errorMessage => {
-			//console.log(errorMessage);
 			Toast.show(errorMessage);
 		})
 }
