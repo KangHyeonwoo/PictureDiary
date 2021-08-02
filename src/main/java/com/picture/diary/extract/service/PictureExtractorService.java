@@ -3,10 +3,10 @@ package com.picture.diary.extract.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
-import com.picture.diary.extract.exception.PictureExtractException;
 import com.picture.diary.picture.data.PictureDto;
 
 /**
@@ -50,5 +50,5 @@ public interface PictureExtractorService {
 	 */
 	String getExtractFolderPath();
 	
-	void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureExtractException;
+	void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureDiaryException;
 }

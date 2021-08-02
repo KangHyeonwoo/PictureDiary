@@ -1,9 +1,9 @@
 package com.picture.diary.extract.service.impl;
 
-import static com.picture.diary.extract.exception.PictureExtractExceptionTypes.ETC_EXCEPTION;
-import static com.picture.diary.extract.exception.PictureExtractExceptionTypes.FILE_NOT_FOUND;
-import static com.picture.diary.extract.exception.PictureExtractExceptionTypes.METADATA_READ_FAILED;
-import static com.picture.diary.extract.exception.PictureExtractExceptionTypes.METADATA_WRITE_FAILED;
+import static com.picture.diary.extract.exception.PictureExtractExceptionType.ETC_EXCEPTION;
+import static com.picture.diary.extract.exception.PictureExtractExceptionType.FILE_NOT_FOUND;
+import static com.picture.diary.extract.exception.PictureExtractExceptionType.METADATA_READ_FAILED;
+import static com.picture.diary.extract.exception.PictureExtractExceptionType.METADATA_WRITE_FAILED;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -38,13 +38,13 @@ import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
+import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.extract.data.Extensions;
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.data.SplitParts;
-import com.picture.diary.extract.exception.PictureExtractException;
 import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.extract.util.PictureExtractUtils;
 import com.picture.diary.picture.data.PictureDto;
@@ -142,7 +142,7 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
 		return picturePathProperties.getFromPath();
 	}
     
-    public void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureExtractException{
+    public void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureDiaryException {
     	//1. declaration
     	String path = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
 
@@ -177,16 +177,16 @@ public class PictureExtractorServiceImpl implements PictureExtractorService {
             
     	} catch (ImageReadException e) {
 			log.error("Metadata read failed. File Path [{}]", path);
-			throw new PictureExtractException(METADATA_READ_FAILED);
+			throw new PictureDiaryException(METADATA_READ_FAILED);
 		} catch (FileNotFoundException e) {
 			log.error("File not found. File Path [{}]", path);
-			throw new PictureExtractException(FILE_NOT_FOUND);
+			throw new PictureDiaryException(FILE_NOT_FOUND);
 		} catch (IOException e) {
 			log.error("IOEception occured.");
-			throw new PictureExtractException(ETC_EXCEPTION);
+			throw new PictureDiaryException(ETC_EXCEPTION);
 		} catch (ImageWriteException e) {
 			log.error("Metadata write failed. File Path [{}]", path);
-			throw new PictureExtractException(METADATA_WRITE_FAILED);
+			throw new PictureDiaryException(METADATA_WRITE_FAILED);
 		}
     }
     

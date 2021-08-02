@@ -6,15 +6,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Objects;
-import com.picture.diary.extract.data.Geometry;
+import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
-import com.picture.diary.picture.exception.PictureException;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
 
@@ -34,7 +32,7 @@ public class PictureServiceImpl implements PictureService {
     	
     	return pictureRepository.findByPictureId(pictureId)
     			.map(PictureEntity::toDto)
-    			.orElseThrow(() -> new PictureException("picture not found."));
+    			.orElseThrow(() -> new PictureDiaryException("picture not found."));
     }
     
     public List<PictureDto> pictureExtract() {
