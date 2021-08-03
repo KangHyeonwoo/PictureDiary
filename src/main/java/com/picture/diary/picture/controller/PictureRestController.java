@@ -1,18 +1,27 @@
 package com.picture.diary.picture.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.picture.data.PictureDto;
+import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.service.PictureService;
 import com.picture.diary.response.BasicResponse;
 import com.picture.diary.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/pictures")
@@ -44,12 +53,20 @@ public class PictureRestController {
 		return ResponseEntity.ok().body(new SuccessResponse<String>());
 	}
 	
-    @PutMapping("/{pictureId}/pictureName")
+    //@PutMapping("/{pictureId}/pictureName")
 	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, @RequestBody PictureDto pictureDto) {
     	PictureDto result = pictureService.rename(pictureId, pictureDto.getPictureName());
     	
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
+    
+    @PutMapping("/{pictureId}/pictureName")
+   	public ResponseEntity<BasicResponse> rename2(@PathVariable("pictureId") long pictureId, @Valid @RequestBody PictureRenameDto pictureRenameDto) {
+       	PictureDto result = new PictureDto();
+       	
+   		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
+   	}
+
 
 	@PutMapping("/{pictureId}/geometry")
 	public ResponseEntity<BasicResponse> addGeometry(@PathVariable("pictureId") long pictureId, @RequestBody Geometry geometry) {
