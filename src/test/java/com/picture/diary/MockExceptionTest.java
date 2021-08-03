@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.picture.diary.picture.controller.PictureRestController;
 import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.service.PictureService;
@@ -21,7 +22,11 @@ public class MockExceptionTest {
 	@Autowired
 	MockMvc mvc;
 	
-	@MockBean
+	@Autowired
+	ObjectMapper objectMapper;
+	
+	//컨트롤러에서 사용하는 bean 객체는 반드시 mockbean으로 등록해야 함
+	@MockBean 
 	PictureService pictureService;
 	
 	@Test
@@ -31,20 +36,18 @@ public class MockExceptionTest {
 		//2. 길이가 15글자 이상인 경우
 		//3. 파일이름이 공백인 경우(trim 기준)
 		long pictureId = 124;
-		String pictureName = "";
+		String pictureName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 		
 		PictureRenameDto dto = PictureRenameDto.builder()
 				.pictureId(pictureId)
 				.pictureName(pictureName)
 				.build();
 		
+		String paramJson = objectMapper.writeValueAsString(dto);
+		String url = "/pictures/ " + pictureId + " /pictureName";
 		
-		
-		String content = "";
-		mvc.perform(put("/").contentType(MediaType.APPLICATION_JSON)
-				.content(content))
-				.andExpect(status().isCreated());
-		
-			
+		mvc.perform(put(url).contentType(MediaType.APPLICATION_JSON)
+				.content(paramJson))
+				.andExpect(status().is4xxClientError());
 	}
 }

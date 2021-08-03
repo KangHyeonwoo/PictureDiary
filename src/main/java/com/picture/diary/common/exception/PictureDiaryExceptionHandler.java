@@ -21,6 +21,7 @@ public class PictureDiaryExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler(PictureDiaryException.class)
 	public ResponseEntity<ErrorResponse> commonExceptionHandler(PictureDiaryException exception) {
+		BaseExceptionType exceptionType = exception.getExceptionType();
 		
 		return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.OK);
 	}
@@ -33,8 +34,8 @@ public class PictureDiaryExceptionHandler {
 		me.getBindingResult().getAllErrors().forEach(error -> {
 			String fieldName = ((FieldError) error).getField();
 			String errorMessage = error.getDefaultMessage();
-			
-			System.out.println("fieldName : " + fieldName + " , errorMessage : " + errorMessage);
+			String errorCode = error.getCode();
+			System.out.println("fieldName : " + fieldName + " , errorMessage : " + errorMessage + " , errorCode : " + errorCode);
 		});
 		
 		return null;
