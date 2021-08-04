@@ -416,7 +416,7 @@ button {
     margin-bottom: 5px;
 }
 
-.item .item-info .address , .date {
+.item .item-info .address , .time {
 	font-size: 12px;
     line-height: 16px;
     color: #666;
