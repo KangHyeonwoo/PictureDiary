@@ -45,7 +45,7 @@ public class PictureRestController {
     	return ResponseEntity.ok()
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
-
+    
 	@DeleteMapping("/{pictureId}")
 	public ResponseEntity<BasicResponse> deletePicture(@PathVariable("pictureId") long pictureId) {
 		pictureService.delete(pictureId);

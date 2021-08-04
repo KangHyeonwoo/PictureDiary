@@ -45,7 +45,7 @@ import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.data.SplitParts;
-import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.extract.util.PictureExtractUtils;
 import com.picture.diary.picture.data.PictureDto;
 
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PictureExtractorServiceImpl implements PictureExtractorService {
+public class PictureExtractServiceImpl implements PictureExtractService {
 
 	private final PicturePathProperties picturePathProperties;
 	private final PictureExtractUtils pictureExtractUtils;

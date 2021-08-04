@@ -38,7 +38,7 @@ import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
-import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.service.PictureService;
 
@@ -46,7 +46,7 @@ import com.picture.diary.picture.service.PictureService;
 public class ExtractTest {
 
     @Autowired
-    PictureExtractorService pictureExtractorService;
+    PictureExtractService pictureExtractorService;
 
     @Autowired
     PicturePathProperties picturePathProperties;

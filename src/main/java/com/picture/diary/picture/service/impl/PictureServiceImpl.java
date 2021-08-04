@@ -11,7 +11,7 @@ import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.exception.PictureExtractExceptionType;
-import com.picture.diary.extract.service.PictureExtractorService;
+import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
 import com.picture.diary.picture.repository.PictureRepository;
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PictureServiceImpl implements PictureService {
 
     private final PicturePathProperties picturePathProperties;
-    private final PictureExtractorService pictureExtractorService;
+    private final PictureExtractService pictureExtractService;
     private final PictureRepository pictureRepository;
 
     public PictureDto findByPictureId(long pictureId) {
@@ -39,18 +39,18 @@ public class PictureServiceImpl implements PictureService {
     public List<PictureDto> pictureExtract() {
         String path = picturePathProperties.getFromPath();
         //1. 사진파일 목록 조회
-        List<PictureFile> pictureFileList = pictureExtractorService.getPictureList(path);
+        List<PictureFile> pictureFileList = pictureExtractService.getPictureList(path);
         
         List<PictureDto> savedPictureList = this.findPictureList();
         
         List<PictureEntity> pictureEntityList = pictureFileList.stream()
-        		.filter(pictureFile -> !pictureExtractorService.doubleCheck(pictureFile, savedPictureList))
+        		.filter(pictureFile -> !pictureExtractService.doubleCheck(pictureFile, savedPictureList))
         		.map(pictureFile -> {
         			String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
         			//2. 메타데이터 추출
         			//	- 메타데이터 중 속성정보가 하나도 없으면 new PictureMetadata()를 리턴함.
         			//  - 메타데이터 추출 중 오류 발생하면 metadata는 null을 리턴함.
-                    PictureMetadata metadata = pictureExtractorService.getPictureMetadata(fromPath);
+                    PictureMetadata metadata = pictureExtractService.getPictureMetadata(fromPath);
                     pictureFile.addMetadata(metadata);
                     
                     return pictureFile;
@@ -62,7 +62,7 @@ public class PictureServiceImpl implements PictureService {
                     //4. 디렉토리 이동
                     String toPath = picturePathProperties.getDataPath(pictureFile.getFileName(), pictureFile.getExtension());
                     
-                    return pictureExtractorService.movePictureFile(fromPath, toPath);
+                    return pictureExtractService.movePictureFile(fromPath, toPath);
                 })
                 //5. 파일 이동 성공한 데이터들을 entity 로 형변환
                 .map(PictureFile::toEntity)
@@ -124,7 +124,7 @@ public class PictureServiceImpl implements PictureService {
     	//파일 delete 디렉토리로 이동
     	String fromPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
     	String toPath = picturePathProperties.getDeletePath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-    	pictureExtractorService.movePictureFile(fromPath, toPath);
+    	pictureExtractService.movePictureFile(fromPath, toPath);
     	
         pictureRepository.delete(pictureEntity.get());
     }

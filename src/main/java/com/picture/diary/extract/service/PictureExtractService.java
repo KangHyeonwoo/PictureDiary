@@ -13,7 +13,11 @@ import com.picture.diary.picture.data.PictureDto;
  * @author KHW-IPC
  *
  */
-public interface PictureExtractorService {
+/**
+ * @author KHW-IPC
+ *
+ */
+public interface PictureExtractService {
 
 	/** 사진 목록 조회
 	 * @param path
@@ -50,5 +54,11 @@ public interface PictureExtractorService {
 	 */
 	String getExtractFolderPath();
 	
+	/**
+	 * 사진에 좌표 값 넣기
+	 * @param pictureDto
+	 * @param geometry
+	 * @throws PictureDiaryException
+	 */
 	void setPictureGeometry(PictureDto pictureDto, Geometry geometry) throws PictureDiaryException;
 }
