@@ -1,9 +1,10 @@
 export default class HttpRequest {
-	
+	/*
 	static #RESULT_CODE = {
 		SUCCESSES : [200, 201, 202],
 		FAILES : [400, 401, 402, 403, 500, 502]
 	}
+	*/
 	
 	static async get(url) {
 		const method = 'GET';

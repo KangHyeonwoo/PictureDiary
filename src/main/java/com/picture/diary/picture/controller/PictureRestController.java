@@ -72,4 +72,5 @@ public class PictureRestController {
 		
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
+	
 }

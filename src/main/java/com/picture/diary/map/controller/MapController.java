@@ -20,4 +20,9 @@ public class MapController {
     	model.addAttribute("path", path);
         return "pictureMap";
     }
+    
+    @GetMapping("/toc")
+    public String tocView() {
+    	return "toc";
+    }
 }

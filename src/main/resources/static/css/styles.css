@@ -1,6 +1,22 @@
 /* RGB 관련 */
 /* https://encycolorpedia.kr/008d62 */
 
+p, span {
+	margin: 0;
+	padding:0;
+}
+
+body {
+	margin:0;
+	font-family: AppleSDGothicNeo-Regular,'Malgun Gothic','맑은 고딕',dotum,'돋움',sans-serif;
+}
+
+.btn-more {
+	width: 40px;
+	height: 40px;
+	background: url(/img/more.png) no-repeat;
+}
+
 .content {
     width:100%;
     height:800px;
@@ -31,6 +47,7 @@ input:focus {
 	outline: none;
 }
 
+/* TOC영역 */
 #toc {
     height: 800px;
     overflow: scroll;
@@ -144,6 +161,8 @@ button {
 	background:#fff;
 }
 
+
+/* 맵 검색 영역 */
 .map-search, .map-search * {
 	margin: 5px 0px 0px 0px;
 	padding: 0;
@@ -333,4 +352,102 @@ button {
 
 .hidden {
 	display: none !important;
+}
+
+/* 테스트중 */
+
+.toc-search {
+	height: 120px;
+	background: #00B07B;
+	display:flex;
+	justify-content: flex-end;
+	align-items: center;
+	flex-direction: column;
+	padding-bottom: 15px;
+}
+
+.toc-search-group input {
+	width:280px;
+	height:40px;
+	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
+	border-radius: 3px;
+}
+
+.search-group {
+	padding-bottom: 10px;
+}
+
+.toc-header {
+	height: 40px;
+	background: #00B07B;
+	font-size: 12px;
+}
+
+.toc-body {
+	height: 550px;
+	background: #FAFAFA;
+}
+
+.toc-body-all .item {
+	height: 90px;
+	background-color: #fff;
+	border-bottom: 1px solid #FAFAFA;
+	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
+	margin-bottom: 1px;
+	cursor: default;
+}
+
+.toc-body-all .item:hover{
+	background-color:rgba(0, 176, 123, 0.1); /* #00b07b */
+}
+
+.toc-body-all .item div {
+	float: left;
+}
+
+.item .item-info {
+	width:260px;
+	padding:12px;
+}
+
+.item .item-info .title {
+	font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item .item-info .address , .date {
+	font-size: 12px;
+    line-height: 16px;
+    color: #666;
+    margin-top: 1px;
+}
+
+.item .item-button{
+	width:65px;
+	height: 90px;
+	text-align: center;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ul.menu {
+	margin:0px;
+	padding: 0 28px;
+}
+
+ul.menu li {
+	list-style-type: none;
+	float: left;
+	cursor: pointer;
+	padding: 7px 19px;
+	margin: 1px;
+	color: white;
+}
+
+ul.menu li.active {
+	background: #008D62;
+	border-radius: 3px;
+	font-weight: bold;
 }

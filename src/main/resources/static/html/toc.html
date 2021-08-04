@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5988d7ab8811489d6e51d45f8081269f&libraries=services"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="/css/styles.css" type="text/css" rel="stylesheet" />
+<script src="/js/toc2.js" defer></script>
+<head>
+    <meta charset="UTF-8">
+    <title>TOC</title>
+</head>
+<body>
+
+<div class="content" style="width:350px; box-shadow: 4px 0px 4px -3px gray;">
+	<div id="toc.search" class="toc-search">
+		<div class="toc-search-group">
+			<input type="text">
+		</div>
+	</div>
+	<div id="toc.header" class="toc-header">
+		<div class="navigation">
+			<ul class="menu">
+				<li id="menu.tab1" class="active">메뉴1</li>
+				<li id="menu.tab2">메뉴2</li>
+				<li id="menu.tab3">메뉴3</li>
+				<li id="menu.tab4">메뉴4</li>
+			</ul>
+		</div>
+	</div>
+	<div id="toc.body" class="toc-body">
+		<div id="toc.all" class="toc-body-all">
+			<div class="item">
+				<div class="item-info">
+					<p class="title">파일명</p>
+					<p class="address">서울특별시 관악구 신림로 44가길 1</p>
+					<p class="date">2021-08-04 14:42:21</p>
+				</div>
+				<div class="item-button">
+					<button class="btn-more"></button>
+				</div>
+			</div>
+			<div class="item">
+				<div class="item-info">
+					<p class="title">파일명</p>
+					<p class="address">서울특별시 관악구 신림로 44가길 1</p>
+					<p class="date">2021-08-04 14:42:21</p>
+				</div>
+				<div class="item-button">
+					<button class="btn-more"></button>
+				</div>
+			</div>
+			<div class="item">
+				<div class="item-info">
+					<p class="title">파일명</p>
+					<p class="address">서울특별시 관악구 신림로 44가길 1</p>
+					<p class="date">2021-08-04 14:42:21</p>
+				</div>
+				<div class="item-button">
+					<button class="btn-more"></button>
+				</div>
+			</div>
+		</div>
+		<div id="toc.sido" class="hidden">2</div>
+		<div id="toc.month" class="hidden">3</div>
+		<div id="toc.etc" class="hidden">4</div>
+	</div>
+	<div id="toc.foot">
+		<div class="btn-group">
+		    <button type="button" id="extract-button" class="basic w200">파일 추출</button>
+		</div>
+	</div>
+</div>
+<div id="toast"></div>
+</body>
+</html>
