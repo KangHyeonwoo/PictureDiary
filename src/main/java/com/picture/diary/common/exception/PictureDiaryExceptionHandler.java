@@ -13,6 +13,7 @@ import com.picture.diary.response.ErrorResponse;
 /**
  * 예외처리 핸들러
  * 참초 URL : https://velog.io/@hanblueblue/Spring-ExceptionHandler
+ * 			 https://www.baeldung.com/spring-boot-bean-validation
  */
 @ControllerAdvice
 public class PictureDiaryExceptionHandler {
@@ -31,7 +32,6 @@ public class PictureDiaryExceptionHandler {
 		return new ResponseEntity<>(new ErrorResponse(errorCode, status, errorMessage), httpStatus);
 	}
 	
-	//https://www.baeldung.com/spring-boot-bean-validation
 	@ResponseBody
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> validationExceptionHandler(MethodArgumentNotValidException me) {

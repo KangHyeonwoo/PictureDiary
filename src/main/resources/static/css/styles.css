@@ -326,7 +326,7 @@ button {
 	top:10px;
 	right:10px;
 }
-
+/* 토스트 알림창 */
 #toast {
     position: fixed;
     bottom: 30px;
@@ -366,16 +366,34 @@ button {
 	padding-bottom: 15px;
 }
 
-.toc-search-group input {
-	width:280px;
+
+.toc-search-group {
+	width:310px;
 	height:40px;
 	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
 	border-radius: 3px;
+	background-color: #FFF;
 }
 
-.search-group {
-	padding-bottom: 10px;
+.toc-search-group input{
+	width:250px;
+	height:25px;
+	margin:5px 0px 5px 10px;
+	border: 0px;
+	float: left;
+	font-weight: bold;
+	font-size: 14px;
 }
+
+.toc-search-group button{
+	width:24px;
+	height:24px;
+	margin: 8px;
+	float: left;
+	background: url(/img/search.png) no-repeat;
+}
+
+
 
 .toc-header {
 	height: 40px;
@@ -416,7 +434,7 @@ button {
     margin-bottom: 5px;
 }
 
-.item .item-info .address , .time {
+.item .item-info .address, .time {
 	font-size: 12px;
     line-height: 16px;
     color: #666;

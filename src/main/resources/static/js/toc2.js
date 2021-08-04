@@ -1,6 +1,7 @@
 const tocHeader = document.getElementById('toc.header');
 const menus = tocHeader.getElementsByTagName('li');
 
+//TOC 헤더에 있는 버튼 이벤트 부여
 Array.from(menus).forEach(menu => {
 	menu.addEventListener('click', headerToggle)
 	menu.addEventListener('click', changeTocBody)
@@ -16,11 +17,11 @@ function headerToggle(event) {
 	li.classList.add('active');
 }
 
+//TOC 버튼 클릭할 때 BODY 변경하기
 function changeTocBody(event) {
 	const menuId = event.currentTarget.id;
 	const tocId = menuId.replace('menu', 'toc');
 	const targetTocBody = document.getElementById(tocId);
-	
 	const tocBodies = document.getElementById('toc.body').children;
 	
 	Array.from(tocBodies).forEach(tocBody => {
