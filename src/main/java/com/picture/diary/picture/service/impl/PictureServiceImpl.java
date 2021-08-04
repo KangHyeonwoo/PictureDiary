@@ -10,6 +10,7 @@ import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.extract.data.PictureFile;
 import com.picture.diary.extract.data.PictureMetadata;
 import com.picture.diary.extract.data.PicturePathProperties;
+import com.picture.diary.extract.exception.PictureExtractExceptionType;
 import com.picture.diary.extract.service.PictureExtractorService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
@@ -32,7 +33,7 @@ public class PictureServiceImpl implements PictureService {
     	
     	return pictureRepository.findByPictureId(pictureId)
     			.map(PictureEntity::toDto)
-    			.orElseThrow(() -> new PictureDiaryException("picture not found."));
+    			.orElseThrow(() -> new PictureDiaryException(PictureExtractExceptionType.FILE_NOT_FOUND));
     }
     
     public List<PictureDto> pictureExtract() {

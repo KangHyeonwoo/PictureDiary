@@ -15,7 +15,7 @@ public class PictureRenameDto {
 	@NotNull(message = "사진 아이디는 필수값입니다.")
 	private long pictureId;
 	
-	@NotBlank(message = "사진명은 필수값입니다.")
+	@NotBlank(message = "사진명을 입력해주세요.")
 	@Size(max = 15, message = "사진명은 15자를 초과할 수 없습니다.")
 	private String pictureName;
 	

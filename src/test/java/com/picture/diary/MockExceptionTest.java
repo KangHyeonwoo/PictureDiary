@@ -30,11 +30,8 @@ public class MockExceptionTest {
 	PictureService pictureService;
 	
 	@Test
-	@DisplayName("파일 이름 변경 예외 발생시키기")
-	void rename() throws Exception {
-		//1. 특수문자가 있는 경우
-		//2. 길이가 15글자 이상인 경우
-		//3. 파일이름이 공백인 경우(trim 기준)
+	@DisplayName("파일 이름 변경 길이 15자 이상의 경우 예외 발생시키기")
+	void renameExceptionOfLong() throws Exception {
 		long pictureId = 124;
 		String pictureName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 		
@@ -49,5 +46,25 @@ public class MockExceptionTest {
 		mvc.perform(put(url).contentType(MediaType.APPLICATION_JSON)
 				.content(paramJson))
 				.andExpect(status().is4xxClientError());
+	}
+	
+	@Test
+	@DisplayName("파일 이름이 공백인 경우 예외 발생시키기")
+	void renameExceptionOfBlack() throws Exception {
+		long pictureId = 124;
+		String pictureName = "          ";
+		
+		PictureRenameDto dto = PictureRenameDto.builder()
+				.pictureId(pictureId)
+				.pictureName(pictureName)
+				.build();
+		
+		String paramJson = objectMapper.writeValueAsString(dto);
+		String url = "/pictures/ " + pictureId + " /pictureName";
+		
+		mvc.perform(put(url).contentType(MediaType.APPLICATION_JSON)
+				.content(paramJson))
+				.andExpect(status().is4xxClientError());
+				
 	}
 }

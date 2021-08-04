@@ -53,23 +53,18 @@ public class PictureRestController {
 		return ResponseEntity.ok().body(new SuccessResponse<String>());
 	}
 	
-    //@PutMapping("/{pictureId}/pictureName")
-	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, @RequestBody PictureDto pictureDto) {
-    	PictureDto result = pictureService.rename(pictureId, pictureDto.getPictureName());
-    	
-		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
-	}
-    
     @PutMapping("/{pictureId}/pictureName")
-   	public ResponseEntity<BasicResponse> rename2(@PathVariable("pictureId") long pictureId, @Valid @RequestBody PictureRenameDto pictureRenameDto) {
-       	PictureDto result = new PictureDto();
+   	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, 
+   			@Valid @RequestBody PictureRenameDto pictureRenameDto) {
+       	PictureDto result = pictureService.rename(pictureId, pictureRenameDto.getPictureName());
        	
    		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
    	}
 
 
 	@PutMapping("/{pictureId}/geometry")
-	public ResponseEntity<BasicResponse> addGeometry(@PathVariable("pictureId") long pictureId, @RequestBody Geometry geometry) {
+	public ResponseEntity<BasicResponse> addGeometry(@PathVariable("pictureId") long pictureId, 
+			@RequestBody Geometry geometry) {
 		PictureDto result = pictureService.updateGeometry(
 				    			pictureId,
 								geometry.getLatitude(),
