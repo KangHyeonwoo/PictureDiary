@@ -48,6 +48,8 @@ import com.picture.diary.extract.data.SplitParts;
 import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.extract.util.PictureExtractUtils;
 import com.picture.diary.picture.data.PictureDto;
+import com.picture.diary.picture.data.PictureEntity;
+import com.picture.diary.picture.repository.PictureRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +59,48 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PictureExtractServiceImpl implements PictureExtractService {
 
+	private final PictureRepository pictureRepository;
 	private final PicturePathProperties picturePathProperties;
 	private final PictureExtractUtils pictureExtractUtils;
+	
+	public List<PictureDto> pictureExtract(List<PictureDto> savedPictureDtoList) {
+		String path = picturePathProperties.getFromPath();
+        //1. 사진파일 목록 조회
+        List<PictureFile> pictureFileList = this.getPictureList(path);
+        
+        List<PictureEntity> pictureEntityList = pictureFileList.stream()
+        		.filter(pictureFile -> !this.doubleCheck(pictureFile, savedPictureDtoList))
+        		.map(pictureFile -> {
+        			String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+        			//2. 메타데이터 추출
+        			//	- 메타데이터 중 속성정보가 하나도 없으면 new PictureMetadata()를 리턴함.
+        			//  - 메타데이터 추출 중 오류 발생하면 metadata는 null을 리턴함.
+                    PictureMetadata metadata = this.getPictureMetadata(fromPath);
+                    pictureFile.addMetadata(metadata);
+                    
+                    return pictureFile;
+        		})
+        		//3. 메타데이터 추출 중 오류 발생한 데이터는 추출 목록에서 제거
+        		.filter(pictureFile -> pictureFile.getPictureMetadata() != null)
+                .filter(pictureFile -> {
+                	String fromPath = picturePathProperties.getFromPath(pictureFile.getFileName(), pictureFile.getExtension());
+                    //4. 디렉토리 이동
+                    String toPath = picturePathProperties.getDataPath(pictureFile.getFileName(), pictureFile.getExtension());
+                    
+                    return this.movePictureFile(fromPath, toPath);
+                })
+                //5. 파일 이동 성공한 데이터들을 entity 로 형변환
+                .map(PictureFile::toEntity)
+                .collect(Collectors.toList());
+        
+        //6. DB에 저장
+        List<PictureEntity> savedList = pictureRepository.saveAll(pictureEntityList);
+        List<PictureDto> savedDtoList = savedList.stream()
+                .map(PictureEntity::toDto)
+                .collect(Collectors.toList());
+        log.info("picture extract success [saved list : {} , files list : {}]", savedDtoList.size(), pictureFileList.size());
+        return savedDtoList;
+    }
 	
 	public List<PictureFile> getPictureList(String path) {
 		Path folder = Paths.get(path);

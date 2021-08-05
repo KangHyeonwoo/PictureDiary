@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,22 +29,14 @@ public class PictureRestController {
 
     private final PictureService pictureService;
     
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<BasicResponse> findAllList() {
-    	List<PictureDto> resultList = pictureService.findPictureList();
+    	List<PictureDto> resultList = pictureService.findAllPictureList();
         
     	return ResponseEntity.ok()
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
-    
-    @PostMapping("/extract")
-    public ResponseEntity<BasicResponse> pictureExtract() {
-    	List<PictureDto> resultList = pictureService.pictureExtract();
-    	
-    	return ResponseEntity.ok()
-    			.body(new SuccessResponse<List<PictureDto>>(resultList));
-    }
-    
+
 	@DeleteMapping("/{pictureId}")
 	public ResponseEntity<BasicResponse> deletePicture(@PathVariable("pictureId") long pictureId) {
 		pictureService.delete(pictureId);
@@ -63,7 +54,7 @@ public class PictureRestController {
 
 
 	@PutMapping("/{pictureId}/geometry")
-	public ResponseEntity<BasicResponse> addGeometry(@PathVariable("pictureId") long pictureId, 
+	public ResponseEntity<BasicResponse> putGeometry(@PathVariable("pictureId") long pictureId, 
 			@RequestBody Geometry geometry) {
 		PictureDto result = pictureService.updateGeometry(
 				    			pictureId,

@@ -19,6 +19,8 @@ import com.picture.diary.picture.data.PictureDto;
  */
 public interface PictureExtractService {
 
+	List<PictureDto> pictureExtract(List<PictureDto> savedPictureDtoList);
+	
 	/** 사진 목록 조회
 	 * @param path
 	 * @return List<PictureFile>

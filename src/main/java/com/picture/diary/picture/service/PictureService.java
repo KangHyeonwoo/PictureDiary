@@ -8,9 +8,7 @@ public interface PictureService {
 
 	PictureDto findByPictureId(long pictureId);
 
-	List<PictureDto> findPictureList();
-
-	List<PictureDto> pictureExtract();
+	List<PictureDto> findAllPictureList();
 
 	PictureDto rename(long pictureId, String pictureName);
 
