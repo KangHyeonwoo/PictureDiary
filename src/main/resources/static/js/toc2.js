@@ -12,27 +12,6 @@ window.onload = function() {
 		menu.addEventListener('click', changeTocBody)
 	});
 	
-	//참조 URL : https://cloudnweb.dev/2019/07/promises-inside-a-loop-javascript-es6/
-	HttpRequest.get('/pictures')
-		.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
-		.then(pictureList => {
-			(async () => {
-				const result = await Promise.all(pictureList.map(pictureObj => {
-					return Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude)
-						.then(address => {
-							pictureObj.address = address.address.address_name;
-							return pictureObj;
-						})
-						.catch(() => {
-							pictureObj.address = '-'
-							return pictureObj;
-						})	
-				}
-				
-			))
-			console.log(result);
-		})();
-	});
 }
 
 //TOC 버튼 클릭할 때 버튼 CSS 변경하기
@@ -104,4 +83,37 @@ function getTocAllItem(pictureObj) {
 	itemDiv.appendChild(itemButtonDiv);
 	
 	return itemDiv;
+}
+
+//TOC 객체 불러오기
+function tocLoad() {
+	//1. DB에서 목록 조회
+	HttpRequest.get('/pictures')
+		//2. 좌표데이터 있는 데이터만 추출
+		.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
+		//3. 루프 돌면서 주소 검색
+		.then(pictureList => {
+			(async () => {
+				//참조 URL : https://cloudnweb.dev/2019/07/promises-inside-a-loop-javascript-es6/
+				const result = await Promise.all(
+					pictureList.map(pictureObj => {
+						return Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude)
+							.then(address => {
+								pictureObj.address = address.address.address_name;
+								return pictureObj;
+							})
+							.catch(() => {
+								pictureObj.address = '-'
+								return pictureObj;
+							})
+							
+				}))
+				
+				return result;
+			})();
+			
+			return pictureList;
+		})
+		//4. 목록에 추가
+		.then(pictureList => console.log(pictureList));
 }
