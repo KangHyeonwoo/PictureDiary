@@ -12,23 +12,27 @@ window.onload = function() {
 		menu.addEventListener('click', changeTocBody)
 	});
 	
+	//참조 URL : https://cloudnweb.dev/2019/07/promises-inside-a-loop-javascript-es6/
 	HttpRequest.get('/pictures')
+		.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
 		.then(pictureList => {
-			const resultPictureList = pictureList
-				.filter(pictureObj => pictureObj.hasGeometry)
-				.map(pictureObj => {
-					const a = await Address.searchDetailLocation(pictureObj.latitude , pictureObj.longitude)
-					console.log(a);
-					
-					return pictureObj;
-				});
-			console.log(resultPictureList);
-			
-			return resultPictureList;
-		})
-		.then(pictureList => {
-			console.log(pictureList);
-		})
+			(async () => {
+				const result = await Promise.all(pictureList.map(pictureObj => {
+					return Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude)
+						.then(address => {
+							pictureObj.address = address.address.address_name;
+							return pictureObj;
+						})
+						.catch(() => {
+							pictureObj.address = '-'
+							return pictureObj;
+						})	
+				}
+				
+			))
+			console.log(result);
+		})();
+	});
 }
 
 //TOC 버튼 클릭할 때 버튼 CSS 변경하기

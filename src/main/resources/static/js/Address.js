@@ -50,16 +50,20 @@ export default class Address {
 	}
 	
 	//법정동 상세 주소 조회
-	async static searchDetailLocation(lat, lng) {
-		Address.#geocoder.coord2Address(lng, lat, function(result, status){
-			if (status === kakao.maps.services.Status.OK) {
-				return result[0];
-		    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-				conole.error(Address.#errorMessage.ZERO_RESULT);
-			} else if (status === kakao.maps.services.Status.ERROR) {
-				conole.error(Address.#errorMessage.ERROR);
+	static searchDetailLocation(lat, lng) {
+		return new Promise(
+			function(resolve, reject) {
+				Address.#geocoder.coord2Address(lng, lat, function(result, status){
+					if (status === kakao.maps.services.Status.OK) {
+						resolve(result[0]);
+				    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+						reject(Address.#errorMessage.ZERO_RESULT);
+					} else if (status === kakao.maps.services.Status.ERROR) {
+						reject(Address.#errorMessage.ERROR);
+					}
+				});
 			}
-		});
+		)
 	}
 	
 	static searchCenterLocation(map) {
