@@ -18,6 +18,7 @@ create table picture (
     picture_date timestamp,
     latitude double,
     longitude double,
+    address varchar(200),
     create_dt timestamp,
     update_dt timestamp
 );

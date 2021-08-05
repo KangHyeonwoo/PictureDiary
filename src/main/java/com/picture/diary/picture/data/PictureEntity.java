@@ -42,6 +42,9 @@ public class PictureEntity {
 
     @Column
     private double longitude;
+    
+    @Column(length = 200)
+    private String address;
 
     @CreationTimestamp
     @Column
@@ -53,7 +56,7 @@ public class PictureEntity {
 
     @Builder
     public PictureEntity(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize, 
-                         LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
+                         LocalDateTime pictureDate, Geometry geometry, String address, double latitude, double longitude) {
         this.pictureId = pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;
@@ -62,6 +65,7 @@ public class PictureEntity {
         this.pictureDate = pictureDate;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.address = address;
         
         if(geometry != null) {
             this.latitude = geometry.getLatitude();
@@ -79,6 +83,7 @@ public class PictureEntity {
                 .pictureDate(this.pictureDate)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
+                .address(this.address)
                 .createDt(this.createDt)
                 .updateDt(this.updateDt)
                 .build();

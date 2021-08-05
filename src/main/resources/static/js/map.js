@@ -247,7 +247,7 @@ picture.tempMarkerMarkerMoveOkButtonHandler = function(marker, tempMarker, addTe
 	}
 	
 	//1. server save
-	HttpRequest.put(`/pictures/${pictureObj.pictureId}/geometry`, geometry)
+	HttpRequest.put(`/pictures/${pictureObj.pictureId}/location`, geometry)
 		.then(resultPictureObj => {
 			//2. tempmarker remove
 			tempMarker.remove();

@@ -41,4 +41,5 @@ public class PictureExtractRestController {
     	return ResponseEntity.ok()
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
+    
 }

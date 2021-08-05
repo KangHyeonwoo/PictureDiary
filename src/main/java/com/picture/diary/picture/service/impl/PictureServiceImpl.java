@@ -13,6 +13,7 @@ import com.picture.diary.extract.exception.PictureExtractExceptionType;
 import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
+import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
 
@@ -41,7 +42,10 @@ public class PictureServiceImpl implements PictureService {
         return pictureDtoList;
     }
 
-    public PictureDto rename(long pictureId, String pictureName) {
+    public PictureDto rename(PictureRenameDto pictureRenameDto) {
+    	final long pictureId = pictureRenameDto.getPictureId();
+    	final String pictureName = pictureRenameDto.getPictureName();
+    	
         PictureDto pictureDto = this.findByPictureId(pictureId);
         pictureDto.rename(pictureName);
 

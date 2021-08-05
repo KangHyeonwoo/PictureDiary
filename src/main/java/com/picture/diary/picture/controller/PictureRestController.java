@@ -48,13 +48,17 @@ public class PictureRestController {
     @PutMapping("/{pictureId}/pictureName")
    	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, 
    			@Valid @RequestBody PictureRenameDto pictureRenameDto) {
-       	PictureDto result = pictureService.rename(pictureId, pictureRenameDto.getPictureName());
+    	
+    	//TODO pictureId , pictureRenameDto.getPictureId() 같은지 검사하기
+    	
+       	PictureDto result = pictureService.rename(pictureRenameDto);
        	
    		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
    	}
 
 
-	@PutMapping("/{pictureId}/geometry")
+    //MEMO : Geometry -> Location(Geometry + Address)
+	@PutMapping("/{pictureId}/location")
 	public ResponseEntity<BasicResponse> updateGeometry(@PathVariable("pictureId") long pictureId, 
 			@RequestBody Geometry geometry) {
 		PictureDto result = pictureService.updateGeometry(
@@ -65,4 +69,9 @@ public class PictureRestController {
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
 	
+	@PutMapping("/address")
+	public ResponseEntity<BasicResponse> updateAddressList(@RequestBody List<?> pictureAddressDtoList) {
+		
+		return null;
+	}
 }
