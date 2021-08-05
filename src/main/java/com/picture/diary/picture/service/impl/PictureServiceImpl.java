@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.extract.data.PictureFile;
-import com.picture.diary.extract.data.PictureMetadata;
+import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.PicturePathProperties;
 import com.picture.diary.extract.exception.PictureExtractExceptionType;
 import com.picture.diary.extract.service.PictureExtractService;
@@ -18,7 +17,6 @@ import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -65,15 +63,13 @@ public class PictureServiceImpl implements PictureService {
          * 
          */
         
-        //TODO 원본 데이터 유지 위해 잠깐 주석
-        //pictureExtractorService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
+        pictureExtractService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
         
         pictureDto.updateGeometry(latitude, longitude);
         
         return this.save(pictureDto);        	
-        
     }
-
+    
     public void delete(long pictureId) {
     	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
     			.orElseThrow(() -> new IllegalArgumentException()));

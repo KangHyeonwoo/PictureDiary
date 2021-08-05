@@ -1,6 +1,7 @@
 package com.picture.diary.picture.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -54,7 +55,7 @@ public class PictureRestController {
 
 
 	@PutMapping("/{pictureId}/geometry")
-	public ResponseEntity<BasicResponse> putGeometry(@PathVariable("pictureId") long pictureId, 
+	public ResponseEntity<BasicResponse> updateGeometry(@PathVariable("pictureId") long pictureId, 
 			@RequestBody Geometry geometry) {
 		PictureDto result = pictureService.updateGeometry(
 				    			pictureId,

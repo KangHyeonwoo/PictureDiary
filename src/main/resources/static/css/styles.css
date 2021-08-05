@@ -366,7 +366,6 @@ button {
 	padding-bottom: 15px;
 }
 
-
 .toc-search-group {
 	width:310px;
 	height:40px;
@@ -392,8 +391,6 @@ button {
 	float: left;
 	background: url(/img/search.png) no-repeat;
 }
-
-
 
 .toc-header {
 	height: 40px;
@@ -469,3 +466,43 @@ ul.menu li.active {
 	border-radius: 3px;
 	font-weight: bold;
 }
+
+.toc-body-time .orderby {
+	height: 30px;
+}
+
+.toc-body-time .item-group {
+	height: 35px;
+	padding: 20px 20px 20px 50px;
+	background-color: #fff;
+	border-bottom: 1px solid #FAFAFA;
+	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
+	margin-bottom: 1px;
+	cursor: default;
+}
+
+.toc-body-time .item-group .info-folder {
+	position: absolute;
+	width: 35px;
+	height: 35px;
+	left: 10px;
+	background: url(/img/folder.png) no-repeat;
+}
+
+.toc-body-time .item-group .title {
+	cursor: pointer;
+}
+
+.toc-body-time .item-group .title:hover {
+	text-decoration: underline;
+}
+
+.toc-body-time .item-group .count {
+	font-size: 14px;
+    line-height: 16px;
+    color: #666;
+    margin-top: 2px;
+}
+
+
+

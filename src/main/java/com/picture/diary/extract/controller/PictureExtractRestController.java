@@ -32,7 +32,7 @@ public class PictureExtractRestController {
 	private final PictureService pictureService;
     private final PictureExtractService pictureExtractService;
  
-    @PostMapping("/metadata")
+    @PostMapping
     public ResponseEntity<BasicResponse> pictureExtract() {
     	//중복확인을 위해 DB에 저장돼있는 파일 리스트 조회
     	List<PictureDto> savedPictureDtoList = pictureService.findAllPictureList();
@@ -41,11 +41,4 @@ public class PictureExtractRestController {
     	return ResponseEntity.ok()
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
     }
-    
-    @PutMapping("/location")
-    public ResponseEntity<BasicResponse> putExtractedPictureLocation() {
-    	
-    	return null;
-    }
-	
 }

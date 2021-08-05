@@ -98,7 +98,9 @@ public class PictureExtractServiceImpl implements PictureExtractService {
         List<PictureDto> savedDtoList = savedList.stream()
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
+        
         log.info("picture extract success [saved list : {} , files list : {}]", savedDtoList.size(), pictureFileList.size());
+        
         return savedDtoList;
     }
 	

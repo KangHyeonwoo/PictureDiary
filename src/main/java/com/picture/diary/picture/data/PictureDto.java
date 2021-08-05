@@ -35,8 +35,7 @@ public class PictureDto {
     
     @Builder
     public PictureDto(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize,
-                      LocalDateTime pictureDate, double latitude, double longitude,
-                      LocalDateTime createDt, LocalDateTime updateDt) {
+                      LocalDateTime pictureDate, double latitude, double longitude, LocalDateTime createDt, LocalDateTime updateDt) {
         this.pictureId =pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;

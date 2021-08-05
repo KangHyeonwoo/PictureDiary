@@ -83,7 +83,7 @@ map.on = function() {
 }
 
 picture.extract = function() {
-	HttpRequest.post('pictures/extract')
+	HttpRequest.post('/extract')
 		.then(pictureList => pictureList.forEach(picture.add))
 }
 

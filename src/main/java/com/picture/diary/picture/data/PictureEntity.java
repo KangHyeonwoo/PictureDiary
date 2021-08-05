@@ -52,8 +52,8 @@ public class PictureEntity {
     private LocalDateTime updateDt;
 
     @Builder
-    public PictureEntity(long pictureId, String pictureName, String pictureOriginName, Extensions extension,
-                         long pictureSize, LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
+    public PictureEntity(long pictureId, String pictureName, String pictureOriginName, Extensions extension, long pictureSize, 
+                         LocalDateTime pictureDate, Geometry geometry, double latitude, double longitude) {
         this.pictureId = pictureId;
         this.pictureName = pictureName;
         this.pictureOriginName = pictureOriginName;
@@ -62,7 +62,7 @@ public class PictureEntity {
         this.pictureDate = pictureDate;
         this.latitude = latitude;
         this.longitude = longitude;
-
+        
         if(geometry != null) {
             this.latitude = geometry.getLatitude();
             this.longitude = geometry.getLongitude();
