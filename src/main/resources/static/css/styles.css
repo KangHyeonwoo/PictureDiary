@@ -483,7 +483,7 @@ ul.menu li.active {
 	height: 30px;
 }
 
-.toc-body-time .item-group {
+.item-group {
 	height: 35px;
 	padding: 20px 20px 20px 50px;
 	background-color: #fff;
@@ -493,7 +493,7 @@ ul.menu li.active {
 	cursor: default;
 }
 
-.toc-body-time .item-group .info-folder {
+.item-group .info-folder {
 	position: absolute;
 	width: 35px;
 	height: 35px;
@@ -501,49 +501,17 @@ ul.menu li.active {
 	background: url(/img/folder.png) no-repeat;
 }
 
-.toc-body-time .item-group .title {
+.item-group .title {
 	cursor: pointer;
 }
 
-.toc-body-time .item-group .title:hover {
+.item-group .title:hover {
 	text-decoration: underline;
 }
 
-.toc-body-time .item-group .count {
+.item-group .count {
 	font-size: 14px;
     line-height: 16px;
     color: #666;
     margin-top: 2px;
 }
-/*
-.toc-body-unregist .item {
-	height: 40px;
-	padding: 20px 20px 20px 70px;
-	background-color: #fff;
-	border-bottom: 1px solid #FAFAFA;
-	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
-	margin-bottom: 1px;
-	cursor: default;
-}
-
-.toc-body-unregist .item .picture {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	left: 15px;
-	border: 2px solid #efefef;
-}
-
-.toc-body-unregist .item .title {
-	font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.toc-body-unregist .item .time {
-    font-size: 12px;
-    line-height: 16px;
-    color: #666;
-    margin-top: 1px;	
-}
-*/
