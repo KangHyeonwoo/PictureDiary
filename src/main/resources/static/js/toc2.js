@@ -117,3 +117,7 @@ function tocLoad() {
 		//4. 목록에 추가
 		.then(pictureList => console.log(pictureList));
 }
+
+function extract() {
+	
+}

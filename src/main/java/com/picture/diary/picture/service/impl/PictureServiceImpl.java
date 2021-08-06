@@ -2,7 +2,10 @@ package com.picture.diary.picture.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import com.picture.diary.extract.exception.PictureExtractExceptionType;
 import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
+import com.picture.diary.picture.data.PictureLocationDto;
 import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
@@ -52,6 +56,25 @@ public class PictureServiceImpl implements PictureService {
         return this.save(pictureDto);
     }
 
+    public PictureDto updateLocation(PictureLocationDto pictureLocationDto) {
+    	final long pictureId = pictureLocationDto.getPictureId();
+    	final double latitude = pictureLocationDto.getLatitude();
+    	final double longitude = pictureLocationDto.getLongitude();
+    	final String address = pictureLocationDto.getAddress();
+    	
+    	PictureDto pictureDto = this.findByPictureId(pictureId);
+    	
+    	//1. 사진파일 좌표 수정
+    	pictureExtractService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
+    	
+    	//2. Entity Setting
+    	pictureDto.updateLocation(address, latitude, longitude);
+    	
+    	//3. Save
+    	return this.save(pictureDto);
+    }
+    
+/*
     public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
         PictureDto pictureDto = this.findByPictureId(pictureId);
         
@@ -66,12 +89,33 @@ public class PictureServiceImpl implements PictureService {
          *  - DB만 먼저 갱신해서 지도에는 데이터 이동한 것 처럼 보이고, 그 다음에 파일 메타데이터 변경하기
          * 
          */
-        
+/*
         pictureExtractService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
         
         pictureDto.updateGeometry(latitude, longitude);
         
         return this.save(pictureDto);        	
+    }
+*/
+    @Transactional
+    public List<PictureDto> updateAddressList(List<PictureLocationDto> pictureLocationDtoList) {
+    	
+    	return pictureLocationDtoList.stream()
+        		.map(pictureLocationDto -> 
+	        		this.findByPictureId(pictureLocationDto.getPictureId())
+	            		.addAddress(pictureLocationDto.getAddress())
+        		)
+        		.map(this::save)
+        		.collect(Collectors.toList());
+    }
+    
+    public PictureDto updateAddress(PictureLocationDto pictureLocationDto) {
+    	final long pictureId = pictureLocationDto.getPictureId();
+    	final String address = pictureLocationDto.getAddress();
+    	
+    	PictureDto pictureDto = this.findByPictureId(pictureId).addAddress(address);
+    	
+    	return this.save(pictureDto);
     }
     
     public void delete(long pictureId) {

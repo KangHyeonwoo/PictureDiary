@@ -59,9 +59,16 @@ public class PictureDto {
         this.pictureName = pictureName;
     }
 
-    public void updateGeometry(double latitude, double longitude) {
-        this.latitude = latitude;
+    public void updateLocation(String address, double latitude, double longitude) {
+        this.address = address;
+    	this.latitude = latitude;
         this.longitude = longitude;
+    }
+    
+    public PictureDto addAddress(String address) {
+    	this.address = address;
+    	
+    	return this;
     }
 
     public PictureEntity toEntity() {

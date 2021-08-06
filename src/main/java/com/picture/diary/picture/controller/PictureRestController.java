@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.picture.data.PictureDto;
+import com.picture.diary.picture.data.PictureLocationDto;
 import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.service.PictureService;
 import com.picture.diary.response.BasicResponse;
@@ -48,7 +49,6 @@ public class PictureRestController {
     @PutMapping("/{pictureId}/pictureName")
    	public ResponseEntity<BasicResponse> rename(@PathVariable("pictureId") long pictureId, 
    			@Valid @RequestBody PictureRenameDto pictureRenameDto) {
-    	
     	//TODO pictureId , pictureRenameDto.getPictureId() 같은지 검사하기
     	
        	PictureDto result = pictureService.rename(pictureRenameDto);
@@ -59,18 +59,15 @@ public class PictureRestController {
 
     //MEMO : Geometry -> Location(Geometry + Address)
 	@PutMapping("/{pictureId}/location")
-	public ResponseEntity<BasicResponse> updateGeometry(@PathVariable("pictureId") long pictureId, 
-			@RequestBody Geometry geometry) {
-		PictureDto result = pictureService.updateGeometry(
-				    			pictureId,
-								geometry.getLatitude(),
-								geometry.getLongitude());
+	public ResponseEntity<BasicResponse> updateLocation(@PathVariable("pictureId") long pictureId, 
+			@Valid @RequestBody PictureLocationDto pictureLocationDto) {
+		PictureDto result = pictureService.updateLocation(pictureLocationDto);
 		
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
 	
 	@PutMapping("/address")
-	public ResponseEntity<BasicResponse> updateAddressList(@RequestBody List<?> pictureAddressDtoList) {
+	public ResponseEntity<BasicResponse> updateAddressList(@RequestBody List<PictureLocationDto> pictureLocationDtoList) {
 		
 		return null;
 	}
