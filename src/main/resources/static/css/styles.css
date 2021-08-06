@@ -17,6 +17,12 @@ body {
 	background: url(/img/more.png) no-repeat;
 }
 
+.btn-add {
+	width: 32px;
+	height: 32px;
+	background: url(/img/add.png) no-repeat;
+}
+
 .content {
     width:100%;
     height:800px;
@@ -403,17 +409,14 @@ button {
 	background: #FAFAFA;
 }
 
-.toc-body-all .item {
-	height: 90px;
+.item {
 	background-color: #fff;
 	border-bottom: 1px solid #FAFAFA;
 	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
 	margin-bottom: 1px;
 	cursor: default;
-}
-
-.toc-body-all .item:hover{
-	background-color:rgba(0, 176, 123, 0.1); /* #00b07b */
+    display: flex;
+    align-items: center
 }
 
 .toc-body-all .item div {
@@ -421,26 +424,35 @@ button {
 }
 
 .item .item-info {
-	width:260px;
-	padding:12px;
+	width:210px;
+	padding: 15px 20px 15px 70px;
 }
 
-.item .item-info .title {
-	font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
+.item .picture {
+	position: absolute;
+	width: 45px;
+	height: 45px;
+	left: 10px;
+	border: 2px solid #efefef;
 }
 
-.item .item-info .address, .time {
+.item .item-info p {
 	font-size: 12px;
     line-height: 16px;
     color: #666;
     margin-top: 1px;
 }
 
+.item .item-info .title {
+	font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: black;
+}
+
 .item .item-button{
-	width:65px;
-	height: 90px;
+	width:40px;
+	height: 88px;
 	text-align: center;
 	display: flex;
     align-items: center;
@@ -503,6 +515,35 @@ ul.menu li.active {
     color: #666;
     margin-top: 2px;
 }
+/*
+.toc-body-unregist .item {
+	height: 40px;
+	padding: 20px 20px 20px 70px;
+	background-color: #fff;
+	border-bottom: 1px solid #FAFAFA;
+	box-shadow: 0 2px 1px 0 rgb(0 0 0 / 15%);
+	margin-bottom: 1px;
+	cursor: default;
+}
 
+.toc-body-unregist .item .picture {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	left: 15px;
+	border: 2px solid #efefef;
+}
 
+.toc-body-unregist .item .title {
+	font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
+.toc-body-unregist .item .time {
+    font-size: 12px;
+    line-height: 16px;
+    color: #666;
+    margin-top: 1px;	
+}
+*/

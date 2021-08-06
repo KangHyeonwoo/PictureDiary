@@ -6,6 +6,7 @@ const menus = tocHeader.getElementsByTagName('li');
 
 const tocAll = document.getElementById('toc.all');
 const tocTime = document.getElementById('toc.time');
+const tocUnregist = document.getElementById('toc.unregist');
 
 window.onload = function() {
 	
@@ -49,12 +50,17 @@ function changeTocBody(event) {
 }
 
 //Item Div 그리기
-function getTocAllItem(pictureObj) {
+function getTocItem(pictureObj) {
 	const itemDiv = document.createElement('div');
 		  itemDiv.classList.add('item');
 	
 	const itemInfoDiv = document.createElement('div');
 		  itemInfoDiv.classList.add('item-info');
+	
+	const picture = document.createElement('img');
+		  picture.classList.add('picture');
+		  picture.src = `/picture/images/${pictureObj.pictureOriginName}.${pictureObj.extension}`;
+	itemDiv.appendChild(picture);
 	
 	const titlePTag = document.createElement('p');
 		  titlePTag.classList.add('title');
@@ -62,12 +68,10 @@ function getTocAllItem(pictureObj) {
 	itemInfoDiv.appendChild(titlePTag);
 	
 	const addressPTag = document.createElement('p');
-		  addressPTag.classList.add('address');
 		  addressPTag.innerText = pictureObj.address;
 	itemInfoDiv.appendChild(addressPTag);
 		
 	const timePTag = document.createElement('p');
-		  timePTag.classList.add('time');
 		  timePTag.innerText = pictureObj.refinePictureDate;
 	itemInfoDiv.appendChild(timePTag);
 	
@@ -109,50 +113,24 @@ function getTocDateItemGroup(title, count) {
 	return itemGroup;
 }
 
-function getTocUnregistItem(pictureObj) {
-	
-	const src = `/picture/images/${pictureObj.pictureOriginName}.${pictureObj.extension}`;
-	const itemDiv = document.createElement('div');
-		  itemDiv.classList.add('item-group');
-
-	const img = document.createElement('span');
-		  img.classList.add('info-folder');
-	itemGroup.appendChild(img);
-	
-	const titleDiv = document.createElement('p');
-		  titleDiv.classList.add('title');
-		  titleDiv.innerText = title;
-	itemGroup.appendChild(titleDiv);
-	
-	const countDiv = document.createElement('p');
-		  countDiv.classList.add('count');
-		  countDiv.innerText = `개수 : ${count}개`;
-	itemGroup.appendChild(countDiv);
-	
-	return itemGroup;
-}
-
 //TOC 객체 불러오기
 function tocLoad() {
 	//1. DB에서 목록 조회
 	HttpRequest.get('/pictures')
 		//2. TOC 그리기
-		.then(pictureList => {
-			drawTocAllBodyList(pictureList)
-			
-			return pictureList;
-		})
-		.then(pictureList => {
-			drawDateTocBodyList(pictureList);
-		});
+		.then(pictureList => drawTocAllBodyList(pictureList))
+		.then(pictureList => drawDateTocBodyList(pictureList))
+		.then(pictureList => drawUnregistTocBodyList(pictureList));
 }
 
 //TOC > 전체 목록 그리기
 function drawTocAllBodyList(pictureList) {
 	pictureList
 		.filter(pictureObj => pictureObj.hasGeometry)
-		.map(pictureObj => getTocAllItem(pictureObj))
+		.map(pictureObj => getTocItem(pictureObj))
 		.forEach(itemDiv => tocAll.appendChild(itemDiv))
+	
+	return pictureList;
 }
 
 //TOC > 시간별 목록 그리기
@@ -177,7 +155,21 @@ function drawDateTocBodyList(pictureList) {
 		const item = getTocDateItemGroup(key, value.length)
 		tocTime.appendChild(item);
 	})
+	
+	return pictureList;
 }
+
+
+//TOC > 미등록 목록 그리기
+function drawUnregistTocBodyList(pictureList) {
+	pictureList
+		.filter(pictureObj => !pictureObj.hasGeometry)
+		.map(pictureObj => getTocItem(pictureObj))
+		.forEach(itemDiv => tocUnregist.appendChild(itemDiv));
+	
+	return pictureList;
+}
+
 
 //파일 추출
 function extract() {
@@ -196,9 +188,7 @@ async function getAddressList(pictureList) {
 		try {
 			const location = await Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude);
 			pictureObj.address = location.address.address_name;
-		} catch (error) {
-			
-		}
+		} catch (error) {}
 	}
 	
 	return pictureList;
