@@ -14,7 +14,7 @@ window.onload = function() {
 		menu.addEventListener('click', headerToggle)
 		menu.addEventListener('click', changeTocBody)
 	});
-
+	
 	tocLoad();
 }
 
@@ -110,8 +110,26 @@ function getTocDateItemGroup(title, count) {
 }
 
 function getTocUnregistItem(pictureObj) {
+	
+	const src = `/picture/images/${pictureObj.pictureOriginName}.${pictureObj.extension}`;
+	const itemDiv = document.createElement('div');
+		  itemDiv.classList.add('item-group');
 
-
+	const img = document.createElement('span');
+		  img.classList.add('info-folder');
+	itemGroup.appendChild(img);
+	
+	const titleDiv = document.createElement('p');
+		  titleDiv.classList.add('title');
+		  titleDiv.innerText = title;
+	itemGroup.appendChild(titleDiv);
+	
+	const countDiv = document.createElement('p');
+		  countDiv.classList.add('count');
+		  countDiv.innerText = `개수 : ${count}개`;
+	itemGroup.appendChild(countDiv);
+	
+	return itemGroup;
 }
 
 //TOC 객체 불러오기
