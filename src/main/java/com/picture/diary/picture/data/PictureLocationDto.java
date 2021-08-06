@@ -1,9 +1,7 @@
 package com.picture.diary.picture.data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +22,6 @@ public class PictureLocationDto {
 	@NotNull @NotEmpty
 	private double longitude;
 	
-	@NotBlank(message = "주소를 확인해주세요.")
-	@Size(max = 200, message = "주소는 200자를 초과할 수 없습니다.")
 	private String address;
 	
 	@Builder

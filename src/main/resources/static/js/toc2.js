@@ -4,6 +4,9 @@ import Address from './Address.js';
 const tocHeader = document.getElementById('toc.header');
 const menus = tocHeader.getElementsByTagName('li');
 
+const tocAll = document.getElementById('toc.all');
+const tocTime = document.getElementById('toc.time');
+
 window.onload = function() {
 	
 	//TOC 헤더에 있는 버튼 이벤트 부여
@@ -106,13 +109,34 @@ function getTocDateItemGroup(title, count) {
 	return itemGroup;
 }
 
+function getTocUnregistItem(pictureObj) {
+	
+	const src = `/picture/images/${pictureObj.pictureOriginName}.${pictureObj.extension}`;
+	const itemDiv = document.createElement('div');
+		  itemDiv.classList.add('item-group');
+
+	const img = document.createElement('span');
+		  img.classList.add('info-folder');
+	itemGroup.appendChild(img);
+	
+	const titleDiv = document.createElement('p');
+		  titleDiv.classList.add('title');
+		  titleDiv.innerText = title;
+	itemGroup.appendChild(titleDiv);
+	
+	const countDiv = document.createElement('p');
+		  countDiv.classList.add('count');
+		  countDiv.innerText = `개수 : ${count}개`;
+	itemGroup.appendChild(countDiv);
+	
+	return itemGroup;
+}
+
 //TOC 객체 불러오기
 function tocLoad() {
 	//1. DB에서 목록 조회
 	HttpRequest.get('/pictures')
-		//2. 좌표데이터 있는 데이터만 추출
-		//.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
-		//3. TOC 그리기
+		//2. TOC 그리기
 		.then(pictureList => {
 			drawTocAllBodyList(pictureList)
 			
@@ -128,7 +152,7 @@ function drawTocAllBodyList(pictureList) {
 	pictureList
 		.filter(pictureObj => pictureObj.hasGeometry)
 		.map(pictureObj => getTocAllItem(pictureObj))
-		.forEach(itemDiv => document.getElementById('toc.all').appendChild(itemDiv))
+		.forEach(itemDiv => tocAll.appendChild(itemDiv))
 }
 
 //TOC > 시간별 목록 그리기
@@ -151,7 +175,7 @@ function drawDateTocBodyList(pictureList) {
 	//TOC에 그리기
 	dateGroup.forEach((value, key) => {
 		const item = getTocDateItemGroup(key, value.length)
-		document.getElementById('toc.time').appendChild(item);
+		tocTime.appendChild(item);
 	})
 }
 
