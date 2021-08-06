@@ -416,6 +416,7 @@ button {
 .toc-body {
 	height: calc(100% - 230px);
 	background: #FAFAFA;
+	overflow-y: auto;
 }
 
 .item {
@@ -434,14 +435,13 @@ button {
 
 .item .item-info {
 	width:210px;
-	padding: 15px 20px 15px 70px;
+	padding: 15px 20px 10px 10px;
 }
 
 .item .picture {
-	position: absolute;
 	width: 45px;
 	height: 45px;
-	left: 10px;
+	padding-left: 10px;
 	border: 2px solid #efefef;
 }
 
@@ -460,7 +460,7 @@ button {
 }
 
 .item .item-button{
-	width:40px;
+	width:33px;
 	height: 88px;
 	text-align: center;
 	display: flex;
@@ -523,4 +523,8 @@ ul.menu li.active {
     line-height: 16px;
     color: #666;
     margin-top: 2px;
+}
+
+.toc-foot {
+	height:55px;
 }
