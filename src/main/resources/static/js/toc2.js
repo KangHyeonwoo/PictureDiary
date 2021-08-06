@@ -93,6 +93,7 @@ function getTocItem(pictureObj) {
 	return itemDiv;
 }
 
+//Item Group Div 그리기
 function getTocItemGroup(title, count) {
 	const itemGroup = document.createElement('div');
 		  itemGroup.classList.add('item-group');
@@ -121,7 +122,7 @@ function tocLoad() {
 		//2. TOC 그리기
 		.then(pictureList => drawAllTocBodyList(pictureList))		//전체
 		.then(pictureList => drawUnregistTocBodyList(pictureList))	//미등록
-		.then(pictureList => drawRegionTocBodyList(pictureList))		//지역별
+		.then(pictureList => drawRegionTocBodyList(pictureList))	//지역별
 		.then(pictureList => drawTimeTocBodyList(pictureList))		//시간별
 }
 
@@ -149,7 +150,6 @@ function drawUnregistTocBodyList(pictureList) {
 function drawRegionTocBodyList(pictureList) {
 	const regionGroup = new Map();
 	pictureList.forEach(pictureObj => {
-		
 		let key = '';
 		
 		if(pictureObj.address === null ) {
