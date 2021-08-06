@@ -16,6 +16,8 @@ public interface PictureService {
 	
 	PictureDto updateLocation(PictureLocationDto pictureLocationDto);
 	
+	List<PictureDto> updateAddressList(List<PictureLocationDto> pictureLocationDtoList);
+	
 	PictureDto updateAddress(PictureLocationDto pictureLocationDto);
 	
 	//PictureDto updateGeometry(long pictureId, double latitude, double longitude);

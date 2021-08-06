@@ -12,6 +12,7 @@ window.onload = function() {
 		menu.addEventListener('click', changeTocBody)
 	});
 	
+	tocLoad();
 }
 
 //TOC 버튼 클릭할 때 버튼 CSS 변경하기
@@ -54,15 +55,18 @@ function getTocAllItem(pictureObj) {
 	
 	const titlePTag = document.createElement('p');
 		  titlePTag.classList.add('title');
-		  titlePTag.innerText = '';
+		  titlePTag.innerText = (pictureObj.pictureName ? pictureObj.pictureName : pictureObj.pictureOriginName);
+	itemInfoDiv.appendChild(titlePTag);
 	
 	const addressPTag = document.createElement('p');
 		  addressPTag.classList.add('address');
-		  addressPTag.innerText = '';
-	
+		  addressPTag.innerText = pictureObj.address;
+	itemInfoDiv.appendChild(addressPTag);
+		
 	const timePTag = document.createElement('p');
 		  timePTag.classList.add('time');
-		  timePTag.innerText = '';
+		  timePTag.innerText = pictureObj.refinePictureDate;
+	itemInfoDiv.appendChild(timePTag);
 	
 	const itemButtonDiv = document.createElement('div');
 		  itemButtonDiv.classList.add('item-button');
@@ -73,10 +77,6 @@ function getTocAllItem(pictureObj) {
 		console.log(event.currentTarget);
 	})
 	
-	itemInfoDiv.appendChild(titlePtag);
-	itemInfoDiv.appendChild(addressPTag);
-	itemInfoDiv.appendChild(timePTag);
-	
 	itemButtonDiv.appendChild(moreButton);
 	
 	itemDiv.appendChild(itemInfoDiv);
@@ -85,39 +85,97 @@ function getTocAllItem(pictureObj) {
 	return itemDiv;
 }
 
+function getTocDateItemGroup(title, count) {
+	const itemGroup = document.createElement('div');
+		  itemGroup.classList.add('item-group');
+
+	const img = document.createElement('span');
+		  img.classList.add('info-folder');
+	itemGroup.appendChild(img);
+	
+	const titleDiv = document.createElement('p');
+		  titleDiv.classList.add('title');
+		  titleDiv.innerText = title;
+	itemGroup.appendChild(titleDiv);
+	
+	const countDiv = document.createElement('p');
+		  countDiv.classList.add('count');
+		  countDiv.innerText = `개수 : ${count}개`;
+	itemGroup.appendChild(countDiv);
+	
+	return itemGroup;
+}
+
 //TOC 객체 불러오기
 function tocLoad() {
 	//1. DB에서 목록 조회
 	HttpRequest.get('/pictures')
 		//2. 좌표데이터 있는 데이터만 추출
-		.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
-		//3. 루프 돌면서 주소 검색
+		//.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
+		//3. TOC 그리기
 		.then(pictureList => {
-			(async () => {
-				//참조 URL : https://cloudnweb.dev/2019/07/promises-inside-a-loop-javascript-es6/
-				const result = await Promise.all(
-					pictureList.map(pictureObj => {
-						return Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude)
-							.then(address => {
-								pictureObj.address = address.address.address_name;
-								return pictureObj;
-							})
-							.catch(() => {
-								pictureObj.address = '-'
-								return pictureObj;
-							})
-							
-				}))
-				
-				return result;
-			})();
+			drawTocAllBodyList(pictureList)
 			
 			return pictureList;
 		})
-		//4. 목록에 추가
-		.then(pictureList => console.log(pictureList));
+		.then(pictureList => {
+			drawDateTocBodyList(pictureList);
+		});
 }
 
-function extract() {
+//TOC > 전체 목록 그리기
+function drawTocAllBodyList(pictureList) {
+	pictureList
+		.filter(pictureObj => pictureObj.hasGeometry)
+		.map(pictureObj => getTocAllItem(pictureObj))
+		.forEach(itemDiv => document.getElementById('toc.all').appendChild(itemDiv))
+}
+
+//TOC > 시간별 목록 그리기
+function drawDateTocBodyList(pictureList) {
+	//날짜별로 그룹핑
+	const dateGroup = new Map();
+	pictureList.forEach(pictureObj => {
+		const dates = pictureObj.refinePictureDate.split('-');
+		const key = dates.length > 1 ? `${dates[0]}년 ${dates[1]}월` : dates[0];
+		
+		const collection = dateGroup.get(key);
+		
+		if(!collection) {
+			dateGroup.set(key, [pictureObj]);
+		} else {
+			collection.push(pictureObj);
+		}
+	})
 	
+	//TOC에 그리기
+	dateGroup.forEach((value, key) => {
+		const item = getTocDateItemGroup(key, value.length)
+		document.getElementById('toc.time').appendChild(item);
+	})
+}
+
+//파일 추출
+function extract() {
+	HttpRequest.post('/extract')
+		.then(pictureList => pictureList.filter(pictureObj => pictureObj.hasGeometry))
+		.then(getAddressList)
+		.then(pictureList => HttpRequest.put('/pictures/addresses', pictureList))
+		.then(result => console.log(result));
+}
+
+//사진리스트 주소 조회
+async function getAddressList(pictureList) {
+	for(let i = 0; i<pictureList.length; i++) {
+		const pictureObj = pictureList[i];
+		
+		try {
+			const location = await Address.searchDetailLocation(pictureObj.latitude, pictureObj.longitude);
+			pictureObj.address = location.address.address_name;
+		} catch (error) {
+			
+		}
+	}
+	
+	return pictureList;
 }

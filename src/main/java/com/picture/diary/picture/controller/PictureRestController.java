@@ -66,9 +66,10 @@ public class PictureRestController {
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
 	
-	@PutMapping("/address")
+	@PutMapping("/addresses")
 	public ResponseEntity<BasicResponse> updateAddressList(@RequestBody List<PictureLocationDto> pictureLocationDtoList) {
+		List<PictureDto> resultList = pictureService.updateAddressList(pictureLocationDtoList);
 		
-		return null;
+		return ResponseEntity.ok().body(new SuccessResponse<List<PictureDto>>(resultList));
 	}
 }
