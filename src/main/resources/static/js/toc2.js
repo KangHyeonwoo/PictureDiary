@@ -10,6 +10,9 @@ const tocRegionItems = document.getElementById('toc.region.items');
 const tocTime = document.getElementById('toc.time');
 const tocTimeItems = document.getElementById('toc.time.items');
 
+const goRegionGroupButton = document.getElementById('goRegionGroupButton');
+const goTimeGroupButton = document.getElementById('goTimeGroupButton');
+
 window.onload = function() {
 	
 	//TOC 헤더에 있는 버튼 이벤트 부여
@@ -17,6 +20,16 @@ window.onload = function() {
 		menu.addEventListener('click', headerToggle)
 		menu.addEventListener('click', changeTocBody)
 	});
+	
+	goRegionGroupButton.onclick = function() {
+		tocRegionItems.classList.add('hidden');
+		tocRegion.classList.remove('hidden');
+	}
+	
+	goTimeGroupButton.onclick = function() {
+		tocTimeItems.classList.add('hidden');
+		tocTime.classList.remove('hidden');
+	}
 	
 	tocLoad();
 }
