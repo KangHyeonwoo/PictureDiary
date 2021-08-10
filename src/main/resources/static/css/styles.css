@@ -41,7 +41,7 @@ body {
 }
 
 .content .right {
-    width:80%;
+    width:calc(100% - 352px);
     height:100%;
     float:right;
     box-sizing: border-box;
@@ -367,7 +367,8 @@ button {
 /* 테스트중 */
 
 .toc {
-	width: 350px; 
+	width: 350px;
+	height: 100%;
 	box-shadow: 4px 0px 4px -3px gray;
 }
 
