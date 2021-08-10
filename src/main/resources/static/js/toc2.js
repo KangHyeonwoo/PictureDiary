@@ -9,7 +9,6 @@ const tocRegion = document.getElementById('toc.region');
 const tocRegionItems = document.getElementById('toc.region.items');
 const tocTime = document.getElementById('toc.time');
 const tocTimeItems = document.getElementById('toc.time.items');
-
 const goRegionGroupButton = document.getElementById('goRegionGroupButton');
 const goTimeGroupButton = document.getElementById('goTimeGroupButton');
 
