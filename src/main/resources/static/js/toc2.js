@@ -257,6 +257,7 @@ export default class Toc {
 				that.#drawTimeTocBodyList(callbackData);
 			})
 			tocTime.appendChild(item);
+			
 		})
 	}
 	
