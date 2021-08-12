@@ -1,6 +1,5 @@
-
 export default class Map {
-	
+	#map;
 	#options = {
 		divId : 'map',
 	    center : {
@@ -15,7 +14,23 @@ export default class Map {
 	}
 	
 	/* Public Methods */
+	add() {
+		
+	}
 	
+	remove() {
+		
+	}
+	
+	addIdleEvent(fnCallback) {
+		kakao.maps.event.addListener(this.#map, 'idle', () => {
+			fnCallback(this.#map);
+		});
+	}
+	
+	get obj() {
+		return this.#map;
+	}
 	
 	/* Private Methods */
 	
@@ -27,11 +42,15 @@ export default class Map {
 	        level: this.#options.level,
 	    };
 		
-	    map.obj = new kakao.maps.Map(container, options);
-		kakao.maps.event.addListener(map.obj, 'click', mouseEvent => {
+	    const map = new kakao.maps.Map(container, options);
+		kakao.maps.event.addListener(map, 'click', mouseEvent => {
 			const latlng = mouseEvent.latLng;
 			map.geometry.latitude = latlng.getLat();
 			map.geometry.longitude = latlng.getLng();
 		});
+		
+		this.#map = map;
 	}
+	
+	
 }

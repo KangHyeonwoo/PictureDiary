@@ -27,15 +27,6 @@ export default class Toc {
 			tocTime.classList.remove('hidden')
 			tocTimeItems.classList.add('hidden')
 		});
-		
-		//주소검색 텍스트파일 이벤트
-		const addressSearchText = document.getElementById('address-search-text');
-		addressSearchText.addEventListener('keyup', event => {
-			if(event.code === 'Enter') {
-				event.preventDefault();
-				picture.searchAddress();
-			}
-		})
 	}
 	
 	/* Public Methods */

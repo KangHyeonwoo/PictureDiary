@@ -66,6 +66,7 @@ export default class Address {
 		)
 	}
 	
+	//지도 중심위치의 주소정보 조회
 	static searchCenterLocation(map) {
 		const center = map.getCenter();
 		const latitude = center.getLat();
