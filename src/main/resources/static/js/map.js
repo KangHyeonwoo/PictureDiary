@@ -1,3 +1,6 @@
+import Marker from './Marker.js';
+import TempMarker from './TempMarker.js';
+
 export default class Map {
 	#map;
 	#options = {
@@ -14,20 +17,42 @@ export default class Map {
 	}
 	
 	/* Public Methods */
-	add() {
+	
+	//마커 여러개 추가
+	addMarkers(pictureList) {
+		const markers = [];
+		
+		pictureList
+			.filter(pictureObj => pictureObj.hasGeometry)
+			.forEach(pictureObj => {
+				const makedMarker = this.addMarker(pictureObj);
+				
+				markers.push(makedMarker);
+			});
+		
+		return markers;
+	}
+	
+	//마커 추가
+	addMarker(pictureObj) {
+		const marker = new Marker(pictureObj, this.#map);
+		
+		return marker;
+	}
+	
+	//마커 삭제
+	removeMarker() {
 		
 	}
 	
-	remove() {
-		
-	}
-	
+	//지도 이동 이벤트(콜백함수)
 	addIdleEvent(fnCallback) {
 		kakao.maps.event.addListener(this.#map, 'idle', () => {
 			fnCallback(this.#map);
 		});
 	}
 	
+	//맵 객체 getter
 	get obj() {
 		return this.#map;
 	}
