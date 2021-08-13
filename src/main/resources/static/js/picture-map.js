@@ -33,17 +33,30 @@ function init() {
 	HttpRequest.get('/pictures')
 		//마커 추가하기
 		.then(pictureList => {
-			const markers = map.addMarkers(pictureList);
+			pictureList
+				.filter(pictureObj => pictureObj.hasGeometry)
+				.forEach(pictureObj => {
+					const marker = map.addMarker(pictureObj);
+					pictureObj.makrer = marker;
+				})
 			
-			return {
-				pictureList : pictureList,
-				markers : markers
-			}
+			return pictureList
 		})
 		//TOC 추가하기
-		.then(tocParamObj => {
-			toc.setContents(tocParamObj.pictureList);
-			console.log(tocParamObj.markers);
+		.then(pictureList => {
+			/*
+			tocParamObj.pictureList
+				//return tocContent
+				.map(pictureObj => toc.addContent(pictureObj))	
+				.forEach(tocContent => {
+					const title = tocContent.getElementByClassName('title')[0];
+					title.addEventListener('click', event => {
+						
+					})
+				})
+			*/
+			
+			toc.setContents(pictureList);
 		});
 }
 

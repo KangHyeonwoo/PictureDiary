@@ -1,5 +1,8 @@
 export default class Toc {
-
+	
+	#regionGroup = new Map();
+	#timeGroup = new Map();
+	
 	constructor() {
 		const tocHeader = document.getElementById('toc.header');
 		const menus = tocHeader.getElementsByTagName('li');
@@ -7,7 +10,6 @@ export default class Toc {
 		const tocRegionItems = document.getElementById('toc.region.items');
 		const tocTime = document.getElementById('toc.time');
 		const tocTimeItems = document.getElementById('toc.time.items');
-		
 		
 		//TOC 헤더에 있는 버튼 이벤트 부여
 		Array.from(menus).forEach(menu => {
@@ -30,6 +32,16 @@ export default class Toc {
 	}
 	
 	/* Public Methods */
+	
+	addContent(pictureObj) {
+		if(pictureObj.hasGeometry) {
+			
+		} else {
+			
+		}
+		
+		
+	}
 	
 	//TOC 객체 그리기
 	setContents(pictureList) {
@@ -150,126 +162,123 @@ export default class Toc {
 		return itemGroup;
 	}
 	
-	//TOC > 전체 목록 그리기
-	#drawAllTocBodyList(pictureList) {
+	//전체 TOC Content 그리기
+	#drawContentInAllToc(pictureObj) {
 		const tocAll = document.getElementById('toc.all');
+		const itemDiv = this.#getTocItem(pictureObj);
 		
-		pictureList
-			.filter(pictureObj => pictureObj.hasGeometry)
-			.map(pictureObj => this.#getTocItem(pictureObj))
-			.forEach(itemDiv => tocAll.appendChild(itemDiv))
+		tocAll.appendChild(itemDiv);
 	}
 	
-	//TOC > 미등록 목록 그리기
-	#drawUnregistTocBodyList(pictureList) {
+	//미등록 TOC Content 그리기
+	#drawContentInUnregistToc(pictureObj) {
 		const tocUnregist = document.getElementById('toc.unregist');
+		const itemDiv = this.#getTocItem(pictureObj);
 		
-		pictureList
-			.filter(pictureObj => !pictureObj.hasGeometry)
-			.map(pictureObj => this.#getTocItem(pictureObj))
-			.forEach(itemDiv => tocUnregist.appendChild(itemDiv));
+		tocUnregist.appendChild(itemDiv);
 	}
 	
-	//TOC > 지역별 목록 그리기
-	#drawRegionTocBodyGroupList(pictureList) {
-		const tocRegion = document.getElementById('toc.region');
+	//지역별 TOC Content 그리기 (그룹)
+	#drawContentInRegionToc(pictureObj) {
+		const key = this.#extractRegionGroupKey(pictureObj);
+		const collection = regionGroup.get(key);
 		
-		const regionGroup = new Map();
-		pictureList.forEach(pictureObj => {
-			let key = '';
-			
-			if(pictureObj.address === null ) {
-				key = pictureObj.refineAddress;
-			} else {
-				const address = pictureObj.refineAddress.split(' ');
-				key = `${address[0]} ${address[1]}`;
-			}
-			
-			const collection = regionGroup.get(key);
-			
-			if(!collection) {
-				regionGroup.set(key, [pictureObj]);
-			} else {
-				collection.push(pictureObj);
-			}
-		})
-		
-		//TOC에 그리기
-		regionGroup.forEach((value, key) => {
-			const that = this;
-			const item = this.#getTocItemGroup(key, value, function(callbackData){
-				that.#drawRegionTocBodyList(callbackData);
-			})
-			tocRegion.appendChild(item);
-		})
+		if(!collection) {
+			regionGroup.set(key, [pictureObj]);
+			this.#drawTocItemGroup('region', key)
+		} else {
+			collection.push(pictureObj);
+			this.#addTocItemInGroup('region', pictureObj)
+		}
 	}
 	
-	#drawRegionTocBodyList(items) {
-		const tocRegion = document.getElementById('toc.region');
-		tocRegion.classList.add('hidden');
+	//지역별 TOC 그룹 Map객체의 키 조회
+	#extractRegionGroupKey(pictureObj) {
+		let key = '';
 		
-		const tocRegionItems = document.getElementById('toc.region.items');
-		const childrens = tocRegionItems.getElementsByClassName('item');
+		if(pictureObj.address === null) {
+			key = pictureObj.refineAddress;
+		} else {
+			const address = pictureObj.refineAddress.split(' ');
+			key = `${address[0]} ${address[1]}`;
+		}
+		
+		return key;
+	}
+	
+	//시간별 TOC Content 그리기 (그룹)
+	#drawContentInTimeToc(pictureObj) {
+		const key = this.#extractTimeGroupKey(pictureObj);
+		const collection = timeGroup.get(key);
+		
+		if(!collection) {
+			timeGroup.set(key, [pictureObj]);
+			this.#drawTocItemGroup('time', key)
+		} else {
+			collection.push(pictureObj);
+			this.#addTocItemInGroup('time', pictureObj)
+		}
+	}
+	
+	//시간별 TOC 그룹 Map객체의 키 조회
+	#extractTimeGroupKey(pictureObj) {
+		const dates = pictureObj.refinePictureDate.split('-');
+		const key = dates.length > 1 ? `${dates[0]}년 ${dates[1]}월` : dates[0];
+		return key;
+	}
+	
+	//TOC Group 그리기
+	#drawTocItemGroup(type, key) {
+		const that = this;
+		const tocGroup = document.getElementById(`toc.${type}`);
+		const groupMap = (type === 'region' ? regionGroup : timeGroup);
+		const itemGroup = document.createElement('div');
+			  itemGroup.classList.add('item-group');
+	
+		const img = document.createElement('span');
+			  img.classList.add('info-folder');
+		itemGroup.appendChild(img);
+		
+		const titleDiv = document.createElement('p');
+		titleDiv.classList.add('title');
+		titleDiv.innerText = title;
+		titleDiv.onclick = function(){
+			const items = groupMap.get(key);
+			that.#drawTocItemsInGroup(groupMap, items);
+		}
+		
+		itemGroup.appendChild(titleDiv);
+		
+		const countDiv = document.createElement('p');
+			  countDiv.classList.add('count');
+			  countDiv.innerText = `개수 : 1개`;
+		itemGroup.appendChild(countDiv);
+		
+		tocGroup.appendChild(itemGroup);
+	}
+	
+	//TOC 그룹 내 리스트 그리기
+	#drawTocItemsInGroup(type, items) {
+		const tocGroup = document.getElementById(`toc.${type}`);
+		tocGroup.classList.add('hidden');
+		
+		const groupItems = document.getElementById(`toc.${type}.items`);
+		const childrens = groupItems.getElementsByClassName('item');
 		
 		//기존객체들지우기
 		Array.from(childrens).forEach(children => {
-			tocRegionItems.removeChild(children);
+			groupItems.removeChild(children);
 		})
 		
 		items
 			.map(item => this.#getTocItem(item))
-			.forEach(itemDiv => tocRegionItems.appendChild(itemDiv));
+			.forEach(itemDiv => groupItems.appendChild(itemDiv));
 		
-		tocRegionItems.classList.remove('hidden');
+		groupItems.classList.remove('hidden');
 	}
 	
-	//TOC > 시간별 목록 그리기
-	#drawTimeTocBodyGroupList(pictureList) {
-		const tocTime = document.getElementById('toc.time');
+	//TOC Group 추가하기
+	#addTocItemInGroup(type, item) {
 		
-		//날짜별로 그룹핑
-		const timeGroup = new Map();
-		pictureList.forEach(pictureObj => {
-			const dates = pictureObj.refinePictureDate.split('-');
-			const key = dates.length > 1 ? `${dates[0]}년 ${dates[1]}월` : dates[0];
-			
-			const collection = timeGroup.get(key);
-			
-			if(!collection) {
-				timeGroup.set(key, [pictureObj]);
-			} else {
-				collection.push(pictureObj);
-			}
-		})
-		
-		//TOC에 그리기
-		timeGroup.forEach((value, key) => {
-			const that = this;
-			const item = this.#getTocItemGroup(key, value, function(callbackData) {
-				that.#drawTimeTocBodyList(callbackData);
-			})
-			tocTime.appendChild(item);
-			
-		})
 	}
-	
-	#drawTimeTocBodyList(items) {
-		const tocTime = document.getElementById('toc.time');
-		tocTime.classList.add('hidden');
-		
-		const tocTimeItems = document.getElementById('toc.time.items');
-		const childrens = tocTimeItems.getElementsByClassName('item');
-		
-		//기존객체들지우기
-		Array.from(childrens).forEach(children => {
-			tocTimeItems.removeChild(children);
-		})
-		
-		items
-			.map(item => this.#getTocItem(item))
-			.forEach(itemDiv => tocTimeItems.appendChild(itemDiv));
-		
-		tocTimeItems.classList.remove('hidden');
-	}
-
 }

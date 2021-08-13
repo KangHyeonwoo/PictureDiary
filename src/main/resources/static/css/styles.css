@@ -458,6 +458,11 @@ button {
     font-weight: bold;
     margin-bottom: 5px;
     color: black;
+    cursor: pointer;
+}
+
+.item .item-info .title:hover {
+	text-decoration: underline;
 }
 
 .item .item-button{

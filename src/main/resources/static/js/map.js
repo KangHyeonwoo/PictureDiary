@@ -18,21 +18,6 @@ export default class Map {
 	
 	/* Public Methods */
 	
-	//마커 여러개 추가
-	addMarkers(pictureList) {
-		const markers = [];
-		
-		pictureList
-			.filter(pictureObj => pictureObj.hasGeometry)
-			.forEach(pictureObj => {
-				const makedMarker = this.addMarker(pictureObj);
-				
-				markers.push(makedMarker);
-			});
-		
-		return markers;
-	}
-	
 	//마커 추가
 	addMarker(pictureObj) {
 		const marker = new Marker(pictureObj, this.#map);

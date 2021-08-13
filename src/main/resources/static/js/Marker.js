@@ -89,6 +89,10 @@ export default class Marker {
 	    return this.#pictureObj;
 	}
 	
+	get pictureId() {
+		return this.#pictureObj.pictureId;
+	}
+	
 	get marker() {
 		return this.#marker;
 	}
