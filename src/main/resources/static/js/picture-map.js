@@ -44,19 +44,18 @@ function init() {
 		})
 		//TOC 추가하기
 		.then(pictureList => {
-			/*
-			tocParamObj.pictureList
+			
+			pictureList
 				//return tocContent
 				.map(pictureObj => toc.addContent(pictureObj))	
 				.forEach(tocContent => {
-					const title = tocContent.getElementByClassName('title')[0];
+					/*const title = tocContent.getElementByClassName('title')[0];
 					title.addEventListener('click', event => {
 						
-					})
+					})*/
 				})
-			*/
 			
-			toc.setContents(pictureList);
+			
 		});
 }
 

@@ -33,22 +33,16 @@ export default class Toc {
 	
 	/* Public Methods */
 	
+	//TOC 객체 그리기
 	addContent(pictureObj) {
 		if(pictureObj.hasGeometry) {
-			
+			this.#drawContentInAllToc(pictureObj);		//전체
 		} else {
-			
+			this.#drawContentInUnregistToc(pictureObj);	//미등록
 		}
 		
-		
-	}
-	
-	//TOC 객체 그리기
-	setContents(pictureList) {
-		this.#drawAllTocBodyList(pictureList)			//전체
-		this.#drawUnregistTocBodyList(pictureList)		//미등록
-		this.#drawRegionTocBodyGroupList(pictureList)	//지역별
-		this.#drawTimeTocBodyGroupList(pictureList)		//시간별
+		this.#drawContentInRegionToc(pictureObj);		//지역별
+		this.#drawContentInTimeToc(pictureObj);			//시간별
 	}
 	
 	add() {
@@ -136,32 +130,6 @@ export default class Toc {
 		return itemDiv;
 	}
 	
-	//Item Group Div 그리기
-	#getTocItemGroup(title, items, groupClickFunction) {
-		const itemGroup = document.createElement('div');
-			  itemGroup.classList.add('item-group');
-	
-		const img = document.createElement('span');
-			  img.classList.add('info-folder');
-		itemGroup.appendChild(img);
-		
-		const titleDiv = document.createElement('p');
-		titleDiv.classList.add('title');
-		titleDiv.innerText = title;
-		titleDiv.onclick = function(){
-			groupClickFunction(items)
-		}
-		
-		itemGroup.appendChild(titleDiv);
-		
-		const countDiv = document.createElement('p');
-			  countDiv.classList.add('count');
-			  countDiv.innerText = `개수 : ${items.length}개`;
-		itemGroup.appendChild(countDiv);
-		
-		return itemGroup;
-	}
-	
 	//전체 TOC Content 그리기
 	#drawContentInAllToc(pictureObj) {
 		const tocAll = document.getElementById('toc.all');
@@ -181,14 +149,25 @@ export default class Toc {
 	//지역별 TOC Content 그리기 (그룹)
 	#drawContentInRegionToc(pictureObj) {
 		const key = this.#extractRegionGroupKey(pictureObj);
-		const collection = regionGroup.get(key);
+		const collection = this.#regionGroup.get(key);
 		
 		if(!collection) {
-			regionGroup.set(key, [pictureObj]);
-			this.#drawTocItemGroup('region', key)
+			this.#regionGroup.set(key, [pictureObj]);
+			const itemGroup = this.#drawTocItemGroup('region', key)
 		} else {
 			collection.push(pictureObj);
-			this.#addTocItemInGroup('region', pictureObj)
+		}
+		
+		const tocRegion = document.getElementById('toc.region');
+		const groupItems = tocRegion.getElementsByClassName('item-group');
+		for(let i=0; i<groupItems.length; i++) {
+			if(groupItems[i].getElementsByClassName('title')[0].innerText === key) {
+				const countEl = groupItems[i].getElementsByClassName('count')[0];
+				const count = this.#regionGroup.get(key).length;
+				countEl.innerText = `개수 : ${count}개`;
+				
+				break;
+			}
 		}
 	}
 	
@@ -209,14 +188,17 @@ export default class Toc {
 	//시간별 TOC Content 그리기 (그룹)
 	#drawContentInTimeToc(pictureObj) {
 		const key = this.#extractTimeGroupKey(pictureObj);
-		const collection = timeGroup.get(key);
+		const collection = this.#timeGroup.get(key);
 		
 		if(!collection) {
-			timeGroup.set(key, [pictureObj]);
-			this.#drawTocItemGroup('time', key)
+			this.#timeGroup.set(key, [pictureObj]);
+			const itemGroup = this.#drawTocItemGroup('time', key)
 		} else {
 			collection.push(pictureObj);
-			this.#addTocItemInGroup('time', pictureObj)
+			
+			
+			
+			
 		}
 	}
 	
@@ -224,6 +206,7 @@ export default class Toc {
 	#extractTimeGroupKey(pictureObj) {
 		const dates = pictureObj.refinePictureDate.split('-');
 		const key = dates.length > 1 ? `${dates[0]}년 ${dates[1]}월` : dates[0];
+		
 		return key;
 	}
 	
@@ -231,7 +214,7 @@ export default class Toc {
 	#drawTocItemGroup(type, key) {
 		const that = this;
 		const tocGroup = document.getElementById(`toc.${type}`);
-		const groupMap = (type === 'region' ? regionGroup : timeGroup);
+		const groupMap = (type === 'region' ? this.#regionGroup : this.#timeGroup);
 		const itemGroup = document.createElement('div');
 			  itemGroup.classList.add('item-group');
 	
@@ -241,10 +224,10 @@ export default class Toc {
 		
 		const titleDiv = document.createElement('p');
 		titleDiv.classList.add('title');
-		titleDiv.innerText = title;
+		titleDiv.innerText = key;
 		titleDiv.onclick = function(){
 			const items = groupMap.get(key);
-			that.#drawTocItemsInGroup(groupMap, items);
+			that.#drawTocItemsInGroup(type, items);
 		}
 		
 		itemGroup.appendChild(titleDiv);
@@ -255,8 +238,10 @@ export default class Toc {
 		itemGroup.appendChild(countDiv);
 		
 		tocGroup.appendChild(itemGroup);
+		
+		return itemGroup
 	}
-	
+
 	//TOC 그룹 내 리스트 그리기
 	#drawTocItemsInGroup(type, items) {
 		const tocGroup = document.getElementById(`toc.${type}`);
@@ -275,10 +260,5 @@ export default class Toc {
 			.forEach(itemDiv => groupItems.appendChild(itemDiv));
 		
 		groupItems.classList.remove('hidden');
-	}
-	
-	//TOC Group 추가하기
-	#addTocItemInGroup(type, item) {
-		
 	}
 }
