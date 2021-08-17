@@ -53,12 +53,13 @@ export default class Map {
 	    };
 		
 	    const map = new kakao.maps.Map(container, options);
+/*
 		kakao.maps.event.addListener(map, 'click', mouseEvent => {
 			const latlng = mouseEvent.latLng;
 			map.geometry.latitude = latlng.getLat();
 			map.geometry.longitude = latlng.getLng();
 		});
-		
+		*/
 		this.#map = map;
 	}
 	

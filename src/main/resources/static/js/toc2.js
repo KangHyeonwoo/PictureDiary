@@ -153,22 +153,12 @@ export default class Toc {
 		
 		if(!collection) {
 			this.#regionGroup.set(key, [pictureObj]);
-			const itemGroup = this.#drawTocItemGroup('region', key)
+			this.#drawTocItemGroup('region', key)
 		} else {
 			collection.push(pictureObj);
 		}
 		
-		const tocRegion = document.getElementById('toc.region');
-		const groupItems = tocRegion.getElementsByClassName('item-group');
-		for(let i=0; i<groupItems.length; i++) {
-			if(groupItems[i].getElementsByClassName('title')[0].innerText === key) {
-				const countEl = groupItems[i].getElementsByClassName('count')[0];
-				const count = this.#regionGroup.get(key).length;
-				countEl.innerText = `개수 : ${count}개`;
-				
-				break;
-			}
-		}
+		this.#setItemCount('region', key)
 	}
 	
 	//지역별 TOC 그룹 Map객체의 키 조회
@@ -192,14 +182,12 @@ export default class Toc {
 		
 		if(!collection) {
 			this.#timeGroup.set(key, [pictureObj]);
-			const itemGroup = this.#drawTocItemGroup('time', key)
+			this.#drawTocItemGroup('time', key)
 		} else {
 			collection.push(pictureObj);
-			
-			
-			
-			
 		}
+		
+		this.#setItemCount('time', key)
 	}
 	
 	//시간별 TOC 그룹 Map객체의 키 조회
@@ -242,6 +230,24 @@ export default class Toc {
 		return itemGroup
 	}
 
+	//TOC 그룹에 그룹 내 아이템 개수 추가하기
+	//type : region / time
+	#setItemCount(type, key) {
+		const tocGroup = document.getElementById(`toc.${type}`);
+		const groupItems = tocGroup.getElementsByClassName('item-group');
+		
+		for(let i=0; i<groupItems.length; i++) {
+			if(groupItems[i].getElementsByClassName('title')[0].innerText === key) {
+				const countEl = groupItems[i].getElementsByClassName('count')[0];
+				const groupMap = (type === 'region' ? this.#regionGroup : this.#timeGroup);
+				const count = groupMap.get(key).length;
+				
+				countEl.innerText = `개수 : ${count}개`;
+				
+				break;
+			}
+		}
+	}
 	//TOC 그룹 내 리스트 그리기
 	#drawTocItemsInGroup(type, items) {
 		const tocGroup = document.getElementById(`toc.${type}`);
