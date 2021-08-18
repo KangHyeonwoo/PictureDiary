@@ -30,6 +30,10 @@ export default class Map {
 		
 	}
 	
+	getMarker(pictureId) {
+		console.log(Marker.MarkerList.list)
+	}
+	
 	//지도 이동 이벤트(콜백함수)
 	addIdleEvent(fnCallback) {
 		kakao.maps.event.addListener(this.#map, 'idle', () => {

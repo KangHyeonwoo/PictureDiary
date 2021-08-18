@@ -1,3 +1,6 @@
+import TocItem from './TocItem.js';
+
+
 export default class Toc {
 	
 	#regionGroup = new Map();
@@ -29,6 +32,11 @@ export default class Toc {
 			tocTime.classList.remove('hidden')
 			tocTimeItems.classList.add('hidden')
 		});
+		
+		document.addEventListener('click', event => {
+			TocItem.removeContextMenu();
+		})
+		
 	}
 	
 	/* Public Methods */
@@ -44,16 +52,10 @@ export default class Toc {
 		this.#drawContentInRegionToc(pictureObj);		//지역별
 		this.#drawContentInTimeToc(pictureObj);			//시간별
 	}
-	
-	add() {
-		
-	}
-	
-	remove() {
 
+	removeContent() {
 		
-	}
-	
+	}	
 	
 	/* Private Methods */
 	
@@ -86,64 +88,21 @@ export default class Toc {
 			}
 		})
 	}
-	
-	//Item Div 그리기
-	#getTocItem(pictureObj) {
-		const itemDiv = document.createElement('div');
-			  itemDiv.classList.add('item');
-		
-		const itemInfoDiv = document.createElement('div');
-			  itemInfoDiv.classList.add('item-info');
-		
-		const picture = document.createElement('img');
-			  picture.classList.add('picture');
-			  picture.src = `/picture/images/${pictureObj.pictureOriginName}.${pictureObj.extension}`;
-		itemDiv.appendChild(picture);
-		
-		const titlePTag = document.createElement('p');
-			  titlePTag.classList.add('title');
-			  titlePTag.innerText = (pictureObj.pictureName ? pictureObj.pictureName : pictureObj.pictureOriginName);
-		itemInfoDiv.appendChild(titlePTag);
-		
-		const addressPTag = document.createElement('p');
-			  addressPTag.innerText = pictureObj.address;
-		itemInfoDiv.appendChild(addressPTag);
-			
-		const timePTag = document.createElement('p');
-			  timePTag.innerText = pictureObj.refinePictureDate;
-		itemInfoDiv.appendChild(timePTag);
-		
-		const itemButtonDiv = document.createElement('div');
-			  itemButtonDiv.classList.add('item-button');
-		
-		const moreButton = document.createElement('button');
-		moreButton.classList.add('btn-more');
-		moreButton.addEventListener('click', event => {
-			console.log(event.currentTarget);
-		})
-		
-		itemButtonDiv.appendChild(moreButton);
-		
-		itemDiv.appendChild(itemInfoDiv);
-		itemDiv.appendChild(itemButtonDiv);
-		
-		return itemDiv;
-	}
-	
+
 	//전체 TOC Content 그리기
 	#drawContentInAllToc(pictureObj) {
 		const tocAll = document.getElementById('toc.all');
-		const itemDiv = this.#getTocItem(pictureObj);
+		const tocItem = new TocItem(pictureObj);
 		
-		tocAll.appendChild(itemDiv);
+		tocAll.appendChild(tocItem.itemDiv);
 	}
 	
 	//미등록 TOC Content 그리기
 	#drawContentInUnregistToc(pictureObj) {
 		const tocUnregist = document.getElementById('toc.unregist');
-		const itemDiv = this.#getTocItem(pictureObj);
+		const tocItem = new TocItem(pictureObj);
 		
-		tocUnregist.appendChild(itemDiv);
+		tocUnregist.appendChild(tocItem.itemDiv);
 	}
 	
 	//지역별 TOC Content 그리기 (그룹)
@@ -262,7 +221,10 @@ export default class Toc {
 		})
 		
 		items
-			.map(item => this.#getTocItem(item))
+			.map(item => {
+				const tocItem = new TocItem(item);
+				return tocItem.itemDiv
+			})
 			.forEach(itemDiv => groupItems.appendChild(itemDiv));
 		
 		groupItems.classList.remove('hidden');

@@ -1,6 +1,6 @@
 import Address from './Address.js';
 import HttpRequest from './HttpRequest.js';
-import Toast from './Toast.js';
+//import Toast from './Toast.js';
 
 import Toc from './toc2.js'
 import Map from './map.js'
@@ -17,6 +17,7 @@ window.onload = function() {
 	
 	//검색 이벤트 추가
 	setAddressSearchEvent();
+	
 }
 
 //데이터 및 맵 로드
@@ -29,7 +30,6 @@ function init() {
 		2.Contents 를 만들고
 		3.Contents에 이벤트를 부여하는 로직으로 결정.
 	 */
-
 	HttpRequest.get('/pictures')
 		//마커 추가하기
 		.then(pictureList => {
@@ -43,18 +43,9 @@ function init() {
 			return pictureList
 		})
 		//TOC 추가하기
-		.then(pictureList => {
-			
-			pictureList
-				//return tocContent
-				.map(pictureObj => toc.addContent(pictureObj))	
-				.forEach(tocContent => {
-					/*const title = tocContent.getElementByClassName('title')[0];
-					title.addEventListener('click', event => {
-						
-					})*/
-				})
-			
+		.then(pictureList => pictureList.map(pictureObj => toc.addContent(pictureObj)))
+		.then(() => {
+			const items = document.getElementsByClassName('item');
 			
 		});
 }

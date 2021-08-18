@@ -149,6 +149,7 @@ ul.group li.selected {
 	z-index: 2;
 	background-color: #fff;
 	border: 1px solid #008D62;
+	box-shadow: 4px 0px 4px 0px gray;
 }
 
 .context-menu li {
