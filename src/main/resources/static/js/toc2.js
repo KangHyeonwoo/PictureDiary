@@ -1,10 +1,10 @@
 import TocItem from './TocItem.js';
-
+import TocGroup from './TocGroup.js';
 
 export default class Toc {
 	
-	#regionGroup = new Map();
-	#timeGroup = new Map();
+	#regionGroupList = new Array();
+	#timeGroupList   = new Array();
 	
 	constructor() {
 		const tocHeader = document.getElementById('toc.header');
@@ -89,6 +89,7 @@ export default class Toc {
 	
 	//지역별 TOC Content 그리기 (그룹)
 	#drawContentInRegionToc(pictureObj) {
+		/*
 		const key = this.#extractRegionGroupKey(pictureObj);
 		const collection = this.#regionGroup.get(key);
 		
@@ -100,6 +101,15 @@ export default class Toc {
 		}
 		
 		this.#setItemCount('region', key)
+		*/
+		const key = this.#extractRegionGroupKey(pictureObj);
+		const collection = this.#regionGroupList.find(regionGroup => regionGroup.key === key);
+		if(!collection) {
+			const regionGroup = new TocGroup('region', key, pictureObj);
+			this.#regionGroupList.push(regionGroup);
+		} else {
+			collection.addItem(pictureObj);
+		}
 	}
 	
 	//지역별 TOC 그룹 Map객체의 키 조회
@@ -119,16 +129,13 @@ export default class Toc {
 	//시간별 TOC Content 그리기 (그룹)
 	#drawContentInTimeToc(pictureObj) {
 		const key = this.#extractTimeGroupKey(pictureObj);
-		const collection = this.#timeGroup.get(key);
-		
+		const collection = this.#timeGroupList.find(timeGroup=> timeGroup.key === key);
 		if(!collection) {
-			this.#timeGroup.set(key, [pictureObj]);
-			this.#drawTocItemGroup('time', key)
+			const timeGroup = new TocGroup('time', key, pictureObj);
+			this.#timeGroupList.push(timeGroup);
 		} else {
-			collection.push(pictureObj);
+			collection.addItem(pictureObj);
 		}
-		
-		this.#setItemCount('time', key)
 	}
 	
 	//시간별 TOC 그룹 Map객체의 키 조회
@@ -173,6 +180,7 @@ export default class Toc {
 	*/
 	//TOC 그룹에 그룹 내 아이템 개수 추가하기
 	//type : region / time
+	/*
 	#setItemCount(type, key) {
 		const tocGroup = document.getElementById(`toc.${type}`);
 		const groupItems = tocGroup.getElementsByClassName('item-group');
@@ -189,6 +197,7 @@ export default class Toc {
 			}
 		}
 	}
+	*/
 	//TOC 그룹 내 리스트 그리기
 	#drawTocItemsInGroup(type, items) {
 		const tocGroup = document.getElementById(`toc.${type}`);

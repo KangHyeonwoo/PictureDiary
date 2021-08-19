@@ -3,8 +3,8 @@ export default class TocGroup {
 	#type;
 	#key;
 	#titleDiv;
-	#count;
-	#itemList = [];
+	#countText;
+	#pictureObjList = [];
 	
 	constructor(type, key, pictureObj) {
 		const tocRegion = document.getElementById('toc.region');
@@ -29,11 +29,26 @@ export default class TocGroup {
 		
 		this.#type = type;
 		this.#key = key;
-		this.#itemList.push(pictureObj);
-		this.#count = this.#itemList.length;
+		this.#pictureObjList.push(pictureObj);
 	}	
 	
 	/** Public Method */
+	
+	addItem(pictureObj) {
+		this.#pictureObjList.push(pictureObj);
+		this.#countText.innertText = `개수 : ${this.#pictureObjList.length}개`;
+		console.log(this.#titleDiv)
+		console.log(this.#countText);
+		console.log(this.#pictureObjList.length)
+	}
+	
+	hasItem(pictureObj) {
+		const length = this.#pictureObjList
+			.filter(obj => obj.pictureId === pictureObj.pictureId)
+			.length;
+		
+		return length > 0
+	}
 	
 	get key() {
 		return this.#key;
@@ -43,13 +58,15 @@ export default class TocGroup {
 		return this.#titleDiv;
 	}
 	
+	get pictureObjList() {
+		return this.#pictureObjList;
+	}
+	
 	/** Private Method */
 	
 	//TOC Group 그리기
 	#rendererTocGroup(type, key) {
-		const that = this;
 		const tocGroup = document.getElementById(`toc.${type}`);
-		const groupMap = (type === 'region' ? this.#regionGroup : this.#timeGroup);
 		const itemGroup = document.createElement('div');
 			  itemGroup.classList.add('item-group');
 	
@@ -67,10 +84,9 @@ export default class TocGroup {
 		const countDiv = document.createElement('p');
 			  countDiv.classList.add('count');
 			  countDiv.innerText = `개수 : 1개`;
+		this.#countText = countDiv;
 		itemGroup.appendChild(countDiv);
 		
 		tocGroup.appendChild(itemGroup);
-		
-		return itemGroup
 	}
 }
