@@ -24,8 +24,8 @@ window.onload = function() {
 function init() {
 	/**
 	(메모) 마커먼저 추가한 이유.
-		TOC에 Contents 추가 후 Contents를 클릭할 때 지도의 중심이 해당 Content에 매핑되는
-		마커로 이동해야 하기 때문에, 
+		TOC에 Contents 추가 후 Contents를 클릭할 때
+		지도의 중심이 해당 Content에 매핑되는 마커로 이동해야 하기 때문에, 
 		1.마커를 먼저 만들고 
 		2.Contents 를 만들고
 		3.Contents에 이벤트를 부여하는 로직으로 결정.

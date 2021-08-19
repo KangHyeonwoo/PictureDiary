@@ -9,10 +9,6 @@ export default class Toc {
 	constructor() {
 		const tocHeader = document.getElementById('toc.header');
 		const menus = tocHeader.getElementsByTagName('li');
-		const tocRegion = document.getElementById('toc.region');
-		const tocRegionItems = document.getElementById('toc.region.items');
-		const tocTime = document.getElementById('toc.time');
-		const tocTimeItems = document.getElementById('toc.time.items');
 		
 		//TOC 헤더에 있는 버튼 이벤트 부여
 		Array.from(menus).forEach(menu => {
@@ -20,23 +16,9 @@ export default class Toc {
 			menu.addEventListener('click', event => this.#changeTocBody(event, menus))
 		});
 		
-		//그룹 > 뒤로가기 버튼 클릭 이벤트
-		const goRegionGroupButton = document.getElementById('goRegionGroupButton');
-		goRegionGroupButton.addEventListener('click', () => {
-			tocRegion.classList.remove('hidden')
-			tocRegionItems.classList.add('hidden')
-		});
-		
-		const goTimeGroupButton = document.getElementById('goTimeGroupButton');
-		goTimeGroupButton.addEventListener('click', () => {
-			tocTime.classList.remove('hidden')
-			tocTimeItems.classList.add('hidden')
-		});
-		
-		document.addEventListener('click', event => {
+		document.addEventListener('click', () => {
 			TocItem.removeContextMenu();
 		})
-		
 	}
 	
 	/* Public Methods */
@@ -46,7 +28,7 @@ export default class Toc {
 		if(pictureObj.hasGeometry) {
 			this.#drawContentInAllToc(pictureObj);		//전체
 		} else {
-			this.#drawContentInUnregistToc(pictureObj);	//미등록
+			this.#drawContentInUnregisterToc(pictureObj);	//미등록
 		}
 		
 		this.#drawContentInRegionToc(pictureObj);		//지역별
@@ -98,7 +80,7 @@ export default class Toc {
 	}
 	
 	//미등록 TOC Content 그리기
-	#drawContentInUnregistToc(pictureObj) {
+	#drawContentInUnregisterToc(pictureObj) {
 		const tocUnregist = document.getElementById('toc.unregist');
 		const tocItem = new TocItem(pictureObj);
 		
@@ -156,8 +138,8 @@ export default class Toc {
 		
 		return key;
 	}
-	
 	//TOC Group 그리기
+	/*
 	#drawTocItemGroup(type, key) {
 		const that = this;
 		const tocGroup = document.getElementById(`toc.${type}`);
@@ -188,7 +170,7 @@ export default class Toc {
 		
 		return itemGroup
 	}
-
+	*/
 	//TOC 그룹에 그룹 내 아이템 개수 추가하기
 	//type : region / time
 	#setItemCount(type, key) {
