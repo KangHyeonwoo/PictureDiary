@@ -105,5 +105,8 @@ export default class TocGroup {
 			.forEach(itemDiv => groupItems.appendChild(itemDiv));
 		
 		groupItems.classList.remove('hidden');
+		
+		const countSpan = document.getElementById(`${type}ItemCount`);
+		countSpan.innerText = this.#pictureObjList.length;
 	}
 }
