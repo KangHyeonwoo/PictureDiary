@@ -32,9 +32,6 @@ public class PictureDto {
 
     private boolean hasGeometry;
     
-    //TODO tocId 이제 필요 없을 것 같은데
-    private String tocId;
-    
     private String refineAddress;
     private String refinePictureDate;
     
@@ -54,7 +51,6 @@ public class PictureDto {
         this.updateDt = updateDt;
         
         this.hasGeometry = (this.latitude > 0 && this.longitude > 0);
-        this.tocId = this.hasGeometry ? "data-group_" + this.pictureId : "temp-group_" + this.pictureId;
         this.refineAddress = this.address == null ? "주소정보 없음" : this.address;
         this.refinePictureDate = this.pictureDate == null ? "날짜정보 없음" 
         		: this.pictureDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

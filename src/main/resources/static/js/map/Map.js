@@ -1,5 +1,5 @@
-import Marker from './Marker.js';
-import TempMarker from './TempMarker.js';
+import Marker from '../marker/Marker.js';
+import TempMarker from '../marker/TempMarker.js';
 
 export default class Map {
 	#map;

@@ -1,7 +1,5 @@
 export default class TocItem {
-	
 	#itemDiv;
-	
 	#context_menu = {
         rename : {
             type : 'all',
@@ -71,9 +69,15 @@ export default class TocItem {
 			  titlePTag.classList.add('title');
 			  titlePTag.innerText = (pictureObj.pictureName ? pictureObj.pictureName : pictureObj.pictureOriginName);
 		itemInfoDiv.appendChild(titlePTag);
-		
+		//TOC Item 제목 클릭 이벤트
+		titlePTag.addEventListener('click', () => {
+			if(pictureObj.marker) {
+				//지도를 마커로 이동시키기
+				pictureObj.marker.moveCenter();
+			}
+		});
 		const addressPTag = document.createElement('p');
-			  addressPTag.innerText = pictureObj.address;
+			  addressPTag.innerText = pictureObj.refineAddress;
 		itemInfoDiv.appendChild(addressPTag);
 			
 		const timePTag = document.createElement('p');

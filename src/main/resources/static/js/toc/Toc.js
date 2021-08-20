@@ -34,7 +34,7 @@ export default class Toc {
 		this.#drawContentInRegionToc(pictureObj);		//지역별
 		this.#drawContentInTimeToc(pictureObj);			//시간별
 	}
-
+	
 	removeContent() {
 		
 	}	
@@ -90,14 +90,11 @@ export default class Toc {
 	//지역별 TOC Content 그리기 (그룹)
 	#drawContentInRegionToc(pictureObj) {
 		const type = 'region';
-		const that = this;
 		const key = this.#extractRegionGroupKey(pictureObj);
 		const collection = this.#regionGroupList.find(regionGroup => regionGroup.key === key);
 		if(!collection) {
 			const regionGroup = new TocGroup(type, key, pictureObj);
 			this.#regionGroupList.push(regionGroup);
-			//그룹 타이틀 태그 클릭 이벤트
-			regionGroup.addTitleClickEvent(pictureObjList => that.#drawTocItemsInGroup(type, pictureObjList));
 		} else {
 			collection.addItem(pictureObj);
 		}
@@ -120,15 +117,11 @@ export default class Toc {
 	//시간별 TOC 그룹 그리기
 	#drawContentInTimeToc(pictureObj) {
 		const type = 'time';
-		const that = this;
 		const key = this.#extractTimeGroupKey(pictureObj);
 		const collection = this.#timeGroupList.find(timeGroup=> timeGroup.key === key);
 		if(!collection) {
 			const timeGroup = new TocGroup(type, key, pictureObj);
 			this.#timeGroupList.push(timeGroup);
-			//그룹 타이틀 태그 클릭 이벤트
-			timeGroup.addTitleClickEvent(pictureObjList => that.#drawTocItemsInGroup(type, pictureObjList));
-			
 		} else {
 			collection.addItem(pictureObj);
 		}
@@ -140,28 +133,5 @@ export default class Toc {
 		const key = dates.length > 1 ? `${dates[0]}년 ${dates[1]}월` : dates[0];
 		
 		return key;
-	}
-	
-	//TOC 그룹 내 리스트 그리기
-	#drawTocItemsInGroup(type, items) {
-		const tocGroup = document.getElementById(`toc.${type}`);
-		tocGroup.classList.add('hidden');
-		
-		const groupItems = document.getElementById(`toc.${type}.items`);
-		const childrens = groupItems.getElementsByClassName('item');
-		
-		//기존객체들지우기
-		Array.from(childrens).forEach(children => {
-			groupItems.removeChild(children);
-		})
-		
-		items
-			.map(item => {
-				const tocItem = new TocItem(item);
-				return tocItem.itemDiv
-			})
-			.forEach(itemDiv => groupItems.appendChild(itemDiv));
-		
-		groupItems.classList.remove('hidden');
 	}
 }

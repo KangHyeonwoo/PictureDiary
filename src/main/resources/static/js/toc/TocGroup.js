@@ -1,8 +1,7 @@
+import TocItem from './TocItem.js';
 
 export default class TocGroup {
-	#type;
 	#key;
-	#titleDiv;
 	#countText;
 	#pictureObjList = [];
 	
@@ -27,7 +26,6 @@ export default class TocGroup {
 		
 		this.#rendererTocGroup(type, key);
 		
-		this.#type = type;
 		this.#key = key;
 		this.#pictureObjList.push(pictureObj);
 	}	
@@ -47,13 +45,6 @@ export default class TocGroup {
 		return length > 0
 	}
 	
-	addTitleClickEvent(fnCallback) {
-		const that = this;
-		that.#titleDiv.addEventListener('click', () => {
-			fnCallback(that.#pictureObjList);
-		})
-	}
-	
 	get key() {
 		return this.#key;
 	}
@@ -66,6 +57,7 @@ export default class TocGroup {
 	
 	//TOC Group 그리기
 	#rendererTocGroup(type, key) {
+		const that = this;
 		const tocGroup = document.getElementById(`toc.${type}`);
 		const itemGroup = document.createElement('div');
 			  itemGroup.classList.add('item-group');
@@ -77,7 +69,9 @@ export default class TocGroup {
 		const titleDiv = document.createElement('p');
 		titleDiv.classList.add('title');
 		titleDiv.innerText = key;
-		this.#titleDiv = titleDiv;
+		titleDiv.addEventListener('click', () => {
+			that.#tocGroupClickEvent(type)
+		})
 		
 		itemGroup.appendChild(titleDiv);
 		
@@ -88,5 +82,28 @@ export default class TocGroup {
 		itemGroup.appendChild(countDiv);
 		
 		tocGroup.appendChild(itemGroup);
+	}
+	
+	//TOC 그룹 클릭 이벤트 > TOC 그룹 내 리스트 그리기
+	#tocGroupClickEvent(type) {
+		const tocGroup = document.getElementById(`toc.${type}`);
+		tocGroup.classList.add('hidden');
+		
+		const groupItems = document.getElementById(`toc.${type}.items`);
+		const childrens = groupItems.getElementsByClassName('item');
+		
+		//기존객체들지우기
+		Array.from(childrens).forEach(children => {
+			groupItems.removeChild(children);
+		})
+		
+		this.#pictureObjList
+			.map(item => {
+				const tocItem = new TocItem(item);
+				return tocItem.itemDiv
+			})
+			.forEach(itemDiv => groupItems.appendChild(itemDiv));
+		
+		groupItems.classList.remove('hidden');
 	}
 }

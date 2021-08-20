@@ -1,9 +1,9 @@
-import Address from './Address.js';
-import HttpRequest from './HttpRequest.js';
-//import Toast from './Toast.js';
+import Address from './map/Address.js';
+import HttpRequest from './common/HttpRequest.js';
+import Toast from './common/Toast.js';
 
-import Toc from './toc2.js'
-import Map from './map.js'
+import Toc from './toc/Toc.js'
+import Map from './map/Map.js'
 
 const toc = new Toc();
 const map = new Map();
@@ -37,14 +37,15 @@ function init() {
 				.filter(pictureObj => pictureObj.hasGeometry)
 				.forEach(pictureObj => {
 					const marker = map.addMarker(pictureObj);
-					pictureObj.makrer = marker;
+					pictureObj.marker = marker;
 				})
 			
 			return pictureList
 		})
 		//TOC 추가하기
 		.then(pictureList => {
-			pictureList.map(pictureObj => toc.addContent(pictureObj));
+			pictureList.forEach(pictureObj => toc.addContent(pictureObj));
+			
 		});
 }
 

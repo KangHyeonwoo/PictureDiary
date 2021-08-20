@@ -3,8 +3,6 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5988d7ab8811489d6e51d45f8081269f&libraries=services"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link href="/css/styles.css" type="text/css" rel="stylesheet" />
-<!-- <script src="/js/Toc.js" defer></script> -->
-<!-- <script type="module" src="/js/map.js" defer></script> -->
 <script type="module" src="/js/picture-map.js" defer></script>
 
 <head>
@@ -16,43 +14,8 @@
 <div class="content">
     <div class="left">
     	<div th:replace="~{toc}"></div>
-        <!-- <div id="toc">
-            <ul class="group-header">
-                <li>
-                    <div class="btn-group">
-                        <button type="button" id="extract-button" class="basic w200">파일 추출</button>
-                    </div>
-                    <div class="remark">
-                    	<span>추출 경로</span><br>
-                    	<span th:text="${path}"></span>
-                    </div>
-                </li>
-                <li>
-                	<span class="group-title">목록</span>
-                	<span id="dataCnt" class="group-cnt"></span>
-                    <ul id="data-group" class="group"></ul>
-                </li>
-                <li>
-                    <span class="group-title">기타</span>
-                    <span id="tempCnt" class="group-cnt"></span>
-                    <ul id="temp-group" class="group"></ul>
-                </li>
-
-            </ul>
-        </div> -->
     </div>
-    <div class="right" id="map">
-    <!-- 
-    	<div class="map-search">
-    		<input type="text" id="address-search-text">
-    		<button type="button" id="address-search-button">검색</button>
-    		<div id="menu_wrap" class="bg-white">
-		        <ul id="placesList"></ul>
-		        <div id="pagination"></div>
-		    </div>
-    	</div>
-     	-->
-    </div>
+    <div class="right" id="map"></div>
 </div>
 <div id="toast"></div>
 </body>
