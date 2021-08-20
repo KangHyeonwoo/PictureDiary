@@ -43,10 +43,8 @@ function init() {
 			return pictureList
 		})
 		//TOC 추가하기
-		.then(pictureList => pictureList.map(pictureObj => toc.addContent(pictureObj)))
-		.then(() => {
-			const items = document.getElementsByClassName('item');
-			
+		.then(pictureList => {
+			pictureList.map(pictureObj => toc.addContent(pictureObj));
 		});
 }
 

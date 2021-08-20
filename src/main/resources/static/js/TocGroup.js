@@ -36,10 +36,7 @@ export default class TocGroup {
 	
 	addItem(pictureObj) {
 		this.#pictureObjList.push(pictureObj);
-		this.#countText.innertText = `개수 : ${this.#pictureObjList.length}개`;
-		console.log(this.#titleDiv)
-		console.log(this.#countText);
-		console.log(this.#pictureObjList.length)
+		this.#countText.innerText = `개수 : ${this.#pictureObjList.length}개`;
 	}
 	
 	hasItem(pictureObj) {
@@ -50,12 +47,15 @@ export default class TocGroup {
 		return length > 0
 	}
 	
-	get key() {
-		return this.#key;
+	addTitleClickEvent(fnCallback) {
+		const that = this;
+		that.#titleDiv.addEventListener('click', () => {
+			fnCallback(that.#pictureObjList);
+		})
 	}
 	
-	get titleDiv() {
-		return this.#titleDiv;
+	get key() {
+		return this.#key;
 	}
 	
 	get pictureObjList() {
