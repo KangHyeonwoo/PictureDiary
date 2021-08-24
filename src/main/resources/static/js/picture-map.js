@@ -72,13 +72,14 @@ async function getAddressList(pictureList) {
 	return pictureList;
 }
 
+//검색 text 이벤트 부여
 function setAddressSearchEvent() {
 	//장소 검색 텍스트
 	const addressSearchText = document.getElementById('address-search-text');
-	addressSearchText.addEventListener('keyup', event => {
+	addressSearchText.addEventListener('keypress', event => {
 		if(event.code === 'Enter') {
 			event.preventDefault();
-			console.log('Enter Button Clicked')
+			search(event.currentTarget.value);
 		}
 		else if(event.code === 'Escape') {
 			event.preventDefault();
@@ -95,4 +96,15 @@ function setAddressSearchEvent() {
 		Address.searchCenterLocation(mapObj)
 			.then(address => addressSearchText.placeholder = address);
 	})
+}
+
+//장소 검색
+function search(keyword) {
+	Address.searchKeyword(keyword)
+		.then(result => console.log(result))
+		.catch(error => console.log(error));
+	
+	
+	const menuSearchButton = document.getElementById('menu.search');
+	menuSearchButton.click();
 }

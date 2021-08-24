@@ -78,7 +78,7 @@ export default class Address {
 				console.log(error);
 			})
 	}
-	
+	/*
 	static displayPlaces(places) {
 		const listEl = document.getElementById('placesList');
 		const menuEl = document.getElementById('menu_wrap');
@@ -157,6 +157,7 @@ export default class Address {
 			el.removeChild(el.lastChild);
 		}
 	}
+	*/
 }
 
 
