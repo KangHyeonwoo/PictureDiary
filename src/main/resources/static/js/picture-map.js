@@ -80,8 +80,7 @@ function setAddressSearchEvent() {
 			event.preventDefault();
 			console.log('Enter Button Clicked')
 		}
-		
-		if(event.code === 'Escape') {
+		else if(event.code === 'Escape') {
 			event.preventDefault();
 			console.log('ESC Button Clicked');
 		}

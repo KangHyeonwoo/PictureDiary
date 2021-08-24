@@ -15,22 +15,13 @@ export default class Toc {
 			menu.addEventListener('click', event => this.#headerToggle(event, menus))
 			menu.addEventListener('click', event => this.#changeTocBody(event, menus))
 		});
-		
-		document.addEventListener('click', () => {
-			TocItem.removeContextMenu();
-		})
 	}
 	
 	/* Public Methods */
 	
 	//TOC 객체 그리기
 	addContent(pictureObj) {
-		if(pictureObj.hasGeometry) {
-			this.#drawContentInAllToc(pictureObj);		//전체
-		} else {
-			this.#drawContentInUnregisterToc(pictureObj);	//미등록
-		}
-		
+		this.#drawContentInAllToc(pictureObj);			//전체
 		this.#drawContentInRegionToc(pictureObj);		//지역별
 		this.#drawContentInTimeToc(pictureObj);			//시간별
 	}
@@ -77,14 +68,6 @@ export default class Toc {
 		const tocItem = new TocItem(pictureObj);
 		
 		tocAll.appendChild(tocItem.itemDiv);
-	}
-	
-	//미등록 TOC Content 그리기
-	#drawContentInUnregisterToc(pictureObj) {
-		const tocUnregist = document.getElementById('toc.unregist');
-		const tocItem = new TocItem(pictureObj);
-		
-		tocUnregist.appendChild(tocItem.itemDiv);
 	}
 	
 	//지역별 TOC Content 그리기 (그룹)
