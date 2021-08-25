@@ -101,7 +101,7 @@ function setAddressSearchEvent() {
 //장소 검색
 function search(keyword) {
 	Address.searchKeyword(keyword)
-		.then(result => console.log(result))
+		.then(setSearchResultList)
 		.catch(error => console.log(error));
 	
 	

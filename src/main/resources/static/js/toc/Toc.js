@@ -1,5 +1,6 @@
 import TocItem from './TocItem.js';
 import TocGroup from './TocGroup.js';
+import TocSearch from './TocSearch.js';
 
 export default class Toc {
 	
@@ -29,6 +30,10 @@ export default class Toc {
 	removeContent() {
 		
 	}	
+	
+	setSearchResultList(resultList) {
+		new TocSearch(resultList);
+	}
 	
 	/* Private Methods */
 	
