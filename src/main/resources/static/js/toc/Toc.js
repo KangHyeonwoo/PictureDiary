@@ -32,6 +32,10 @@ export default class Toc {
 		
 	}	
 	
+	//검색 결과 TOC 그리기 + 마커 만들기
+	/**
+	 *  MEMO 기존 구현 방식으로는 페이징 처리 등에 이슈가 예상되어 조금 다른 방식으로 구현함.
+	 */
 	setSearchResultList(searchResult, map) {
 		this.#tocSearch.displayAddressList(searchResult.addressList, map);
 		this.#tocSearch.setPagination(searchResult.pagination);

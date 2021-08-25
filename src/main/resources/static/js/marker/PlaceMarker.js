@@ -9,12 +9,12 @@ export default class PlaceMarker {
 	constructor(place, map) {
 		console.log(place);
 		
-		const imageSrc = '/img/marker1-1.png';
+		const imageSrc = '/img/marker1-2.png';
     	const imageSize = new kakao.maps.Size(32, 32);
     	const imageOption = {offset: new kakao.maps.Point(16, 32)};
 		const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 		
-		this.#position = new kakao.maps.LatLng(place.x, place.y);
+		this.#position = new kakao.maps.LatLng(place.y, place.x);
 		this.#map = map;
 		
 		this.#marker = new kakao.maps.Marker({
@@ -29,12 +29,20 @@ export default class PlaceMarker {
 		this.#addMarkerEvent();
 	}
 	
+	/** Public Methods */
+	
+	remove() {
+		this.#marker.setMap(null);	
+	}
+	
+	/** Private Methods */
+	
 	//마커 객체 지도에 추가하기
 	#add() {
-		console.log(this.#marker)
-		console.log(this.#map)
 		this.#marker.setMap(this.#map);
 	}
+	
+	
 	
 	//마커 객체에 이벤트 부여하기
 	#addMarkerEvent() {
