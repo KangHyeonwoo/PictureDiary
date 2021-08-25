@@ -1,12 +1,12 @@
+import PlaceMarker from '../marker/PlaceMarker.js';
+
 export default class TocSearch {
+
+	constructor() {}
 	
-	constructor(places, map) {
-		
-		this.#displaySearchList(places, map);
-		this.#displayPagination();
-	}
+	/** Public Methods */
 	
-	#displaySearchList(places, map) {
+	displayAddressList(addressList, map) {
 		//place_name
 		//address_name
 		//category_name
@@ -17,7 +17,7 @@ export default class TocSearch {
 		//2. 기존에 검색 마커 삭제
 		
 		//3. TOC에 추가 및 마커 추가
-		places.forEach(place => {
+		addressList.forEach(place => {
 			const searchItem = this.#rendererTocSearch(place);
 			const placeMarker = new PlaceMarker(place, map);
 			
@@ -37,6 +37,12 @@ export default class TocSearch {
 		
 	}
 	
+	setPagination(pagination) {
+		
+	}
+	
+	/** Private Methods */
+	
 	#rendererTocSearch(place) {
 		const searchItem = document.createElement('div');
 		
@@ -52,7 +58,5 @@ export default class TocSearch {
 		return searchItem;
 	}
 	
-	#displayPagination() {
-		
-	}
+	
 } 

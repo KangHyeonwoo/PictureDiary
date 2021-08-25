@@ -17,7 +17,6 @@ window.onload = function() {
 	
 	//검색 이벤트 추가
 	setAddressSearchEvent();
-	
 }
 
 //데이터 및 맵 로드
@@ -101,7 +100,7 @@ function setAddressSearchEvent() {
 //장소 검색
 function search(keyword) {
 	Address.searchKeyword(keyword)
-		.then(setSearchResultList)
+		.then(searchResult => toc.setSearchResultList(searchResult, map.obj))
 		.catch(error => console.log(error));
 	
 	

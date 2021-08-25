@@ -6,6 +6,7 @@ export default class Toc {
 	
 	#regionGroupList = new Array();
 	#timeGroupList   = new Array();
+	#tocSearch = new TocSearch();
 	
 	constructor() {
 		const tocHeader = document.getElementById('toc.header');
@@ -31,8 +32,9 @@ export default class Toc {
 		
 	}	
 	
-	setSearchResultList(resultList) {
-		new TocSearch(resultList);
+	setSearchResultList(searchResult, map) {
+		this.#tocSearch.displayAddressList(searchResult.addressList, map);
+		this.#tocSearch.setPagination(searchResult.pagination);
 	}
 	
 	/* Private Methods */

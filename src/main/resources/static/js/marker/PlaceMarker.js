@@ -14,7 +14,7 @@ export default class PlaceMarker {
     	const imageOption = {offset: new kakao.maps.Point(16, 32)};
 		const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 		
-		this.#position = new kakao.maps.LatLng(searchObj.x, searchObj.y);
+		this.#position = new kakao.maps.LatLng(place.x, place.y);
 		this.#map = map;
 		
 		this.#marker = new kakao.maps.Marker({
@@ -31,6 +31,8 @@ export default class PlaceMarker {
 	
 	//마커 객체 지도에 추가하기
 	#add() {
+		console.log(this.#marker)
+		console.log(this.#map)
 		this.#marker.setMap(this.#map);
 	}
 	
@@ -57,7 +59,7 @@ class Infowindow {
 	constructor(title, marker, map) {
 		const content ='<div style="padding:5px;z-index:1;">' + title + '</div>';
 		
-		this.#infowindow = new kakao.maps.Infowindow({zIndex:1})
+		this.#infowindow = new kakao.maps.InfoWindow({zIndex:1})
 	    this.#infowindow.setContent(content);
 		
 		this.#title = title;
