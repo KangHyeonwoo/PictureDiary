@@ -1,12 +1,10 @@
 import TocItem from './TocItem.js';
 import TocGroup from './TocGroup.js';
-import TocSearch from './TocSearch.js';
 
 export default class Toc {
 	
 	#regionGroupList = new Array();
 	#timeGroupList   = new Array();
-	#tocSearch = new TocSearch();
 	
 	constructor() {
 		const tocHeader = document.getElementById('toc.header');
@@ -33,14 +31,7 @@ export default class Toc {
 	}	
 	
 	//검색 결과 TOC 그리기 + 마커 만들기
-	/**
-	 *  MEMO 기존 구현 방식으로는 페이징 처리 등에 이슈가 예상되어 조금 다른 방식으로 구현함.
-	 */
-	setSearchResultList(searchResult, map) {
-		this.#tocSearch.displayAddressList(searchResult.addressList, map);
-		this.#tocSearch.setPagination(searchResult.pagination);
-	}
-	
+
 	/* Private Methods */
 	
 	//TOC 버튼 클릭할 때 버튼 CSS 변경하기

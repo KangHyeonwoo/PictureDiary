@@ -3,15 +3,20 @@ export default class Address {
 	static #geocoder = new kakao.maps.services.Geocoder();
 	
 	static #errorMessage = {
+		EMPTY_KEYWORD : '키워드를 입력해주세요',
 		ZERO_RESULT : '검색 결과가 존재하지 않습니다.',
 		ERROR : '검색 결과 중 오류가 발생했습니다.'
 	}
 	
-	static searchKeyword(keyword) {
+	static searchKeyword(keyword, page) {
+		const i = (typeof page === 'undefined' ? 1 : page);
+		const searchOptions = {
+			'page' : i
+		};
 		return new Promise(
 			function(resolve, reject) {
 				if (!keyword.replace(/^\s+|\s+$/g, '')) {
-			        reject('키워드를 입력해주세요');
+			        reject(Address.#errorMessage.EMPTY_KEYWORD);
 					return;
 			    }
 				
@@ -26,7 +31,7 @@ export default class Address {
 					} else if (status === kakao.maps.services.Status.ERROR) {
 						reject(Address.#errorMessage.ERROR);
 					}
-				});
+				}, searchOptions);
 			}
 		);
 	}

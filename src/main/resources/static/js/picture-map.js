@@ -1,12 +1,13 @@
 import Address from './map/Address.js';
 import HttpRequest from './common/HttpRequest.js';
 import Toast from './common/Toast.js';
-
 import Toc from './toc/Toc.js'
 import Map from './map/Map.js'
+import Search from './search/Search.js';
 
 const toc = new Toc();
 const map = new Map();
+const search = new Search(map.obj);
 
 window.onload = function() {
 	init();
@@ -78,7 +79,7 @@ function setAddressSearchEvent() {
 	addressSearchText.addEventListener('keypress', event => {
 		if(event.code === 'Enter') {
 			event.preventDefault();
-			search(event.currentTarget.value);
+			placeSearch(event.currentTarget.value);
 		}
 		else if(event.code === 'Escape') {
 			event.preventDefault();
@@ -98,9 +99,15 @@ function setAddressSearchEvent() {
 }
 
 //장소 검색
-function search(keyword) {
-	Address.searchKeyword(keyword)
-		.then(searchResult => toc.setSearchResultList(searchResult, map.obj))
+function placeSearch(keyword, pageIndex) {
+	
+	Address.searchKeyword(keyword, pageIndex)
+		.then(searchResult => search.displayResult(searchResult))
+		.then(searchResult => {
+			search.setPagination(searchResult.pagination, function(index) {
+				placeSearch(keyword, index);
+			})
+		})
 		.catch(error => console.log(error));
 	
 	

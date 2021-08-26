@@ -1,32 +1,27 @@
-import PlaceMarker from '../marker/PlaceMarker.js';
+import SearchMarker from './SearchMarker.js';
 
-export default class TocSearch {
+export default class Search {
 	
 	#markerList = new Array();
 	#map;
 	
-	constructor() {}
+	constructor(map) {
+		this.#map = map;
+	}
 	
 	/** Public Methods */
 	
-	displayAddressList(addressList, map) {
-		//TODO 이부분 맘에 안듦
-		if(!this.#map) {
-			this.#map = map;
-		}
-		
+	displayResult(searchResult) {
 		this.#reset();
 		const listEl = document.getElementById('toc.search');
 		const bounds = new kakao.maps.LatLngBounds();
-		//1. 기존에 검색 목록 삭제
-		
-		//2. 기존에 검색 마커 삭제
 		
 		//3. TOC에 추가 및 마커 추가
-		addressList.forEach(place => {
+		searchResult.addressList.forEach(place => {
 			const searchItem = this.#rendererTocSearch(place);
-			const placeMarker = new PlaceMarker(place, map);
-			this.#markerList.push(placeMarker);
+			const searchMarker = new SearchMarker(place, this.#map);
+			this.#markerList.push(searchMarker);
+			
 			searchItem.onmouseover = function() {
 				
 			}
@@ -41,10 +36,38 @@ export default class TocSearch {
 			bounds.extend(placePosition);
 		})
 		
+		this.#map.setBounds(bounds);
+		
+		return searchResult;
 	}
 	
-	setPagination(pagination) {
+	setPagination(pagination, pageClickedFunc) {
+		const paginationEl = document.getElementById('pagination');
+		const fragment = document.createDocumentFragment();
 		
+		while(paginationEl.hasChildNodes()) {
+			paginationEl.removeChild(paginationEl.lastChild);
+		}
+		
+		for(let i = 1; i <= pagination.last; i++) {
+			const el = document.createElement('a');
+			el.href = '#';
+			el.innerHTML = i;
+			
+			if(i === pagination.current) {
+				el.className = 'on';
+			} else {
+				el.onclick = (function(i){
+					return function() {
+						pageClickedFunc(i);
+					}
+				})(i);
+			}
+			
+			fragment.appendChild(el);
+		}
+		
+		paginationEl.appendChild(fragment);
 	}
 	
 	/** Private Methods */
@@ -67,6 +90,7 @@ export default class TocSearch {
 		
 		return searchItem;
 	}
+	
 	//TOC 목록 / 마커 초기화하기
 	#reset() {
 		//마커 지우기

@@ -1,5 +1,4 @@
-
-export default class PlaceMarker {
+export default class SearchMarker {
 	
 	#marker;
 	#position;
@@ -7,8 +6,6 @@ export default class PlaceMarker {
 	#infowindow;
 	
 	constructor(place, map) {
-		console.log(place);
-		
 		const imageSrc = '/img/marker1-2.png';
     	const imageSize = new kakao.maps.Size(32, 32);
     	const imageOption = {offset: new kakao.maps.Point(16, 32)};
@@ -41,8 +38,6 @@ export default class PlaceMarker {
 	#add() {
 		this.#marker.setMap(this.#map);
 	}
-	
-	
 	
 	//마커 객체에 이벤트 부여하기
 	#addMarkerEvent() {
