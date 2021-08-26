@@ -1,4 +1,5 @@
 import SearchMarker from './SearchMarker.js';
+import Address from '../map/Address.js';
 
 export default class Search {
 	
@@ -11,24 +12,34 @@ export default class Search {
 	
 	/** Public Methods */
 	
+	//장소 검색
+	placeSearch(keyword, pageIndex) {
+		const that = this;
+		Address.searchKeyword(keyword, pageIndex)
+			.then(searchResult => that.displayResult(searchResult))
+			.then(searchResult => {
+				that.setPagination(searchResult.pagination, function(index) {
+					that.placeSearch(keyword, index);
+				})
+			})
+			.catch(error => console.log(error));
+		
+		const menuSearchButton = document.getElementById('menu.search');
+		menuSearchButton.click();
+	}
+
+
+	//검색 결과 TOC에 그리기
 	displayResult(searchResult) {
 		this.#reset();
 		const listEl = document.getElementById('toc.search');
 		const bounds = new kakao.maps.LatLngBounds();
 		
-		//3. TOC에 추가 및 마커 추가
+		//TOC에 추가 및 마커 추가
 		searchResult.addressList.forEach(place => {
 			const searchItem = this.#rendererTocSearch(place);
 			const searchMarker = new SearchMarker(place, this.#map);
 			this.#markerList.push(searchMarker);
-			
-			searchItem.onmouseover = function() {
-				
-			}
-			
-			searchItem.onmouseout = function() {
-				
-			}
 			
 			listEl.appendChild(searchItem);
 			
@@ -36,11 +47,15 @@ export default class Search {
 			bounds.extend(placePosition);
 		})
 		
+		//검색 결과 TOC 최상단으로 이동
+		listEl.scrollTop = 0;
+		//마커 위치로 bounds 조정
 		this.#map.setBounds(bounds);
 		
 		return searchResult;
 	}
 	
+	//페이지네이션 그리기
 	setPagination(pagination, pageClickedFunc) {
 		const paginationEl = document.getElementById('pagination');
 		const fragment = document.createDocumentFragment();
@@ -73,22 +88,35 @@ export default class Search {
 	/** Private Methods */
 	
 	#rendererTocSearch(place) {
-		const searchItem = document.createElement('div');
-		searchItem.classList.add('search-item');
 		
-		const addressEl = document.createElement('p');
-		const placeEl = document.createElement('p');
-		const categoryEl = document.createElement('p');
+		const itemDiv = document.createElement('div');
+			  itemDiv.classList.add('item');
 		
-		addressEl.innerText = place.address_name;
-		placeEl.innerText = place.place_name;
-		categoryEl.innerText = place.category_name;
+		const itemInfoDiv = document.createElement('div');
+			  itemInfoDiv.classList.add('item-info');
+			  itemInfoDiv.classList.add('no-more');
 		
-		searchItem.appendChild(placeEl);
-		searchItem.appendChild(categoryEl);
-		searchItem.appendChild(addressEl);
+		const picture = document.createElement('img');
+			  picture.classList.add('picture');
+			  picture.src = '/img/marker1-2.png';
+		itemDiv.appendChild(picture);
 		
-		return searchItem;
+		const placePTag = document.createElement('p');
+			  placePTag.classList.add('title');
+			  placePTag.innerText = place.place_name;
+		itemInfoDiv.appendChild(placePTag);
+
+		const addressPTag = document.createElement('p');
+			  addressPTag.innerText = place.address_name;
+		itemInfoDiv.appendChild(addressPTag);
+		
+		const categoryPTag = document.createElement('p');
+			  categoryPTag.innerText = place.category_name;
+		itemInfoDiv.appendChild(categoryPTag);
+		
+		itemDiv.appendChild(itemInfoDiv);
+		
+		return itemDiv;
 	}
 	
 	//TOC 목록 / 마커 초기화하기
@@ -99,7 +127,7 @@ export default class Search {
 		
 		//TOC 목록 제거
 		const listEl = document.getElementById('toc.search');
-		const childrens = listEl.getElementsByClassName('search-item');
+		const childrens = listEl.getElementsByClassName('item');
 		Array.from(childrens).forEach(children => {
 			listEl.removeChild(children);
 		})

@@ -5,9 +5,12 @@ import Toc from './toc/Toc.js'
 import Map from './map/Map.js'
 import Search from './search/Search.js';
 
-const toc = new Toc();
-const map = new Map();
-const search = new Search(map.obj);
+const toc = new Toc();					//TOC 객체
+const map = new Map();					//Map 객체
+const search = new Search(map.obj);		//검색 모듈 (TOC > 검색하는 부분)
+
+//검색어 입력 텍스트
+const addressSearchText = document.getElementById('address-search-text');
 
 window.onload = function() {
 	init();
@@ -18,6 +21,9 @@ window.onload = function() {
 	
 	//검색 이벤트 추가
 	setAddressSearchEvent();
+	
+	//지도 이벤트 추가
+	setMapEvent();
 }
 
 //데이터 및 맵 로드
@@ -72,20 +78,30 @@ async function getAddressList(pictureList) {
 	return pictureList;
 }
 
-//검색 text 이벤트 부여
+//검색 이벤트 부여
 function setAddressSearchEvent() {
-	//장소 검색 텍스트
-	const addressSearchText = document.getElementById('address-search-text');
+	
+	//장소 검색 텍스트에 이벤트 부여
 	addressSearchText.addEventListener('keypress', event => {
 		if(event.code === 'Enter') {
 			event.preventDefault();
-			placeSearch(event.currentTarget.value);
+			search.placeSearch(event.currentTarget.value);
 		}
 		else if(event.code === 'Escape') {
 			event.preventDefault();
 			console.log('ESC Button Clicked');
 		}
 	})
+	
+	//장소 검색 버튼에 이벤트 부여
+	const searchButton = document.getElementById('address-search-button');
+	searchButton.addEventListener('click', event => {
+		event.preventDefault();
+		search.placeSearch(addressSearchText.value);
+	})
+}
+
+function setMapEvent() {
 	
 	//처음 지도 로드 시 지도 중심좌표 주소 조회
 	Address.searchCenterLocation(map.obj)
@@ -98,19 +114,3 @@ function setAddressSearchEvent() {
 	})
 }
 
-//장소 검색
-function placeSearch(keyword, pageIndex) {
-	
-	Address.searchKeyword(keyword, pageIndex)
-		.then(searchResult => search.displayResult(searchResult))
-		.then(searchResult => {
-			search.setPagination(searchResult.pagination, function(index) {
-				placeSearch(keyword, index);
-			})
-		})
-		.catch(error => console.log(error));
-	
-	
-	const menuSearchButton = document.getElementById('menu.search');
-	menuSearchButton.click();
-}

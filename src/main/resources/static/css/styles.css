@@ -269,6 +269,7 @@ button {
 }
 
 .btn-group {
+    margin-top: 10px;
     text-align: center;
     width:100%;
 }
@@ -440,7 +441,7 @@ button {
 }
 
 .toc-body {
-	height: calc(100% - 230px);
+	height: calc(100% - 240px);
 	background: #FAFAFA;
 	overflow-y: auto;
 }
@@ -464,10 +465,14 @@ button {
 	padding: 15px 20px 10px 10px;
 }
 
+.item .item-info.no-more {
+	width:100%;
+}
+
 .item .picture {
 	width: 45px;
 	height: 45px;
-	padding-left: 10px;
+	margin-left: 10px;
 	border: 2px solid #efefef;
 }
 
@@ -489,17 +494,9 @@ button {
 .item .item-info .title:hover {
 	text-decoration: underline;
 }
-/* 
-.item .item-button{
-	width:33px;
-	height: 88px;
-	text-align: center;
-	display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
- */
+
+
 ul.menu {
 	margin:0px;
 	padding: 0 28px;
