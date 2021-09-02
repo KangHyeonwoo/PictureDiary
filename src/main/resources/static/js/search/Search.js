@@ -1,5 +1,6 @@
 import SearchMarker from './SearchMarker.js';
 import Address from '../map/Address.js';
+import Toast from '../common/Toast.js';
 
 export default class Search {
 	
@@ -22,7 +23,10 @@ export default class Search {
 					that.placeSearch(keyword, index);
 				})
 			})
-			.catch(error => console.log(error));
+			.catch(error => {
+				Toast.show(error);
+				that.#reset();
+			});
 		
 		const menuSearchButton = document.getElementById('menu.search');
 		menuSearchButton.click();
@@ -87,6 +91,7 @@ export default class Search {
 	
 	/** Private Methods */
 	
+	//TOC에 검색 결과 item 객체 생성
 	#rendererTocSearch(place) {
 		
 		const itemDiv = document.createElement('div');
@@ -131,5 +136,12 @@ export default class Search {
 		Array.from(childrens).forEach(children => {
 			listEl.removeChild(children);
 		})
+		
+		//페이지네이션 제거
+		const paginationEl = document.getElementById('pagination');
+		
+		while(paginationEl.hasChildNodes()) {
+			paginationEl.removeChild(paginationEl.lastChild);
+		}
 	}
 } 

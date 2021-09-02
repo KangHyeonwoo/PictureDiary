@@ -51,7 +51,6 @@ function init() {
 		//TOC 추가하기
 		.then(pictureList => {
 			pictureList.forEach(pictureObj => toc.addContent(pictureObj));
-			
 		});
 }
 
