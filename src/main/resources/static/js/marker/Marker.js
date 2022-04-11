@@ -5,7 +5,6 @@ export default class Marker {
 	#position;
 	#infowindow;
 	#map;
-	#pictureObj;
 	
 	static MarkerList = {
 		list : [],
@@ -36,8 +35,6 @@ export default class Marker {
 			 image: markerImage
         });
 		this.#infowindow = new Infowindow('default', map, this, pictureObj);
-		this.#pictureObj = pictureObj;
-		
 		const that = this;
 		kakao.maps.event.addListener(this.#marker, 'click', function() {
 			Marker.closeAllInfowindow();
@@ -71,6 +68,11 @@ export default class Marker {
 		this.infowindow.close();
 	}
 
+	//지도의 중심을 해당 마커로 이동하기
+	moveCenter() {
+	    this.#map.panTo(this.#position); 
+	}
+
 	static closeAllInfowindow() {
 		Marker.MarkerList.list.forEach(marker => {
 			marker.infowindow.close();
@@ -85,10 +87,6 @@ export default class Marker {
 		return this.#infowindow;
 	}
 
-	get pictureObj() {
-	    return this.#pictureObj;
-	}
-	
 	get marker() {
 		return this.#marker;
 	}

@@ -4,10 +4,12 @@ import Address from './Address.js';
 import HttpRequest from './HttpRequest.js';
 import Toast from './Toast.js';
 
+import Toc from './toc2.js'
+
 const map = {};
 const picture = {};
 let tempMarker;
-const toc = new Toc();
+//const toc = new Toc();
 
 map.options = {
     divId : 'map',
@@ -23,7 +25,7 @@ map.geometry = {};
 map.init = function() {
     //1. map on
     this.on();
-	Toc.Map = map.obj;
+	//Toc.Map = map.obj;
 	
 	//2. pictures draw
 	HttpRequest.get('/pictures')
@@ -34,22 +36,23 @@ map.init = function() {
 	extractButton.addEventListener('click', picture.extract)
 	
 	//TOC > ContextMenu
-	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
-	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
-	kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-rename', picture.tocContextMenuRenameHandler)
+	//kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-remove', picture.tocContextMenuRemoveHandler);
+	//kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-addGeometry', picture.tocContextMenuAddGeometryHandler)
+	//kakao.maps.event.addListener(map.obj, 'toc-contextmenu-picture-rename', picture.tocContextMenuRenameHandler)
 	
 	//Marker > Infowindow
 	kakao.maps.event.addListener(map.obj, 'marker-infowindow-move-button', picture.markerInfowindowMoveGeometryHandler);
 	
 	//Address > Search Center Location
+	/*
 	const addressSearchText = document.getElementById('address-search-text');
-	
 	addressSearchText.addEventListener('keyup', event => {
 		if(event.code === 'Enter') {
 			event.preventDefault();
 			picture.searchAddress();
 		}
 	})
+	
 	
 	//Address > Center location of map on first load
 	Address.searchCenterLocation(map.obj)
@@ -60,7 +63,7 @@ map.init = function() {
 		Address.searchCenterLocation(map.obj)
 			.then(address => addressSearchText.placeholder = address);
 	});
-	
+	*/
 	//Address > Search	
 	const addressSearchButton = document.getElementById('address-search-button');
 	addressSearchButton.addEventListener('click', picture.searchAddress)
@@ -88,11 +91,12 @@ picture.extract = function() {
 }
 
 picture.add = function(pictureObj) {
-	const contents = toc.add(pictureObj);
-
+	//const contents = toc.add(pictureObj);
+/*
 	if(pictureObj.hasGeometry) {
 		picture.addMarker(pictureObj, contents);
 	}
+	*/
 }
 
 picture.addMarker = function(pictureObj, contents) {
@@ -115,7 +119,7 @@ picture.addMarker = function(pictureObj, contents) {
 	    const param = {};
 		param.currentTarget = contents;
 		
-		toc.contentClickEventHandler(param);
+		//toc.contentClickEventHandler(param);
 	})
 	
 	contents.addEventListener('click', function(event){
@@ -136,7 +140,7 @@ picture.tocContextMenuRemoveHandler = function(pictureObj) {
 	HttpRequest.delete(`/pictures/${pictureObj.pictureId}`)
 		.then(result => {
 			//toc remove
-			toc.remove(pictureObj);
+			//toc.remove(pictureObj);
 			
 			//marker remove
 			const marker = Marker.findByPictureId(pictureObj.pictureId);
@@ -190,7 +194,7 @@ picture.tocContextMenuRenameHandler= function(paramObj) {
 	}
 	HttpRequest.put(url, data)
 		.then(result => {
-			Toc.closeRename(paramObj.pictureObj);
+			//Toc.closeRename(paramObj.pictureObj);
 			
 			const tocElement = document.getElementById(result.tocId);
 			tocElement.innerText = result.pictureName
@@ -288,7 +292,7 @@ picture.tempMarkerAddGeometryOkButtonHandler = function(obj) {
 			tempMarker.remove();
 			
 			//toc 삭제
-			toc.remove(pictureObj);
+			//toc.remove(pictureObj);
 			
 			//picture 추가
 			picture.add(resultPictureObj);

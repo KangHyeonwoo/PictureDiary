@@ -1,41 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5988d7ab8811489d6e51d45f8081269f&libraries=services"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link href="/css/styles.css" type="text/css" rel="stylesheet" />
-<script type="module" src="/js/toc2.js" defer></script>
+<script type="module" src="/js/toc/Toc.js" defer></script>
 <head>
     <meta charset="UTF-8">
     <title>TOC</title>
 </head>
 <body>
 
-<div class="content">
-	<div id="toc.search" class="toc-search">
+<div class="toc">
+	<div class="toc-search">
 		<div class="toc-search-group">
-			<input type="text">
-			<button type="button"></button>
+			<input type="text" id="address-search-text">
+			<button type="button" id="address-search-button"></button>
 		</div>
 	</div>
 	<div id="toc.header" class="toc-header">
 		<div class="navigation">
 			<ul class="menu">
 				<li id="menu.all" class="active">전체</li>
-				<li id="menu.unregist">미등록</li>
 				<li id="menu.region">지역별</li>
 				<li id="menu.time">시간별</li>
+				<li id="menu.search">검색결과</li>
 			</ul>
 		</div>
 	</div>
 	<div id="toc.body" class="toc-body">
 		<div id="toc.all" class="toc-body-all"></div>
-		<div id="toc.unregist" class="hidden toc-body-unregist"></div>
 		<div id="toc.region" class="hidden"></div>
+		<div id="toc.region.items" class="hidden">
+			<div class="group-info">
+				<span>
+					<button type="button" id="goRegionGroupButton" class="back-button"></button>
+				</span>
+				<span class="span-count">
+					총<span id="regionItemCount" class="span-count-bold">2</span>건
+				</span>
+			</div>
+		</div>
 		<div id="toc.time" class="hidden toc-body-time"></div>
+		<div id="toc.time.items" class="hidden">
+			<div class="group-info">
+				<span>
+					<button type="button" id="goTimeGroupButton" class="back-button"></button>			
+				</span>
+				<span class="span-count">
+					총<span id="timeItemCount" class="span-count-bold">2</span>건
+				</span>
+			</div>
+		</div>
+		<div id="toc.search" class="hidden toc-body-search">
+			<div id="pagination"></div>
+		</div>
 	</div>
 	<div id="toc.foot" class="toc-foot">
 		<div class="btn-group">
-		    <button type="button" id="extract-button" class="basic w200">파일 추출</button>
+			<button type="button" id="extract-button" class="basic w200">파일 추출</button>
 		</div>
 	</div>
 </div>

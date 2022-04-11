@@ -18,7 +18,7 @@ public class MapController {
     public String mapView(Model model) {
     	String path = pictureExtractService.getExtractFolderPath();
     	model.addAttribute("path", path);
-        return "pictureMap";
+        return "picture-map";
     }
     
     @GetMapping("/toc")

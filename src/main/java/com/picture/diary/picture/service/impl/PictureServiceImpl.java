@@ -2,11 +2,11 @@ package com.picture.diary.picture.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.picture.diary.common.exception.PictureDiaryException;
@@ -39,7 +39,9 @@ public class PictureServiceImpl implements PictureService {
     }
     
     public List<PictureDto> findAllPictureList() {
-        List<PictureDto> pictureDtoList = pictureRepository.findAll().stream()
+    	
+        List<PictureDto> pictureDtoList = pictureRepository.findAll(Sort.by(Sort.Direction.DESC, "latitude"))
+        		.stream()
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
 
