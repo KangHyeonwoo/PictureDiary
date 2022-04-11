@@ -49,7 +49,11 @@ dependencies {
 	testAnnotationProcessor ("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
 
 	//mysql
-	runtimeOnly 'mysql:mysql-connector-java'
+	//runtimeOnly 'mysql:mysql-connector-java'
+
+	//postgresql
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+	runtimeOnly 'org.postgresql:postgresql'
 
 	//java 9 이상의 버전에서 @Entity 어노테이션 사용시 발생하는 오류 해결
 	//Error message : java.lang.NoClassDefFoundError: javax/annotation/Generated (Compile Error)

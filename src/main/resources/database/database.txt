@@ -23,6 +23,21 @@ create table picture (
     update_dt timestamp
 );
 
+ 3-1. DDL IN POSTGRESQL
+create table picture (
+    picture_id serial primary key,
+    picture_name varchar(100),
+    picture_origin_name varchar(20) not null,
+    extension varchar(10) not null,
+    picture_size int not null,
+    picture_date timestamp,
+    latitude float4,
+    longitude float4,
+    address varchar(200),
+    create_dt timestamp,
+    update_dt timestamp
+);
+
 # 기타
  - JS 환경에서 MySQL 서버 접속 (Window)
   1. \connect mysql://root@localhost:3306
