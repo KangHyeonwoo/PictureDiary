@@ -1,10 +1,11 @@
 package com.picture.diary.config;
 
-import com.picture.diary.extract.data.PicturePathProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
+@PropertySource(value = {
+        "classpath:extract.properties"
+}, ignoreResourceNotFound = true)
 @Configuration
-@EnableConfigurationProperties(value = {PicturePathProperties.class})
 public class PropertiesConfig {
 }
