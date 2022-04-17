@@ -1,5 +1,6 @@
 package com.picture.diary.extract;
 
+import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.extract.data.Picture;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,18 +14,26 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractPictureExtractor {
 
+    /**
+     * 추출
+     * @param userId
+     *
+     *  1. 사진 파일 목록 조회
+     *  2. 좌표 정보 유무 체크
+     *  3.
+     */
     public void extract(String userId) {
-
         List<Picture> pictureList = this.findPictureListByUserId(userId);
-        for(Object o : pictureList) {
 
+        for(Picture picture : pictureList) {
+            if(picture.hasMetadata()) {
+
+            }
         }
 
     }
 
     protected abstract List<Picture> findPictureListByUserId(String userId);
-
-    protected abstract void getMetadata();
 
     private boolean moveFile(String from, String to) {
         Path fromPath = Paths.get(from);
