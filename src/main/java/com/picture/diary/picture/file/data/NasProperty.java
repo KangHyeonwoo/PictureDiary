@@ -1,4 +1,4 @@
-package com.picture.diary.extract.data;
+package com.picture.diary.picture.file.data;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,15 +9,13 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  *  파일 추출 경로 클래스
- *   - extract.properties 참조
+ *   - nas.properties 참조
  */
 @Getter
 @Configuration
-public class ExtractPath {
+public class NasProperty {
 
-    @Value("${extract.target.folder.path}")
-    private String targetFolderPath;
+    @Value("${picture.path}")
+    private String picturePath;
 
-    @Value("${extract.saved.folder.path}")
-    private String savedFolderPath;
 }

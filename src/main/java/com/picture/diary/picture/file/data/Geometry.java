@@ -1,4 +1,4 @@
-package com.picture.diary.extract.data;
+package com.picture.diary.picture.file.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

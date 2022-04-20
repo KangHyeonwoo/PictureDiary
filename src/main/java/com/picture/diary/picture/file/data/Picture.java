@@ -1,9 +1,10 @@
-package com.picture.diary.extract.data;
+package com.picture.diary.picture.file.data;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,6 +17,8 @@ public class Picture {
 
     private String name;
 
+    private String path;
+
     private long size;
 
     private Geometry geometry;
@@ -23,11 +26,16 @@ public class Picture {
     private LocalDateTime localDateTime;
 
     @Builder
-    public Picture(String name, long size, Geometry geometry, LocalDateTime localDateTime) {
+    public Picture(String name, String path, long size, Geometry geometry, LocalDateTime localDateTime) {
         this.name = name;
+        this.path = path;
         this.size = size;
         this.geometry = geometry;
         this.localDateTime = localDateTime;
+    }
+
+    public Picture(File file) {
+
     }
 
     public boolean hasMetadata() {
@@ -47,6 +55,7 @@ public class Picture {
         Picture picture = (Picture) o;
 
         return name.equalsIgnoreCase(picture.name) &&
+                path.equalsIgnoreCase(picture.path) &&
                 size == picture.size &&
                 geometry.equals(picture.geometry) &&
                 localDateTime.equals(picture.localDateTime);
@@ -54,6 +63,6 @@ public class Picture {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, size, geometry, localDateTime);
+        return Objects.hash(name, path, size, geometry, localDateTime);
     }
 }
