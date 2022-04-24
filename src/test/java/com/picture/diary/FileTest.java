@@ -1,10 +1,12 @@
 package com.picture.diary;
 
-import com.groupdocs.metadata.Metadata;
-import com.groupdocs.metadata.core.IDocumentInfo;
-import com.groupdocs.metadata.core.IExif;
-import com.groupdocs.metadata.core.TiffTag;
-import com.groupdocs.metadata.internal.c.a.w.internal.Ex;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.GpsDirectory;
+import com.drew.metadata.file.FileSystemDirectory;
+import com.drew.metadata.file.FileTypeDirectory;
+import com.drew.metadata.heif.HeifDirectory;
 import com.picture.diary.extract.util.PictureExtractUtils;
 import com.picture.diary.picture.file.data.Geometry;
 import com.picture.diary.picture.file.data.Picture;
@@ -61,7 +63,8 @@ public class FileTest {
         //Path resultPath = Files.copy(fromFile.toPath(), toFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
 
     }
-
+/*
+    //HEIC 확장자 안됨. 다른 라이브러리 찾는중
     @Test
     @DisplayName("HEIC 확장자 메타데이터 조회. ")
     void getMetadataOfHEICPicture() throws Exception {
@@ -78,21 +81,29 @@ public class FileTest {
 
         }
     }
-
+*/
     @Test
-    @DisplayName("디렉토리 내 파일 목록 조회")
-    void getFileList() throws Exception {
+    @DisplayName("HEIC 확장자 메타데이터 조회")
+    void getMetadataOfHeicPicture() throws Exception {
         String filePath = "D:/test/IMG_2068_copy.HEIC";
-        Path path = Paths.get(filePath);
+        Metadata metadata = ImageMetadataReader.readMetadata(new File(filePath));
 
-        BasicFileAttributes basicFileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
-        System.out.println("hi");
-        System.out.println(basicFileAttributes);
+        metadata.getDirectories().forEach(System.out::println);
 
-        UserDefinedFileAttributeView userDefinedFileAttributeView = Files.getFileAttributeView(path, UserDefinedFileAttributeView.class);
-        System.out.println("bye");
-        System.out.println(userDefinedFileAttributeView);
+        GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
 
+        if(gpsDirectory != null) {
+            System.out.println(gpsDirectory.getGeoLocation().getLatitude());
+            System.out.println(gpsDirectory.getGeoLocation().getLongitude());
+        }
+
+        metadata.getDirectories().forEach(directory -> {
+            System.out.println("Directory Name : " + directory.getName());
+            directory.getTags().forEach(tag -> {
+                System.out.println("  Tag Name : " + tag.getTagName());
+                System.out.println("  Tag Description : " + tag.getDescription());
+            });
+        });
     }
 
 }

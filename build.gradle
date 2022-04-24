@@ -23,6 +23,8 @@ configurations {
 
 repositories {
 	mavenCentral()
+	//HEIC 안됨
+	//maven { url "https://repository.groupdocs.com/repo/" }
 }
 
 dependencies {
@@ -73,6 +75,12 @@ dependencies {
 
 	//@ConfigurationProperties 어노테이션 사용 시 발생하는 에러 해결
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	//HEIC 안됨
+	//implementation group: 'com.groupdocs', name: 'groupdocs-metadata', version: '21.4'
+
+	// https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
+	implementation 'com.drewnoakes:metadata-extractor:2.14.0'
 }
 
 
