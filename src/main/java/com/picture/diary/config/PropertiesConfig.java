@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = {
-        "classpath:extract.properties"
+        "classpath:nas.properties"
 }, ignoreResourceNotFound = true)
 @Configuration
 public class PropertiesConfig {
