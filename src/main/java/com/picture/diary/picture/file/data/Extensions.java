@@ -3,9 +3,9 @@ package com.picture.diary.picture.file.data;
 /**
  *  추출 가능한 확장자
  */
-public enum AllowedExtensions {
+public enum Extensions {
 
-    JPEG, HEIC;
+    JPEG, JPG, HEIC;
 
     /**
      * 파일 확장자 체크 여부
@@ -24,7 +24,7 @@ public enum AllowedExtensions {
 
         String compareExtension = parts[parts.length - 1];
 
-        for(AllowedExtensions allowedExtension : AllowedExtensions.values()) {
+        for(Extensions allowedExtension : Extensions.values()) {
             if(allowedExtension.name().equalsIgnoreCase(compareExtension)) {
                 return true;
             }
