@@ -1,141 +1,87 @@
 package com.picture.diary.picture.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.extract.data.Geometry;
-import com.picture.diary.extract.data.PicturePathProperties;
-import com.picture.diary.extract.exception.PictureExtractExceptionType;
-import com.picture.diary.extract.service.PictureExtractService;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
-import com.picture.diary.picture.data.PictureLocationDto;
-import com.picture.diary.picture.data.PictureRenameDto;
+import com.picture.diary.picture.file.service.PictureFileService;
 import com.picture.diary.picture.repository.PictureRepository;
+import org.springframework.stereotype.Service;
+
 import com.picture.diary.picture.service.PictureService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PictureServiceImpl implements PictureService {
 
-    private final PicturePathProperties picturePathProperties;
-    private final PictureExtractService pictureExtractService;
     private final PictureRepository pictureRepository;
+    private final PictureFileService fileService;
 
-    public PictureDto findByPictureId(long pictureId) {
-    	
-    	return pictureRepository.findByPictureId(pictureId)
-    			.map(PictureEntity::toDto)
-    			.orElseThrow(() -> new PictureDiaryException(PictureExtractExceptionType.FILE_NOT_FOUND));
-    }
-    
-    public List<PictureDto> findAllPictureList() {
-    	
-        List<PictureDto> pictureDtoList = pictureRepository.findAll(Sort.by(Sort.Direction.DESC, "latitude"))
-        		.stream()
+    //TODO Cache -> 사용하는 곳 많다면 AOP 처리 가능하지 않을까
+    private final Map<String, List<PictureDto>> cacheMap = new HashMap<>();
+
+    @Override
+    public List<PictureDto> findListByUserId(String userId) {
+        List<PictureDto> cacheList = cacheMap.get(userId);
+        if(cacheList != null && !cacheList.isEmpty()) {
+            return cacheList;
+        }
+
+        List<PictureEntity> pictureEntityList = pictureRepository.findListByUserId(userId);
+        //TODO pictureEntityList 결과가 0건인 경우 null 인가 Empty List 인가?
+        return pictureEntityList.stream()
+                .filter(PictureEntity::isNotDeleted)
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
-
-        return pictureDtoList;
     }
 
-    public PictureDto rename(PictureRenameDto pictureRenameDto) {
-    	final long pictureId = pictureRenameDto.getPictureId();
-    	final String pictureName = pictureRenameDto.getPictureName();
-    	
-        PictureDto pictureDto = this.findByPictureId(pictureId);
-        pictureDto.rename(pictureName);
-
-        return this.save(pictureDto);
-    }
-
-    public PictureDto updateLocation(PictureLocationDto pictureLocationDto) {
-    	final long pictureId = pictureLocationDto.getPictureId();
-    	final double latitude = pictureLocationDto.getLatitude();
-    	final double longitude = pictureLocationDto.getLongitude();
-    	final String address = pictureLocationDto.getAddress();
-    	
-    	PictureDto pictureDto = this.findByPictureId(pictureId);
-    	
-    	//1. 사진파일 좌표 수정
-    	pictureExtractService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
-    	
-    	//2. Entity Setting
-    	pictureDto.updateLocation(address, latitude, longitude);
-    	
-    	//3. Save
-    	return this.save(pictureDto);
-    }
-    
-/*
-    public PictureDto updateGeometry(long pictureId, double latitude, double longitude) {
-        PictureDto pictureDto = this.findByPictureId(pictureId);
-        
-        //TODO 여기 속도 개선 필요함
-        /**
-         * 새로 좌표 추가하면 빨리 되는데
-         * 기존에 좌표가 있는 경우 느림
-         * 같은 메소드 타는데 속도가 차이나는 이유가 뭘까
-         * setPictureGeometry > getOrCreateExifDirectory() 얘의 차이일 수 있겠다.
-         * 없으면 새로 만들고 있으면 기존거 다 조회해야하니까
-         * 속도 개선 방안 1
-         *  - DB만 먼저 갱신해서 지도에는 데이터 이동한 것 처럼 보이고, 그 다음에 파일 메타데이터 변경하기
-         * 
-         */
-/*
-        pictureExtractService.setPictureGeometry(pictureDto, new Geometry(latitude, longitude));
-        
-        pictureDto.updateGeometry(latitude, longitude);
-        
-        return this.save(pictureDto);        	
-    }
-*/
-    @Transactional
-    public List<PictureDto> updateAddressList(List<PictureLocationDto> pictureLocationDtoList) {
-    	
-    	return pictureLocationDtoList.stream()
-        		.map(pictureLocationDto -> 
-	        		this.findByPictureId(pictureLocationDto.getPictureId())
-	            		.addAddress(pictureLocationDto.getAddress())
-        		)
-        		.map(this::save)
-        		.collect(Collectors.toList());
-    }
-    
-    public PictureDto updateAddress(PictureLocationDto pictureLocationDto) {
-    	final long pictureId = pictureLocationDto.getPictureId();
-    	final String address = pictureLocationDto.getAddress();
-    	
-    	PictureDto pictureDto = this.findByPictureId(pictureId).addAddress(address);
-    	
-    	return this.save(pictureDto);
-    }
-    
-    public void delete(long pictureId) {
-    	Optional<PictureEntity> pictureEntity = Optional.of(pictureRepository.findByPictureId(pictureId)
-    			.orElseThrow(() -> new IllegalArgumentException()));
-    	PictureDto pictureDto = pictureEntity.get().toDto();
-    	
-    	//파일 delete 디렉토리로 이동
-    	String fromPath = picturePathProperties.getDataPath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-    	String toPath = picturePathProperties.getDeletePath(pictureDto.getPictureOriginName(), pictureDto.getExtension());
-    	pictureExtractService.movePictureFile(fromPath, toPath);
-    	
-        pictureRepository.delete(pictureEntity.get());
-    }
-
+    //TODO save 가 필요할까?
+    @Override
     public PictureDto save(PictureDto pictureDto) {
+        pictureRepository.save(pictureDto.toEntity());
+        return null;
+    }
+
+    @Override
+    public void updateDescription(PictureDto pictureDto) {
         PictureEntity savedEntity = pictureRepository.save(pictureDto.toEntity());
-        
-        return savedEntity.toDto();
+
+        PictureDto savedDto = savedEntity.toDto();
+        //TODO 주석 풀기
+        //String userId = pictureDto.getUserId();
+        String userId = "";
+        List<PictureDto> cacheList = cacheMap.get(userId);
+
+        PictureDto updateDto = cacheList.stream()
+                .filter(o -> o.getPictureId() == savedDto.getPictureId())
+                .findFirst()
+                .orElseThrow(() -> new PictureDiaryException(""));
+
+        boolean remove = cacheList.remove(updateDto);
+
+        if(remove) {
+            cacheList.add(updateDto);
+        } else {
+            throw new PictureDiaryException("");
+        }
+    }
+
+    @Override
+    public void updateGeometry(PictureDto pictureDto) {
+
+        //TODO 위와 같으므로 우선 패스
+    }
+
+    @Override
+    public void delete(long pictureId) {
+        boolean deleted = pictureRepository.updateDeleteYn(pictureId, "Y");
+
+        //TODO Cache 처리
     }
 }

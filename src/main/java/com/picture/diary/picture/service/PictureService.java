@@ -8,21 +8,14 @@ import java.util.List;
 
 public interface PictureService {
 
-	PictureDto findByPictureId(long pictureId);
+	List<PictureDto> findListByUserId(String userId);
 
-	List<PictureDto> findAllPictureList();
+	PictureDto save(PictureDto pictureDto);
 
-	PictureDto rename(PictureRenameDto pictureRenameDto);
-	
-	PictureDto updateLocation(PictureLocationDto pictureLocationDto);
-	
-	List<PictureDto> updateAddressList(List<PictureLocationDto> pictureLocationDtoList);
-	
-	PictureDto updateAddress(PictureLocationDto pictureLocationDto);
-	
-	//PictureDto updateGeometry(long pictureId, double latitude, double longitude);
+	void updateDescription(PictureDto pictureDto);
+
+	void updateGeometry(PictureDto pictureDto);
 
 	void delete(long pictureId);
 
-	PictureDto save(PictureDto pictureDto);
 }
