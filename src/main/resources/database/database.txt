@@ -44,3 +44,30 @@ create table picture (
   2. 패스워드 입력
   3. \sql
   	(JS mode -> SQL mode)
+
+
+# PostgreSQL
+
+DROP TABLE IF EXISTS public.picture;
+
+create sequence picture_picture_id_seq;
+
+CREATE TABLE IF NOT EXISTS public.picture
+(
+    picture_id integer NOT NULL DEFAULT nextval('picture_picture_id_seq'::regclass),
+    picture_name character varying(100) COLLATE pg_catalog."default",
+    extension character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    picture_size integer NOT NULL,
+    date_time timestamp without time zone,
+    latitude real,
+    longitude real,
+	delete_at character varying(1) NOT NULL,
+	user_id character varying(50) NOT NULL,
+    description character varying(500) COLLATE pg_catalog."default",
+    create_dt timestamp without time zone,
+    update_dt timestamp without time zone,
+    CONSTRAINT picture_pkey PRIMARY KEY (picture_id)
+)
+
+ALTER TABLE IF EXISTS public.picture
+    OWNER to postgres;
