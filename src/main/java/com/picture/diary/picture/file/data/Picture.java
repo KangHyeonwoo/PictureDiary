@@ -68,6 +68,10 @@ public class Picture {
         return this.geometry != null || this.localDateTime != null;
     }
 
+    public boolean hasGeometry() {
+        return this.geometry != null;
+    }
+
     private Geometry findGeometry() {
         String filePath = getFullPath();
         try {
