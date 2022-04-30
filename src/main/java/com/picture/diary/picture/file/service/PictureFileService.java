@@ -7,9 +7,10 @@ import java.util.Optional;
 
 public interface PictureFileService {
 
+    @Deprecated
     List<Picture> findListByUserId(String userId);
 
-    //Optional<Picture> findByPictureName(String pictureName);
+    List<Picture> findAllListByUserId(String userId);
 
-    boolean updateMetadata(Picture picture);
+    Picture findByPath(String path);
 }
