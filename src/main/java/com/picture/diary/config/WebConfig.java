@@ -1,26 +1,21 @@
 package com.picture.diary.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.picture.diary.common.annotation.LoginUserArgumentResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
 
+@RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	@Value("${file.path.data-path}")
-	private String dataPath;
-	
-	@Value("${file.request.url}")
-	private String requestUrl;
-	
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		//String filePath = "file://" + dataPath + "/";
-		String filePath = "file:///" + dataPath + "/";
-		registry.addResourceHandler(requestUrl)
-				.addResourceLocations(filePath)
-				.setCachePeriod(60 * 60 * 24 * 365);
-	}
+    private final LoginUserArgumentResolver loginUserArgumentResolver;
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(loginUserArgumentResolver);
+    }
 }
