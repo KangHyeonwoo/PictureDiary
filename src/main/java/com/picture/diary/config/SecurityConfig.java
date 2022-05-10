@@ -2,15 +2,10 @@ package com.picture.diary.config;
 
 import com.picture.diary.login.data.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -55,17 +50,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .headers().frameOptions().disable()
-                .and()
+            .and()
                 .authorizeRequests()
                 .antMatchers(PERMIT_ALL_PATTERNS).permitAll()
                 .antMatchers(USER_ROLE_PATTERNS).hasRole(Role.USER.name())
                 .anyRequest().authenticated()
-                .and()
+            .and()
                 .logout()
                 .logoutSuccessUrl("/")
-                .and()
-                .oauth2Login()
-                .userInfoEndpoint();
+            .and()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/map");
+            //TODO OAUTH 로그인 기능 구현 시 주석 풀기
+            //.and()
+                //.oauth2Login()
+                //.userInfoEndpoint();
                 //.userService(customOAuthUserService);
     }
 }
