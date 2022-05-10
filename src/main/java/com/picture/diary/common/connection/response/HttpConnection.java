@@ -1,4 +1,4 @@
-package com.picture.diary.common.utils;
+package com.picture.diary.common.connection.response;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,41 +11,32 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-@Data
-@Builder
-@Component
 @Slf4j
-public class HttpConnectionUtils {
+@Deprecated
+public class HttpConnection {
 
     // PUSH
     @Builder.Default
     private String httpMethod = "GET";
     @Builder.Default
-    private String protocol = "http";
+    private String protocol = "https";
     private String host;
     private String port;
     private String code;
     private String url; // 통합 인자값
-    /*  @Param resource
-     *  dataJson, dataMap 빌더로 둘중 하나의 데이터를 받아야한다.
-     *  dataList -> applicatioin/json ,dataMap -> application/x-www-form-urlencoded
-     *
-     * */
     private List<JSONObject> dataList; // 리스트로된 json을 파라미터로 보낼경우
     private Map<String, Object> dataMap;
 
-    @Builder.Default
     private boolean hasResponseBody = false;
-    @Builder.Default
     private String filePath = "";
+
+
 
     /**
      * 통신 기능 시작
@@ -53,12 +44,13 @@ public class HttpConnectionUtils {
      * @return ResultVO
      * @throws IOException
      */
-    public String start() throws IOException {
+    public String getResponse() throws IOException {
 
         String sParam = this.makeParam();
         String sUrl = this.makeUrl(sParam);
 
-        if (ObjectUtils.isEmpty(sUrl)) {
+        if (!ObjectUtils.isEmpty(sUrl)) {
+
             return this.connection(sUrl, sParam);
         }
 
@@ -98,7 +90,7 @@ public class HttpConnectionUtils {
                 conn.getOutputStream().write(bParam);
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("허용되지 않은 요청 타입입니다.");
         }
 
         // Response Code
@@ -240,25 +232,6 @@ public class HttpConnectionUtils {
             log.error("message", e.getMessage());
         }
         return out;
-    }
-
-    /**
-     * 서버주소 만들기
-     * @param scheme
-     * @param ip
-     * @param port
-     * @return
-     */
-    public String ServerAddr(String scheme, String ip, String port) {
-        String addr = "";
-
-        if("".equals(port) || port == null) {
-            addr = scheme + "://" + ip;
-        }else{
-            addr = scheme + "://" + ip + ":" + port;
-        }
-
-        return addr;
     }
 
 }
