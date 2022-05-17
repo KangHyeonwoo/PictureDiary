@@ -2,7 +2,6 @@ package com.picture.diary;
 
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
-import com.picture.diary.picture.file.data.Extensions;
 import com.picture.diary.picture.file.data.Picture;
 import com.picture.diary.picture.repository.PictureRepository;
 import com.picture.diary.picture.service.PictureService;
@@ -11,12 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +59,7 @@ public class PictureServiceTest {
         3. 사용자 ID 다를 경우 결과 제대로 조회되는지 체크해봐야함
      */
 
+    //TODO : 데이터가 0건일 경우에만 테스트가 성공함. 이거 테스트케이스 수정할 필요 있음.
     @Test
     @Transactional
     @DisplayName("저장소에는 있고 DB 에는 없을 경우, 해당 데이터는 DB 에 추가 후 리턴한다. (findAllListByUserId)")
