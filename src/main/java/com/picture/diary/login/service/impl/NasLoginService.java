@@ -1,25 +1,19 @@
 package com.picture.diary.login.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.picture.diary.common.connection.response.ConnectionResponse;
 import com.picture.diary.login.data.LoginRequestDto;
 import com.picture.diary.login.data.LoginResponseEntity;
 import com.picture.diary.login.service.LoginService;
 import com.picture.diary.picture.file.data.NasProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriBuilder;
-import reactor.core.publisher.Mono;
-
-import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
 public class NasLoginService implements LoginService {
 
     private final NasProperty nasProperty;
-    private final WebClient webClient;
+    //private final WebClient webClient;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,6 +36,7 @@ public class NasLoginService implements LoginService {
                 .block();
 */
 
+/*
         Mono<Object> loginResponse = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(apiPath)
@@ -62,6 +57,7 @@ public class NasLoginService implements LoginService {
                 .flatMap(responseObj -> {
 
                 });
+*/
 
 
         objectMapper.convertValue(new Object(), LoginResponseEntity.class);
