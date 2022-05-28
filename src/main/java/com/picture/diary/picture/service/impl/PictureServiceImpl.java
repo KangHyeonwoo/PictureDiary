@@ -3,6 +3,7 @@ package com.picture.diary.picture.service.impl;
 import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureEntity;
+import com.picture.diary.picture.file.data.Picture;
 import com.picture.diary.picture.file.service.PictureFileService;
 import com.picture.diary.picture.repository.PictureRepository;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,8 @@ import com.picture.diary.picture.service.PictureService;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,65 +23,70 @@ public class PictureServiceImpl implements PictureService {
     private final PictureRepository pictureRepository;
     private final PictureFileService fileService;
 
-    //TODO Cache -> 사용하는 곳 많다면 AOP 처리 가능하지 않을까
-    private final Map<String, List<PictureDto>> cacheMap = new HashMap<>();
-
     @Override
-    public List<PictureDto> findListByUserId(String userId) {
-        List<PictureDto> cacheList = cacheMap.get(userId);
-        if(cacheList != null && !cacheList.isEmpty()) {
-            return cacheList;
-        }
-
+    public List<PictureDto> findNotDeletedListByUserId(String userId) {
         List<PictureEntity> pictureEntityList = pictureRepository.findListByUserId(userId);
-        //TODO pictureEntityList 결과가 0건인 경우 null 인가 Empty List 인가?
+
+        //DB 에서 조회했을 때 데이터가 있을 경우
         return pictureEntityList.stream()
                 .filter(PictureEntity::isNotDeleted)
                 .map(PictureEntity::toDto)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PictureDto> findAllListByUserId(String userId) {
+        List<PictureEntity> dbPictureList = pictureRepository.findListByUserId(userId);
+        List<Picture> storePictureList = fileService.findAllListByUserId(userId);
+
+        List<PictureDto> savePictureDtoList = new ArrayList<>();
+
+        for(int i=0; i< storePictureList.size(); i++) {
+            PictureDto storePictureDto = PictureDto.createBy(userId, storePictureList.get(i));
+            boolean hasInDB = dbPictureList.stream()
+                    .map(PictureEntity::toDto)
+                    //TODO equals 재정의가 필요할까? (만약 해야 한다면 hashcode 도 같이 해야 함)
+                    .anyMatch(dbPictureDto -> dbPictureDto.getPictureId() == storePictureDto.getPictureId() && dbPictureDto.getUserId().equals(storePictureDto.getUserId()));
+
+            if(!hasInDB) {
+                savePictureDtoList.add(storePictureDto);
+            }
+        }
+
+        pictureRepository.saveAll(
+                savePictureDtoList.stream()
+                        .map(PictureDto::toEntity)
+                        .collect(Collectors.toList())
+        );
+
+        return savePictureDtoList;
+    }
+
     //TODO save 가 필요할까?
     @Override
     public PictureDto save(PictureDto pictureDto) {
-        pictureRepository.save(pictureDto.toEntity());
-        return null;
+
+        return pictureRepository.save(pictureDto.toEntity()).toDto();
     }
 
     @Override
     public void updateDescription(PictureDto pictureDto) {
-        PictureEntity savedEntity = pictureRepository.save(pictureDto.toEntity());
-
-        PictureDto savedDto = savedEntity.toDto();
-        //TODO 주석 풀기
-        //String userId = pictureDto.getUserId();
-        String userId = "";
-        List<PictureDto> cacheList = cacheMap.get(userId);
-
-        PictureDto updateDto = cacheList.stream()
-                .filter(o -> o.getPictureId() == savedDto.getPictureId())
-                .findFirst()
-                .orElseThrow(() -> new PictureDiaryException(""));
-
-        boolean remove = cacheList.remove(updateDto);
-
-        if(remove) {
-            cacheList.add(updateDto);
-        } else {
-            throw new PictureDiaryException("");
-        }
+        pictureRepository.save(pictureDto.toEntity());
     }
 
     @Override
     public void updateGeometry(PictureDto pictureDto) {
-
-        //TODO 위와 같으므로 우선 패스
+        pictureRepository.save(pictureDto.toEntity());
     }
 
     @Override
     public void delete(long pictureId) {
-        boolean deleted = pictureRepository.updateDeleteYn(pictureId, "Y");
+        PictureDto pictureDto = pictureRepository.findByPictureId(pictureId)
+                .orElseThrow(() -> new PictureDiaryException(""))
+                .toDto();
 
-        //TODO Cache 처리
+        pictureDto.updateToDelete();
+
+        pictureRepository.save(pictureDto.toEntity());
     }
 }
