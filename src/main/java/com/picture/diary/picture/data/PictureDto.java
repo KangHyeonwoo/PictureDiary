@@ -1,5 +1,6 @@
 package com.picture.diary.picture.data;
 
+import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.picture.file.data.Extensions;
 import com.picture.diary.picture.file.data.Geometry;
 import com.picture.diary.picture.file.data.Picture;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -71,6 +73,10 @@ public class PictureDto {
     	this.geometry = new Geometry(latitude, longitude);
     }
 
+    public void updateToDelete() {
+        this.deleteAt = "Y";
+    }
+
     public PictureEntity toEntity() {
         return PictureEntity.builder()
                 .pictureId(this.pictureId)
@@ -86,6 +92,10 @@ public class PictureDto {
     }
 
     public static PictureDto createBy(String userId, Picture picture) {
+        if(StringUtils.isEmpty(userId)) {
+            throw new PictureDiaryException("userId is required.");
+        }
+
         return PictureDto.builder()
                 .pictureName(picture.getName())
                 .extension(picture.getExtension())
@@ -97,4 +107,5 @@ public class PictureDto {
                 .build();
 
     }
+
 }

@@ -60,14 +60,6 @@ public class Picture {
         return this.path + "\\" + this.name + FilenameUtils.EXTENSION_SEPARATOR_STR + this.extension.name();
     }
 
-    /*
-        파일의 메타데이터 보유 유무는
-        좌표 정보 혹은 파일 생성 일자 중 하나라도 존재하는지로 판단한다.
-     */
-    public boolean hasMetadata() {
-        return this.geometry != null || this.localDateTime != null;
-    }
-
     public boolean hasGeometry() {
         return this.geometry != null;
     }

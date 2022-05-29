@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.picture.diary.response.ErrorResponse;
+import com.picture.diary.common.response.ErrorResponse;
 
 /**
  * 예외처리 핸들러

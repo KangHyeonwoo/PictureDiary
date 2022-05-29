@@ -1,10 +1,10 @@
 package com.picture.diary.login.data;
 
-import com.picture.diary.common.connection.response.ConnectionResponse;
+import com.picture.diary.common.connection.response.ConnectionResponseEntity;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class LoginResponseEntity extends ConnectionResponse {
+public class LoginResponseEntity extends ConnectionResponseEntity {
 
     private String did;
     private boolean isPortalPort;
