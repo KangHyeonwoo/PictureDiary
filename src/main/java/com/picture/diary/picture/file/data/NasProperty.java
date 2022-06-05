@@ -16,4 +16,6 @@ public class NasProperty {
     @Value("${picture.path}")
     private String picturePath;
 
+    @Value("${api.path}")
+    private String apiPath;
 }

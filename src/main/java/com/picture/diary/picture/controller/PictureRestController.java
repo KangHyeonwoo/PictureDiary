@@ -1,7 +1,6 @@
 package com.picture.diary.picture.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -14,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.picture.diary.extract.data.Geometry;
 import com.picture.diary.picture.data.PictureDto;
 import com.picture.diary.picture.data.PictureLocationDto;
 import com.picture.diary.picture.data.PictureRenameDto;
 import com.picture.diary.picture.service.PictureService;
-import com.picture.diary.response.BasicResponse;
-import com.picture.diary.response.SuccessResponse;
+import com.picture.diary.common.response.BasicResponse;
+import com.picture.diary.common.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +31,8 @@ public class PictureRestController {
     
     @GetMapping
     public ResponseEntity<BasicResponse> findAllList() {
-    	List<PictureDto> resultList = pictureService.findAllPictureList();
+    	//List<PictureDto> resultList = pictureService.findAllPictureList();
+		List<PictureDto> resultList = null;
         
     	return ResponseEntity.ok()
     			.body(new SuccessResponse<List<PictureDto>>(resultList));
@@ -51,7 +50,8 @@ public class PictureRestController {
    			@Valid @RequestBody PictureRenameDto pictureRenameDto) {
     	//TODO pictureId , pictureRenameDto.getPictureId() 같은지 검사하기
     	
-       	PictureDto result = pictureService.rename(pictureRenameDto);
+       	//PictureDto result = pictureService.rename(pictureRenameDto);
+		PictureDto result = null;
        	
    		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
    	}
@@ -61,14 +61,16 @@ public class PictureRestController {
 	@PutMapping("/{pictureId}/location")
 	public ResponseEntity<BasicResponse> updateLocation(@PathVariable("pictureId") long pictureId, 
 			@Valid @RequestBody PictureLocationDto pictureLocationDto) {
-		PictureDto result = pictureService.updateLocation(pictureLocationDto);
+		//PictureDto result = pictureService.updateLocation(pictureLocationDto);
+		PictureDto result = null;
 		
 		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
 	}
 	
 	@PutMapping("/addresses")
 	public ResponseEntity<BasicResponse> updateAddressList(@RequestBody List<PictureLocationDto> pictureLocationDtoList) {
-		List<PictureDto> resultList = pictureService.updateAddressList(pictureLocationDtoList);
+		//List<PictureDto> resultList = pictureService.updateAddressList(pictureLocationDtoList);
+		List<PictureDto> resultList = null;
 		
 		return ResponseEntity.ok().body(new SuccessResponse<List<PictureDto>>(resultList));
 	}
