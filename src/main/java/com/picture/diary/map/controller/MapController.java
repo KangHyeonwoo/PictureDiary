@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.picture.diary.extract.service.PictureExtractService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,12 +11,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MapController {
 
-	private final PictureExtractService pictureExtractService;
-	
+
     @GetMapping("/")
     public String mapView(Model model) {
-    	String path = pictureExtractService.getExtractFolderPath();
-    	model.addAttribute("path", path);
+        //TODO KAKAO API KEY RETURN
+    	//String path = pictureExtractService.getExtractFolderPath();
+    	//model.addAttribute("path", path);
         return "picture-map";
     }
     

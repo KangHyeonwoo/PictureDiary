@@ -22,6 +22,9 @@ public class NasLoginService implements LoginService {
         final String userId = loginRequestDto.getUserId();
         final String password = loginRequestDto.getPassword();
         String apiPath = nasProperty.getApiPath();
+
+
+
 /*
         //TODO study 에 정리할 때 예제소스코드로 작성 후 삭제하기
         LoginResponseEntity responseEntity = webClient
