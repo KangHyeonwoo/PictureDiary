@@ -16,4 +16,9 @@ public class ErrorResponse extends BasicResponse{
 	public ErrorResponse(String message) {
 		this.message = message;
 	}
+
+	@Override
+	public boolean isSuccess() {
+		return false;
+	}
 }

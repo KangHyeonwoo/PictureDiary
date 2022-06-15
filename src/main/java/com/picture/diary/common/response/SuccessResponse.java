@@ -22,4 +22,9 @@ public class SuccessResponse<T> extends BasicResponse {
 			this.count = 1;
 		}
 	}
+
+	@Override
+	public boolean isSuccess() {
+		return true;
+	}
 }
