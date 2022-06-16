@@ -14,10 +14,4 @@ public class LoginController {
 
         return "login";
     }
-
-    @PostMapping
-    public String login() {
-
-        return "";
-    }
 }
