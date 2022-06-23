@@ -20,8 +20,13 @@ public enum NasConnectionType {
             }}
     );
 
+    //Request Method Type
     private HttpMethod httpMethod;
+
+    //Required Parameters
     private String[] requiredParams;
+
+    //Setting Default Parameters
     private Map<String, String> defaultParamMap;
 
     NasConnectionType(HttpMethod httpMethod, String[] requiredParams, Map<String, String> defaultParamMap) {

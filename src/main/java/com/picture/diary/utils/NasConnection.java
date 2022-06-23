@@ -1,11 +1,13 @@
 package com.picture.diary.utils;
 
+import com.picture.diary.common.response.BasicResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpMethod;
+import static org.springframework.http.HttpMethod.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,13 @@ public class NasConnection {
 
         String queryString = this.getQueryString();
         log.info("==> Create Query String. [ " + queryString + " ]");
+
+        HttpMethod requestMethod = connectionType.getHttpMethod();
+        if(requestMethod == GET) {
+            HttpGet httpGet = new HttpGet(baseUrl + queryString);
+        }
+
+
     }
 
     private String getQueryString() {
@@ -41,6 +50,11 @@ public class NasConnection {
         );
 
         return queryString.toString();
+    }
+
+    public BasicResponse getResponse() {
+
+        return null;
     }
 
     public static class create {

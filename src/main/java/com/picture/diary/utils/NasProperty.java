@@ -1,4 +1,4 @@
-package com.picture.diary.picture.file.data;
+package com.picture.diary.utils;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
