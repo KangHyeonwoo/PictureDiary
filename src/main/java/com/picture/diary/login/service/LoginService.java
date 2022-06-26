@@ -1,12 +1,25 @@
 package com.picture.diary.login.service;
 
+import com.picture.diary.common.response.BasicResponse;
 import com.picture.diary.login.data.LoginRequestDto;
 
 import java.io.IOException;
 
 public interface LoginService {
 
-    void login(LoginRequestDto loginRequestDto) throws IOException;
+    /**
+     * 로그인
+     *
+     * @param loginRequestDto
+     * @return
+     * @throws IOException
+     */
+    BasicResponse login(LoginRequestDto loginRequestDto) throws IOException;
 
-    void logout(LoginRequestDto loginRequestDto);
+    /**
+     * 로그아웃
+     *
+     * @param userId
+     */
+    void logout(String userId);
 }
