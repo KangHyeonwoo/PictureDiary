@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-public class LoginValidationTest {
+public class LoginTest {
 
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -29,6 +28,23 @@ public class LoginValidationTest {
 
         //3. then 유효성에 맞지 않는 결과 건수가 0이 나온다.
         Assertions.assertThat(validate.size()).isEqualTo(0);
+    }
+
+
+    @Test
+    @DisplayName("아이디가 4글자 이하인 경우 테스트에 실패한다.")
+    void loginRequestDtoValidationFail() {
+        final String id = "a";
+        final String password = "Test1234!";
+
+        LoginRequestDto loginRequestDto = new LoginRequestDto(id, password);
+
+        //2. when 유효성 검증하면
+        Set<ConstraintViolation<LoginRequestDto>> validate = validator.validate(loginRequestDto);
+
+        validate.stream().forEach(violation -> {
+            System.out.println(violation.getMessage());
+        });
     }
 
 }
