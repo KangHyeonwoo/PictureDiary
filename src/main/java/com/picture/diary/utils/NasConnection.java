@@ -1,7 +1,10 @@
 package com.picture.diary.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.picture.diary.common.response.BasicResponse;
+import com.picture.diary.common.response.ErrorResponse;
+import com.picture.diary.common.response.SuccessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -48,38 +51,41 @@ public class NasConnection {
         }
 
         httpResponse = httpClient.execute(httpRequest);
+
+        //JSON 중 내가 필드로 선언한 데이터들만 파싱하겠다는 설정
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public String getResponse() throws IOException {
-        StringBuffer response = new StringBuffer();
+        StringBuffer responseBuffer = new StringBuffer();
 
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()))){
             String inputLine;
 
             while((inputLine = reader.readLine()) != null) {
-                response.append(inputLine);
+                responseBuffer.append(inputLine);
             }
         }
-        Map<String, Object> responseMap = objectMapper.readValue(response.toString(), HashMap.class);
-        System.out.println("responseMap : ");
-        System.out.println(responseMap.toString());
 
-        if(responseMap.containsKey("error")) {
-            responseMap.keySet().forEach(key -> {
-                System.out.println("key : " + key);
-                System.out.println("value : " + responseMap.get(key));
-            });
+        return responseBuffer.toString();
+    }
 
-            String error = responseMap.get("error").toString();
+    /**
+     * Return of Nas Connection Response Information.
+     *
+     * @return BasicResponse 를 확장한 SuccessResponse , ErrorResponse 객체
+     * @throws IOException
+     */
+    public BasicResponse getBasicResponse() throws IOException {
+        String response = this.getResponse();
 
-            Map<String, Object> errorMap = objectMapper.readValue(error, HashMap.class);
-            errorMap.keySet().forEach(key -> {
-                System.out.println("error key : " + key);
-                System.out.println("error value : " + errorMap.get(key));
-            });
+        if(response.contains("error")) {
+            NasConnectionErrorResponse errorResponse = objectMapper.readValue(response, NasConnectionErrorResponse.class);
+
+            return errorResponse.toErrorResponse();
         }
 
-        return response.toString();
+        return new SuccessResponse<>();
     }
 
     private String getQueryString() {
@@ -97,13 +103,24 @@ public class NasConnection {
         return queryString.toString();
     }
 
+    private ErrorResponse createErrorResponse() {
+
+        return null;
+    }
+
+    private SuccessResponse createSuccessResponse() {
+
+        return null;
+    }
+
+    /*
     private void validation() {
         String[] reqParams = this.connectionType.getRequiredParams();
         for(String reqParam : reqParams) {
             this.paramMap.keySet().stream().findFirst();
         }
     }
-
+    */
     public static class create {
         private NasConnectionType connectionType;
         private final Map<String, String> paramMap = new HashMap<>();
