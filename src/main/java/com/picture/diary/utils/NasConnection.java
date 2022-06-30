@@ -76,16 +76,14 @@ public class NasConnection {
      * @return BasicResponse 를 확장한 SuccessResponse , ErrorResponse 객체
      * @throws IOException
      */
-    public BasicResponse getBasicResponse() throws IOException {
+    public BasicResponse getBasicResponse(Class responseClass) throws IOException {
         String response = this.getResponse();
 
         if(response.contains("error")) {
-            NasConnectionErrorResponse errorResponse = objectMapper.readValue(response, NasConnectionErrorResponse.class);
-
-            return errorResponse.toErrorResponse();
+            return createErrorResponse(response);
         }
 
-        return new SuccessResponse<>();
+        return createSuccessResponse(response, responseClass);
     }
 
     private String getQueryString() {
@@ -103,24 +101,18 @@ public class NasConnection {
         return queryString.toString();
     }
 
-    private ErrorResponse createErrorResponse() {
+    private ErrorResponse createErrorResponse(String response) throws IOException {
+        NasConnectionErrorResponse errorResponse = objectMapper.readValue(response, NasConnectionErrorResponse.class);
+
+        return errorResponse.toErrorResponse();
+    }
+
+    private SuccessResponse createSuccessResponse(String response, Class responseClass) {
+
 
         return null;
     }
 
-    private SuccessResponse createSuccessResponse() {
-
-        return null;
-    }
-
-    /*
-    private void validation() {
-        String[] reqParams = this.connectionType.getRequiredParams();
-        for(String reqParam : reqParams) {
-            this.paramMap.keySet().stream().findFirst();
-        }
-    }
-    */
     public static class create {
         private NasConnectionType connectionType;
         private final Map<String, String> paramMap = new HashMap<>();
