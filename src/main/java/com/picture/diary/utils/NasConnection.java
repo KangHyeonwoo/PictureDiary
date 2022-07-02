@@ -83,7 +83,7 @@ public class NasConnection {
             return createErrorResponse(response);
         }
 
-        return createSuccessResponse(response, responseClass);
+        return new SuccessResponse<>(response);
     }
 
     private String getQueryString() {
@@ -105,12 +105,6 @@ public class NasConnection {
         NasConnectionErrorResponse errorResponse = objectMapper.readValue(response, NasConnectionErrorResponse.class);
 
         return errorResponse.toErrorResponse();
-    }
-
-    private SuccessResponse createSuccessResponse(String response, Class responseClass) {
-
-
-        return null;
     }
 
     public static class create {

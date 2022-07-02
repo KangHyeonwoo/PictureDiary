@@ -12,17 +12,9 @@ import com.picture.diary.utils.NasConnection;
 import com.picture.diary.utils.NasConnectionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -44,13 +36,15 @@ public class NasLoginService implements LoginService {
                 .addParam("password", password)
                 .send();
 
-        String response = connection.getResponse();
-
-        return new ErrorResponse("알 수 없는 오류가 발생하였습니다.");
+        return connection.getBasicResponse(LoginResponseEntity.class);
     }
 
     @Override
     public void logout(String userId) {
 
+    }
+
+    private boolean failedLogin(String responseStr) {
+        return responseStr.contains("error");
     }
 }
