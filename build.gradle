@@ -29,10 +29,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//webflux
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
+
 	compileOnly 'org.projectlombok:lombok'
-	//TODO 이거 없어도 되는 거 같은데 나중에 테스트 해봐야함
-	implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -80,6 +80,9 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
 	implementation 'com.drewnoakes:metadata-extractor:2.14.0'
+
+	//HTTP Client
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 }
 
 
