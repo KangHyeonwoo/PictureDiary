@@ -36,7 +36,11 @@ public class NasLoginService implements LoginService {
                 .addParam("password", password)
                 .send();
 
-        return connection.getBasicResponse(LoginResponseEntity.class);
+        if(connection.isSuccess()) {
+
+        }
+
+        return null;
     }
 
     @Override

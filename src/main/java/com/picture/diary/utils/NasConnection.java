@@ -36,6 +36,9 @@ public class NasConnection {
     private HttpUriRequest httpRequest;
     private CloseableHttpResponse httpResponse;
 
+    private boolean isSuccess = false;
+    private String response;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private NasConnection(NasConnectionType connectionType, Map<String, String> paramMap) throws IOException {
@@ -70,13 +73,11 @@ public class NasConnection {
         return responseBuffer.toString();
     }
 
-    /**
-     * Return of Nas Connection Response Information.
-     *
-     * @return BasicResponse 를 확장한 SuccessResponse , ErrorResponse 객체
-     * @throws IOException
-     */
-    public BasicResponse getBasicResponse(Class responseClass) throws IOException {
+    public boolean isSuccess() {
+        return this.isSuccess;
+    }
+
+    public BasicResponse getBasicResponse() throws IOException {
         String response = this.getResponse();
 
         if(response.contains("error")) {
@@ -101,7 +102,10 @@ public class NasConnection {
         return queryString.toString();
     }
 
-    private ErrorResponse createErrorResponse(String response) throws IOException {
+    private ErrorResponse createErrorResponse() throws IOException {
+        if(isSuccess) {
+            throw new RuntimeException("성공한 객체임");
+        }
         NasConnectionErrorResponse errorResponse = objectMapper.readValue(response, NasConnectionErrorResponse.class);
 
         return errorResponse.toErrorResponse();
