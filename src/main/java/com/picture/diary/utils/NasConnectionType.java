@@ -10,7 +10,7 @@ import java.util.Map;
 public enum NasConnectionType {
     LOGIN(
             HttpMethod.GET,
-            new String[]{"account", "password"},
+            new String[]{"account", "passwd"},
             new HashMap<>(){{
                 put("api", "SYNO.API.Auth");
                 put("version","6");
