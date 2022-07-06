@@ -26,9 +26,9 @@ public class PictureDiaryExceptionHandler {
 		final String errorCode = exceptionType.getErrorCode();
 		final int status = exceptionType.getHttpStatus();
 		final String errorMessage = exceptionType.getErrorMessage();
-		
-		HttpStatus httpStatus = HttpStatus.valueOf(status);
-		
+
+		HttpStatus httpStatus = HttpStatus.resolve(status) == null ? HttpStatus.BAD_REQUEST : HttpStatus.resolve(status);
+
 		return new ResponseEntity<>(new ErrorResponse(errorCode, status, errorMessage), httpStatus);
 	}
 	
