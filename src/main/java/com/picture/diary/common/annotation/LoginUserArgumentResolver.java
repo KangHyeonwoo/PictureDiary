@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final HttpSession httpSession;
