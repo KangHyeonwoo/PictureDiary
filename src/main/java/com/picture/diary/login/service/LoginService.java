@@ -2,6 +2,7 @@ package com.picture.diary.login.service;
 
 import com.picture.diary.common.response.BasicResponse;
 import com.picture.diary.login.data.LoginRequestDto;
+import com.picture.diary.login.data.LoginResponseEntity;
 
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ public interface LoginService {
      * @return
      * @throws IOException
      */
-    BasicResponse login(LoginRequestDto loginRequestDto) throws IOException;
+    LoginResponseEntity login(LoginRequestDto loginRequestDto) throws IOException;
 
     /**
      * 로그아웃
