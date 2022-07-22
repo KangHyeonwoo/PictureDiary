@@ -1,4 +1,4 @@
-package com.picture.diary.login.data;
+package com.picture.diary.common.user.data;
 
 import lombok.RequiredArgsConstructor;
 
