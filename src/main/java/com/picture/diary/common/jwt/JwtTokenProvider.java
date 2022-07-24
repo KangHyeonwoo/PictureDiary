@@ -26,7 +26,7 @@ public class JwtTokenProvider {
 
     private String key = "projectKey";
 
-    private long tokenValidTime = 30 * 60 * 1000L;
+    private long tokenValidTime = 30 * 60 * 100L;
 
     private final UserDetailsService userDetailsService;
 
@@ -35,7 +35,14 @@ public class JwtTokenProvider {
         key = Base64.getEncoder().encodeToString(key.getBytes());
     }
 
-    public String createToken(String userPk, List<String> roles) {
+    public JwtToken createToken(String userPk, List<String> roles) {
+        String accessToken = createAccessToken(userPk, roles);
+        String refreshToken = createRefreshToken(accessToken);
+
+        return new JwtToken(accessToken, refreshToken);
+    }
+
+    private String createAccessToken(String userPk, List<String> roles) {
         //JWT payload 에 저장되는 정보 단위, 여기서 사용자를 식별하는 값을 넣는다.
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
@@ -46,6 +53,16 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
                 .signWith(SignatureAlgorithm.HS256, userPk)                 //Hashing user id
+                .compact();
+    }
+
+    private String createRefreshToken(String accessToken) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
+                .signWith(SignatureAlgorithm.HS256, accessToken)                 //Hashing user id
                 .compact();
     }
 
