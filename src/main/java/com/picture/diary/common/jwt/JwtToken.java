@@ -13,7 +13,7 @@ public class JwtToken {
 
     private String refreshToken;
 
-    public JwtToken(HttpServletRequest request) {
+    public JwtToken(HttpServletRequest request) throws JwtException {
         String accessToken = request.getHeader("Access-Token");
         String refreshToken = request.getHeader("Refresh-Token");
 
@@ -24,6 +24,7 @@ public class JwtToken {
         if(StringUtils.isEmpty(refreshToken)) {
             throw new JwtException("Refresh-Token must be not empty");
         }
+
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
