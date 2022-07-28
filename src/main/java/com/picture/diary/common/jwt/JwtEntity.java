@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class JwtTokenEntity {
+public class JwtEntity {
 
     private String userId;
 

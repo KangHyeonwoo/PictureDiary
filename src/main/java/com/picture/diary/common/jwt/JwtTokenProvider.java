@@ -68,6 +68,7 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -80,9 +81,9 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'
-    public JwtToken resolveToken(HttpServletRequest request) {
-        return new JwtToken(request);
+    // Request의 Header에서 token 값을 가져온다. "Authorization" : "TOKEN값'
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("ACCESS-TOKEN");
     }
 
     // 토큰의 유효성 + 만료일자 확인
