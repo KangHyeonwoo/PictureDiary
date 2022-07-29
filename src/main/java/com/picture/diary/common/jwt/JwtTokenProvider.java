@@ -35,11 +35,11 @@ public class JwtTokenProvider {
         key = Base64.getEncoder().encodeToString(key.getBytes());
     }
 
-    public JwtToken createToken(String userPk, List<String> roles) {
+    public JwtEntity createToken(String userPk, List<String> roles) {
         String accessToken = createAccessToken(userPk, roles);
         String refreshToken = createRefreshToken(accessToken);
 
-        return new JwtToken(accessToken, refreshToken);
+        return new JwtEntity(accessToken, refreshToken);
     }
 
     private String createAccessToken(String userPk, List<String> roles) {

@@ -5,22 +5,26 @@ import java.util.Map;
 
 public class MemoryJwtRepository implements JwtRepository {
 
-    private final Map<String, JwtEntity> tokenMap = new HashMap<>();
+    private final Map<String, String> tokenMap = new HashMap<>();
 
     @Override
     public void save(JwtEntity jwtEntity) {
-        String userId = jwtEntity.getUserId();
-        tokenMap.put(userId, jwtEntity);
+        tokenMap.put(jwtEntity.getRefreshToken(), jwtEntity.getAccessToken());
     }
 
     @Override
-    public JwtEntity findByUserId(String userId) {
+    public String findRefreshTokenByAccessToken(String accessToken) {
+        if(tokenMap.containsValue(accessToken)) {
+            return tokenMap.keySet().stream()
+                    .filter(key -> tokenMap.get(key) == accessToken)
+                    .findFirst().get();
+        }
 
-        return tokenMap.get(userId);
+        return null;
     }
 
     @Override
-    public void refreshAccessToken(String userId, JwtEntity jwtToken) {
-        tokenMap.put(userId, jwtToken);
+    public void refreshAccessToken(JwtEntity jwtEntity) {
+        tokenMap.put(jwtEntity.getRefreshToken(), jwtEntity.getAccessToken());
     }
 }

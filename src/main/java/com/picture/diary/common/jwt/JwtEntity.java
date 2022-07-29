@@ -7,13 +7,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class JwtEntity {
 
-    private String userId;
-
     private String accessToken;
 
     private String refreshToken;
 
-    public JwtToken toJwtToken() {
-        return new JwtToken(accessToken, refreshToken);
+    public JwtEntity(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
