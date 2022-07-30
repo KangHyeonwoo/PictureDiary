@@ -5,7 +5,7 @@ public interface JwtRepository {
 
     void save(JwtEntity jwtEntity);
 
-    String findRefreshTokenByAccessToken(String refreshToken);
+    String findRefreshTokenByAccessToken(String accessToken);
 
     void refreshAccessToken(JwtEntity jwtToken);
 

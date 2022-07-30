@@ -29,6 +29,7 @@ public class JwtTokenProvider {
     private long tokenValidTime = 30 * 60 * 100L;
 
     private final UserDetailsService userDetailsService;
+    private final JwtRepository jwtRepository;
 
     @PostConstruct
     protected void init() {
@@ -89,9 +90,25 @@ public class JwtTokenProvider {
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
+            //accessToken 검사
             final Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            if(claims.getBody().getExpiration().before(new Date())) {
+                return true;
+            }
+
+            //accessToken 이 만료됐다면 refreshToken 검사
+            String refreshToken = jwtRepository.findRefreshTokenByAccessToken(jwtToken);
+            final Jws<Claims> refreshClams = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken);
+            if(refreshClams.getBody().getExpiration().before(new Date())) {
+
+                //TODO ACCESS-TOKEN 재발급
+
+                return true;
+            }
+
+            return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
