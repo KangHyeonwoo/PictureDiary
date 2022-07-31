@@ -1,20 +1,18 @@
 package com.picture.diary.config;
 
-import com.picture.diary.login.data.Role;
+import com.picture.diary.common.jwt.JwtTokenProvider;
+import com.picture.diary.common.user.data.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-/**
- * @Reference : https://devuna.tistory.com/59
- */
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthenticationProvider authenticationProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final static String[] PERMIT_ALL_PATTERNS = {"/", "/css/**" , "/images/**", "/js/**"};
     private final static String[] USER_ROLE_PATTERNS = {"/map"};
@@ -41,5 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.oauth2Login()
                 //.userInfoEndpoint();
                 //.userService(customOAuthUserService);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
