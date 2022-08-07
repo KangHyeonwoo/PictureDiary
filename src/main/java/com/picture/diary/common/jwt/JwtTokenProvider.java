@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +62,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
-                .signWith(SignatureAlgorithm.HS256, accessToken)                 //Hashing user id
+                .signWith(SignatureAlgorithm.HS256, accessToken)            //Hashing user id
                 .compact();
     }
 
