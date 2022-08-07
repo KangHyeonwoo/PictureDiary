@@ -4,10 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
 public class LoginRequestDto {
+
+    @NotNull(message = "로그인 형식을 선택해주세요.")
+    private LoginType loginType;
 
     @NotEmpty(message = "ID를 입력해주세요.")
     @Size(min = 4, max = 20, message = "사용자 ID는 4 ~ 20 글자 사이로 입력이 가능합니다.")
@@ -18,7 +22,8 @@ public class LoginRequestDto {
     private String password;
 
     @Builder
-    public LoginRequestDto(String userId, String password) {
+    public LoginRequestDto(LoginType loginType, String userId, String password) {
+        this.loginType = loginType;
         this.userId = userId;
         this.password = password;
     }

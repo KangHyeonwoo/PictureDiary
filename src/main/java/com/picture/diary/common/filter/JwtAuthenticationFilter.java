@@ -1,6 +1,5 @@
 package com.picture.diary.common.filter;
 
-import com.picture.diary.common.jwt.JwtRepository;
 import com.picture.diary.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

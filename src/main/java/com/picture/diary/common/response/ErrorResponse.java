@@ -4,6 +4,7 @@ import com.picture.diary.common.exception.BaseExceptionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor
@@ -16,6 +17,11 @@ public class ErrorResponse extends BasicResponse implements BaseExceptionType {
 
 	public ErrorResponse(int status, String message) {
 		this.status = status;
+		this.message = message;
+	}
+
+	public ErrorResponse(HttpStatus status, String message) {
+		this.status = status.value();
 		this.message = message;
 	}
 
