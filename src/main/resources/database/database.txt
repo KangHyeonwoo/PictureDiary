@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS public.picture
     picture_id integer NOT NULL DEFAULT nextval('picture_picture_id_seq'::regclass),
     picture_name character varying(100) COLLATE pg_catalog."default",
     extension character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    picture_size integer NOT NULL,
+    size integer NOT NULL,
     date_time timestamp without time zone,
     latitude real,
     longitude real,
