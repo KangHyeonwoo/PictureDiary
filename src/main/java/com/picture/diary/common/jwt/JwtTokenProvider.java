@@ -87,12 +87,14 @@ public class JwtTokenProvider {
     }
 
     // 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String jwtToken) {
+    public JwtEntity getValidateResponseToken(String jwtToken) {
+        JwtEntity response = new JwtEntity(jwtToken);
+
         try {
             //accessToken 검사
             final Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
             if(claims.getBody().getExpiration().before(new Date())) {
-                return true;
+                response.setValidate(true);
             }
 
             //accessToken 이 만료됐다면 refreshToken 검사
@@ -102,13 +104,13 @@ public class JwtTokenProvider {
 
                 //TODO ACCESS-TOKEN 재발급
 
-                return true;
+                response.setValidate(true);
             }
 
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+
+        return response;
     }
 }

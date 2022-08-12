@@ -7,11 +7,19 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class JwtEntity {
 
+    private String requestToken;
+
     private String accessToken;
 
     private String refreshToken;
 
     private boolean needRefresh;
+
+    private boolean validate;
+
+    public JwtEntity(String requestToken) {
+        this.validate = false;
+    }
 
     public JwtEntity(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
@@ -20,5 +28,9 @@ public class JwtEntity {
 
     public void setNeedRefresh(boolean needRefresh) {
         this.needRefresh = needRefresh;
+    }
+
+    public void setValidate(boolean validate) {
+        this.validate = validate;
     }
 }
