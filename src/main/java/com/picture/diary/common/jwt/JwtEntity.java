@@ -3,6 +3,8 @@ package com.picture.diary.common.jwt;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Getter
 public class JwtEntity {
@@ -16,6 +18,11 @@ public class JwtEntity {
     private boolean needRefresh;
 
     private boolean validate;
+
+    //JWT 에 들어가는 사용자 정보
+    private String userPk;
+
+    private List<String> roles;
 
     public JwtEntity(String requestToken) {
         this.validate = false;

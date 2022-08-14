@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +66,8 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
                 .signWith(SignatureAlgorithm.HS256, accessToken)            //Hashing user id
                 .compact();
+
+        //TODO RefreshToken 은 DB 저장 필요
     }
 
     public Authentication getAuthentication(String token) {
@@ -101,9 +105,6 @@ public class JwtTokenProvider {
             String refreshToken = jwtRepository.findRefreshTokenByAccessToken(jwtToken);
             final Jws<Claims> refreshClams = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken);
             if(refreshClams.getBody().getExpiration().before(new Date())) {
-
-                //TODO ACCESS-TOKEN 재발급
-
                 response.setValidate(true);
             }
 
@@ -112,5 +113,11 @@ public class JwtTokenProvider {
         }
 
         return response;
+    }
+
+    public void setRefreshToken(HttpServletResponse response, JwtEntity jwtEntity) {
+        String refreshToken = this.createAccessToken(jwtEntity.getUserPk(), jwtEntity.getRoles());
+
+        response.addHeader("ACCESS-TOKEN", refreshToken);
     }
 }
