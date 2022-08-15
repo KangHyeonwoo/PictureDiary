@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
@@ -41,7 +40,11 @@ public class JwtTokenProvider {
         String accessToken = createAccessToken(userPk, roles);
         String refreshToken = createRefreshToken(accessToken);
 
-        return new JwtEntity(accessToken, refreshToken);
+        JwtEntity jwtEntity = new JwtEntity(accessToken, refreshToken);
+
+        jwtRepository.save(jwtEntity);
+
+        return jwtEntity;
     }
 
     private String createAccessToken(String userPk, List<String> roles) {
@@ -66,8 +69,6 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
                 .signWith(SignatureAlgorithm.HS256, accessToken)            //Hashing user id
                 .compact();
-
-        //TODO RefreshToken 은 DB 저장 필요
     }
 
     public Authentication getAuthentication(String token) {
@@ -91,20 +92,21 @@ public class JwtTokenProvider {
     }
 
     // 토큰의 유효성 + 만료일자 확인
-    public JwtEntity getValidateResponseToken(String jwtToken) {
-        JwtEntity response = new JwtEntity(jwtToken);
+    public JwtEntity getValidateResponseToken(String accessToken) {
+        JwtEntity response = new JwtEntity();
 
         try {
             //accessToken 검사
-            final Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
+            final Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken);
             if(claims.getBody().getExpiration().before(new Date())) {
                 response.setValidate(true);
             }
 
             //accessToken 이 만료됐다면 refreshToken 검사
-            String refreshToken = jwtRepository.findRefreshTokenByAccessToken(jwtToken);
+            String refreshToken = jwtRepository.findRefreshTokenByAccessToken(accessToken);
             final Jws<Claims> refreshClams = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken);
             if(refreshClams.getBody().getExpiration().before(new Date())) {
+                response.setNeedRefresh(true);
                 response.setValidate(true);
             }
 
