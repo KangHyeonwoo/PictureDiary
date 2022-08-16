@@ -1,9 +1,7 @@
 package com.picture.diary.picture.file.service.nas;
 
-import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.picture.file.data.Extensions;
-import com.picture.diary.picture.file.data.Geometry;
-import com.picture.diary.picture.file.data.NasProperty;
+import com.picture.diary.utils.NasProperty;
 import com.picture.diary.picture.file.data.Picture;
 import com.picture.diary.picture.file.service.PictureFileService;
 import lombok.AllArgsConstructor;
@@ -11,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +31,7 @@ public class NasPictureFileService implements PictureFileService {
         Path path = Paths.get(userDir);
         List<Picture> pictureList = new ArrayList<>();
 
-        //NAS 내의 사진 파일 중에서 좌표가 있는 데이터만 리턴한다.
+        //NAS 내의 사진 파일 중에서 Extensions 에 정의된 확장자를 가진 파일과, 좌표가 있는 데이터만 리턴한다.
         try {
             pictureList = Files.walk(path)
                     .filter(file -> Extensions.contains(file.getFileName().toString()))

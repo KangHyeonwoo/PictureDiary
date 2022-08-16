@@ -1,22 +1,15 @@
 package com.picture.diary.login.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.common.response.BasicResponse;
-import com.picture.diary.common.response.ErrorResponse;
-import com.picture.diary.common.response.SuccessResponse;
-import com.picture.diary.common.session.SessionConstants;
 import com.picture.diary.login.data.LoginRequestDto;
 import com.picture.diary.login.data.LoginResponseEntity;
 import com.picture.diary.login.service.LoginService;
-import com.picture.diary.utils.NasProperty;
 import com.picture.diary.utils.NasConnection;
 import com.picture.diary.utils.NasConnectionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Service
