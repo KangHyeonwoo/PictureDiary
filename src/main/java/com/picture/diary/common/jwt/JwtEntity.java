@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 public class JwtEntity {
 
