@@ -18,6 +18,11 @@ import com.picture.diary.common.response.ErrorResponse;
 @ControllerAdvice
 public class PictureDiaryExceptionHandler {
 
+	/**
+	 * 사용자 정의 Exception 예외처리
+	 * @param exception
+	 * @return
+	 */
 	@ResponseBody
 	@ExceptionHandler(PictureDiaryException.class)
 	public ResponseEntity<ErrorResponse> commonExceptionHandler(PictureDiaryException exception) {
@@ -31,7 +36,12 @@ public class PictureDiaryExceptionHandler {
 
 		return new ResponseEntity<>(new ErrorResponse(errorCode, status, errorMessage), httpStatus);
 	}
-	
+
+	/**
+	 * 정상적인 파라미터를 입력받지 못할 경우 Exception 예외처리
+	 * @param me
+	 * @return
+	 */
 	@ResponseBody
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> validationExceptionHandler(MethodArgumentNotValidException me) {

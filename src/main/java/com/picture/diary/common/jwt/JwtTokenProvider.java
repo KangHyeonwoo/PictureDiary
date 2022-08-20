@@ -20,6 +20,9 @@ import java.util.List;
 
 //@see : https://velog.io/@jkijki12/Spirng-Security-Jwt-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
 
+/**
+ * JWT 객체 관리 Component
+ */
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
