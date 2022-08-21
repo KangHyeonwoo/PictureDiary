@@ -1,5 +1,6 @@
 package com.picture.diary.config;
 
+import com.picture.diary.common.filter.JwtAuthenticationFilter;
 import com.picture.diary.common.jwt.JwtTokenProvider;
 import com.picture.diary.common.user.data.Role;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -14,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final static String[] PERMIT_ALL_PATTERNS = {"/", "/css/**" , "/images/**", "/js/**"};
+    private final static String[] PERMIT_ALL_PATTERNS = {"/login", "/css/**" , "/images/**", "/js/**"};
     private final static String[] USER_ROLE_PATTERNS = {"/map"};
 
     @Override
@@ -33,12 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/map");
-            //TODO OAUTH 로그인 기능 구현 시 주석 풀기
-            //.and()
-                //.oauth2Login()
-                //.userInfoEndpoint();
-                //.userService(customOAuthUserService);
+                .defaultSuccessUrl("/map")
+            .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
