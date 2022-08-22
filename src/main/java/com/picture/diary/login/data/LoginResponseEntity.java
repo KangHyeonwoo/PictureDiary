@@ -4,12 +4,18 @@ import com.picture.diary.common.response.SuccessResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Map;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
 public class LoginResponseEntity extends SuccessResponse {
 
+    private LoginType loginType;
+    private String userId;
+    private LocalDateTime loginTime;
+
+    /*
+    //너무 NAS 의존적이어서 삭제함.
     private String did;
     private boolean isPortalPort;
     private String sid;
@@ -21,4 +27,6 @@ public class LoginResponseEntity extends SuccessResponse {
 
         return new LoginResponseEntity(did, isPortalPort, sid);
     }
+    */
+
 }
