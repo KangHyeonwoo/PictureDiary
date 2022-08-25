@@ -12,10 +12,10 @@ public interface LoginService {
      * 로그인
      *
      * @param loginRequestDto
-     * @return
+     * @return JWT
      * @throws IOException
      */
-    LoginResponseEntity login(LoginRequestDto loginRequestDto) throws IOException;
+    String login(LoginRequestDto loginRequestDto) throws IOException;
 
     /**
      * 로그아웃
