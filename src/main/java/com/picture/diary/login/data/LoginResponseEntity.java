@@ -5,28 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public class LoginResponseEntity extends SuccessResponse {
 
+    //로그인 타입
     private LoginType loginType;
+
+    //사용자 ID
     private String userId;
-    private LocalDateTime loginTime;
 
-    /*
-    //너무 NAS 의존적이어서 삭제함.
-    private String did;
-    private boolean isPortalPort;
-    private String sid;
-
-    public static LoginResponseEntity of(Map<String, Object> dataMap) {
-        String did = (String) dataMap.get("did");
-        boolean isPortalPort  = (Boolean) dataMap.get("is_portal_port");
-        String sid = (String) dataMap.get("sid");
-
-        return new LoginResponseEntity(did, isPortalPort, sid);
-    }
-    */
+    private List<String> roles;
 
 }

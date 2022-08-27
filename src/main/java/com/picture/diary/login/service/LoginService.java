@@ -17,10 +17,4 @@ public interface LoginService {
      */
     String login(LoginRequestDto loginRequestDto) throws IOException;
 
-    /**
-     * 로그아웃
-     *
-     * @param userId
-     */
-    void logout(String userId);
 }
