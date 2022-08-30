@@ -1,5 +1,6 @@
 package com.picture.diary.common.jwt;
 
+import com.picture.diary.login.data.LoginType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -39,7 +40,15 @@ public class JwtTokenProvider {
         key = Base64.getEncoder().encodeToString(key.getBytes());
     }
 
-    public JwtEntity createToken(String userPk, List<String> roles) {
+    /**
+     * Create JWT Token
+     * @param loginType
+     * @param userId
+     * @param roles
+     * @return Jwt Access Token
+     */
+    public String createToken(LoginType loginType, String userId, List<String> roles) {
+        String userPk = this.createUserPk(loginType, userId);
         String accessToken = createAccessToken(userPk, roles);
         String refreshToken = createRefreshToken(accessToken);
 
@@ -47,31 +56,7 @@ public class JwtTokenProvider {
 
         jwtRepository.save(jwtEntity);
 
-        return jwtEntity;
-    }
-
-    private String createAccessToken(String userPk, List<String> roles) {
-        //JWT payload 에 저장되는 정보 단위, 여기서 사용자를 식별하는 값을 넣는다.
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
-        Date now = new Date();
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
-                .signWith(SignatureAlgorithm.HS256, userPk)                 //Hashing user id
-                .compact();
-    }
-
-    private String createRefreshToken(String accessToken) {
-        Date now = new Date();
-
-        return Jwts.builder()
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
-                .signWith(SignatureAlgorithm.HS256, accessToken)            //Hashing user id
-                .compact();
+        return jwtEntity.getAccessToken();
     }
 
     public Authentication getAuthentication(String token) {
@@ -125,4 +110,36 @@ public class JwtTokenProvider {
 
         response.addHeader("ACCESS-TOKEN", refreshToken);
     }
+
+    private String createAccessToken(String userPk, List<String> roles) {
+        //JWT payload 에 저장되는 정보 단위, 여기서 사용자를 식별하는 값을 넣는다.
+        Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("roles", roles);
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
+                .signWith(SignatureAlgorithm.HS256, userPk)                 //Hashing user id
+                .compact();
+    }
+
+    private String createRefreshToken(String accessToken) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidTime))    //set Expire Time
+                .signWith(SignatureAlgorithm.HS256, accessToken)            //Hashing user id
+                .compact();
+    }
+
+    //TODO 메서드 수정 필요 임시로 만들어 놓음
+    private String createUserPk(LoginType loginType, String userId) {
+        String loginTypeStr = loginType.toString();
+
+        return loginTypeStr + ":" + userId;
+    }
+
 }

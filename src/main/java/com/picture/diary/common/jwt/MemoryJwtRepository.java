@@ -1,8 +1,11 @@
 package com.picture.diary.common.jwt;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class MemoryJwtRepository implements JwtRepository {
 
     private final Map<String, String> tokenMap = new HashMap<>();
