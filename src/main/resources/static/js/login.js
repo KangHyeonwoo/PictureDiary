@@ -1,21 +1,21 @@
 import HttpRequest from "./common/HttpRequest.js";
 
-const inputId = document.querySelector('#id');
+const inputUsername = document.querySelector('#username');
 const inputPassword = document.querySelector('#password');
 const loginButton = document.querySelector('#loginButton');
 
 loginButton.addEventListener('click', e => {
-    const id = inputId.value;
+    const username = inputUsername.value;
     const password = inputPassword.value;
 
-    login(id, password);
+    login(username, password);
 })
 
 
-function login(id, password) {
+function login(username, password) {
     const data = {
         loginType : 'SYNOLOGY_NAS',
-        userId : id,
+        username : username,
         password : password
     }
     HttpRequest.post('/login', data).then()
