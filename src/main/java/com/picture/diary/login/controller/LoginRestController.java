@@ -30,8 +30,6 @@ public class LoginRestController {
     @PostMapping("/logout")
     public ResponseEntity<BasicResponse> logout(@RequestParam String userId) {
 
-        loginService.logout(userId);
-
         return ResponseEntity.ok(new SuccessResponse<>());
     }
 }
