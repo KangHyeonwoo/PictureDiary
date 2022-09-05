@@ -22,12 +22,14 @@ public class JwtUserDetailService implements UserDetailsService {
         return null;
     }
 
-    public void authenticateByUserNameAndPassword(String username, String password) throws IOException {
+    public String authenticateByUserNameAndPassword(String username, String password) throws IOException {
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                 .userId(username)
                 .password(password)
                 .build();
 
-        String response = loginService.login(loginRequestDto);
+        String jwt = loginService.login(loginRequestDto);
+
+        return jwt;
     }
 }
