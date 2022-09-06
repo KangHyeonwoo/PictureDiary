@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.io.IOException;
 
+/**
+    @see : https://ttl-blog.tistory.com/104
+ */
+
 @RequiredArgsConstructor
 @RestController
 public class LoginRestController {
