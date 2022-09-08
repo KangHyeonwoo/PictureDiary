@@ -1,5 +1,6 @@
 package com.picture.diary.config;
 
+import com.picture.diary.common.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.picture.diary.common.filter.JwtAuthenticationFilter;
 import com.picture.diary.common.jwt.JwtTokenProvider;
 import com.picture.diary.common.user.data.Role;
@@ -16,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
     private final LoginFailureHandler loginFailureHandler;
 
     private final static String[] PERMIT_ALL_PATTERNS = {"/login", "/css/**" , "/images/**", "/js/**"};
@@ -42,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.successHandler()
                 //.failureHandler(loginFailureHandler)
             .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

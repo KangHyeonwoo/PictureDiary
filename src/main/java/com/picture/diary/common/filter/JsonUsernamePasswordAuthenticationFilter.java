@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+/**
+ * TODO : JwtAuthenticationFilter 로 클래스명 변경하기
+ */
 @Slf4j
 @Component
 public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
