@@ -15,16 +15,16 @@ public class LoginRequestDto {
 
     @NotEmpty(message = "ID를 입력해주세요.")
     @Size(min = 4, max = 20, message = "사용자 ID는 4 ~ 20 글자 사이로 입력이 가능합니다.")
-    private String userId;
+    private String username;
 
     @NotEmpty(message = "비밀번호를 입력해주세요.")
     @Size(min = 8, max = 20, message = "사용자 비밀번호는 8 ~ 20 글자 사이로 입력이 가능합니다.")
     private String password;
 
     @Builder
-    public LoginRequestDto(LoginType loginType, String userId, String password) {
+    public LoginRequestDto(LoginType loginType, String username, String password) {
         this.loginType = loginType;
-        this.userId = userId;
+        this.username = username;
         this.password = password;
     }
 }

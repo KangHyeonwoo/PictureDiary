@@ -64,7 +64,7 @@ public class PictureRestController {
 		//PictureDto result = pictureService.updateLocation(pictureLocationDto);
 		PictureDto result = null;
 		
-		return ResponseEntity.ok().body(new SuccessResponse<PictureDto>(result));
+		return ResponseEntity.ok().body(new SuccessResponse<>(result));
 	}
 	
 	@PutMapping("/addresses")
@@ -72,6 +72,6 @@ public class PictureRestController {
 		//List<PictureDto> resultList = pictureService.updateAddressList(pictureLocationDtoList);
 		List<PictureDto> resultList = null;
 		
-		return ResponseEntity.ok().body(new SuccessResponse<List<PictureDto>>(resultList));
+		return ResponseEntity.ok().body(new SuccessResponse<>(resultList));
 	}
 }
