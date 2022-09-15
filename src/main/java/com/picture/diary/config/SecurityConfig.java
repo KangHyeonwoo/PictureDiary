@@ -1,12 +1,8 @@
 package com.picture.diary.config;
 
 import com.picture.diary.common.filter.JsonUsernamePasswordAuthenticationFilter;
-import com.picture.diary.common.filter.JwtAuthenticationFilter;
-import com.picture.diary.common.jwt.JwtTokenProvider;
 import com.picture.diary.common.user.data.Role;
-import com.picture.diary.login.handler.LoginFailureHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
-    private final LoginFailureHandler loginFailureHandler;
 
     private final static String[] PERMIT_ALL_PATTERNS = {"/login", "/css/**" , "/images/**", "/js/**"};
     private final static String[] USER_ROLE_PATTERNS = {"/map"};
@@ -45,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 }

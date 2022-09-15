@@ -1,6 +1,6 @@
 package com.picture.diary.common.user.service;
 
-import com.picture.diary.login.service.LoginService;
+import com.picture.diary.common.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
+    private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //loginService.login()
-        System.out.println("여기오나");
-        return null;
+
+        return userRepository.findByUserId(username);
     }
 
 }
