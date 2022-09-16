@@ -1,16 +1,11 @@
 package com.picture.diary.utils;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.common.response.BasicResponse;
 import com.picture.diary.common.response.ErrorResponse;
-import com.picture.diary.common.response.SuccessResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -25,13 +20,15 @@ import static org.springframework.http.HttpMethod.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 public class NasConnection {
 
+    //TODO 환경변수는 따로 모아서 처리
+    //properties 에서 관리할 건지 , 소스코드 내에서 관리할 건지
+    //어찌 됐든 관리는 한 곳에서..
     private final String baseUrl = "https://hwkang.synology.me:5001/webapi/entry.cgi";
 
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -45,7 +42,7 @@ public class NasConnection {
     private CloseableHttpResponse httpResponse;
 
     //성공 여부
-    private boolean isSuccess = false;
+    private boolean isSuccess;
 
     //Json 형태의 응답 문자열
     private String response;
@@ -61,7 +58,7 @@ public class NasConnection {
         this.paramMap = paramMap;
 
         String queryString = this.getQueryString();
-        log.info("==> Create Query String. [ " + queryString + " ]");
+        log.info(" ==> Create Query String. [ " + queryString + " ]");
 
         HttpMethod requestMethod = connectionType.getHttpMethod();
         if(requestMethod == GET) {
@@ -72,10 +69,12 @@ public class NasConnection {
 
         this.httpResponse = httpClient.execute(httpRequest);
         this.response = getResponse();
+
+        //TODO SUCCESS 처리가 너무 부실함. 수정 필요
         this.isSuccess = !response.contains("error");
 
-        log.info("==> Is success : " + isSuccess);
-        log.info("==> Response : " + this.response);
+        log.info(" ==> Is success : " + isSuccess);
+        log.info(" ==> Response : " + this.response);
     }
 
     /**
@@ -108,7 +107,7 @@ public class NasConnection {
      */
     public Map<String, Object> getResponseMap() {
         //TODO "{"data":{"did":"NsxKiXN3LKcFG9VrN-lyDp72EMd9HJAvIZDLyUzE1JNv_SRsUfs_nC1wyV9JJYRu7p7Nn_gQNodf_8C8QNrPHw","is_portal_port":false,"sid":"uIUH_qNPoZ3QCugEyUApT7Ex6gWPE_WY0aR3f5_OQ3ENJQDDyx43keVsJG2Har-i2iS2ZjHCM3zq-sRKz7uxjY"},"success":true}"
-        //여기서 data 부분만 파싱해야 함.
+        //여기서 data 부분만 파싱해야 함. 0822 추가 : success 도 해야할 것 같은데?
         try {
             Map<String, Object> responseMap = objectMapper.readValue(this.response, HashMap.class);
             Map<String, Object> dataMap =  (Map<String, Object>) responseMap.get("data");
