@@ -22,7 +22,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * TODO : JwtAuthenticationFilter 로 클래스명 변경하기
+ * TODO :  로 클래스명 변경하기
+ * @See : https://jeong-pro.tistory.com/205
  */
 @Slf4j
 @Component
@@ -47,7 +48,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
             throws AuthenticationException, IOException, ServletException {
 
         if (!request.getMethod().equals(HTTP_METHOD) || !request.getContentType().equals("application/json")) {//POST가 아니거나 JSON이 아닌 경우
-            log.error("POST 요청이 아니거나 JSON이 아닙니다!");
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         LoginRequestDto loginDto = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), Charset.defaultCharset()), LoginRequestDto.class);
