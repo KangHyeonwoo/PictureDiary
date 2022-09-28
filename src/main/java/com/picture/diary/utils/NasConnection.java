@@ -59,14 +59,13 @@ public class NasConnection {
 
         String queryString = this.getQueryString();
         log.info(" ==> Create Query String. [ " + queryString + " ]");
-
+        log.info(" ==> Full URL. [ " + baseUrl + queryString+ " ]");
         HttpMethod requestMethod = connectionType.getHttpMethod();
         if(requestMethod == GET) {
             httpRequest = new HttpGet(baseUrl + queryString);
         }
 
         //TODO -> POST 일 경우
-
         this.httpResponse = httpClient.execute(httpRequest);
         this.response = getResponse();
 
