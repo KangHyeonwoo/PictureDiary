@@ -69,6 +69,7 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         }
 
         //만약 실패 시 에러 리턴
+        //TODO 위로 올리기
         if(StringUtils.isEmpty(requestUsername) || StringUtils.isEmpty(requestPassword)) {
             throw new AuthenticationServiceException("아이디 또는 비밀번호를 입력해주세요.");
         }
