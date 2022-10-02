@@ -2,6 +2,8 @@ package com.picture.diary.config;
 
 import com.picture.diary.common.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.picture.diary.common.user.data.Role;
+import com.picture.diary.login.handler.LoginFailureHandler;
+import com.picture.diary.login.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/map")
-                //.successHandler()
-                //.failureHandler(loginFailureHandler)
+                .successHandler(new LoginSuccessHandler())
+                .failureHandler(new LoginFailureHandler())
             .and()
                 .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
