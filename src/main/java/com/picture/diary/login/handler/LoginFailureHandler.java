@@ -22,6 +22,6 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         response.getWriter().print("{\"success\":false}");
         response.getWriter().flush();
 
-        super.onAuthenticationFailure(request, response, exception);
+        //super.onAuthenticationFailure(request, response, exception);
     }
 }

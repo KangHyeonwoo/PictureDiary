@@ -76,13 +76,14 @@ public class JsonAuthenticationManager implements AuthenticationManager {
 
         //JWT 인증 성공 시 해당 사용자의 권한을 조회
         UserDetails userDetails = userService.loadUserByUsername(requestUsername);
+        if(userDetails == null) {
+            throw new AuthenticationServiceException("사용자 정보가 존재하지 않습니다.");
+        }
 
         //인증이 완료되면
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-        if(userDetails == null) {
-            throw new AuthenticationServiceException("사용자 정보가 존재하지 않습니다.");
-        }
+
 
         //TODO 뭐가 리턴되는지 확인해야함.
         return result;
