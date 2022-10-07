@@ -17,11 +17,11 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.error("login fail");
+        log.debug("login fail");
         response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-        response.getWriter().print("{\"success\":false}");
-        response.getWriter().flush();
+        //TODO 이부분 문자열 말고 객체 -> 문자열 로 바꿔서 리턴하고 싶어..
 
-        //super.onAuthenticationFailure(request, response, exception);
+        response.getWriter().print("{\"isSuccess\":false, \"message\":"+exception.getMessage()+"}");
+        response.getWriter().flush();
     }
 }

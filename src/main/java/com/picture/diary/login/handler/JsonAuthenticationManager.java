@@ -40,8 +40,6 @@ import java.util.List;
  *  그래서 authenticate 메소드는 jwt 토큰이 없다고 가정하고 진행해야 함
  *  @See : https://velog.io/@jkijki12/Spirng-Security-Jwt-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
  */
-
-
 @RequiredArgsConstructor
 @Component
 @Slf4j
@@ -69,7 +67,6 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         }
 
         //만약 실패 시 에러 리턴
-        //TODO 위로 올리기
         if(StringUtils.isEmpty(requestUsername) || StringUtils.isEmpty(requestPassword)) {
             throw new AuthenticationServiceException("아이디 또는 비밀번호를 입력해주세요.");
         }
@@ -83,7 +80,8 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         //인증이 완료되면
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-
+        log.debug("asdasdasdq1wdascx");
+        System.out.println(result);
 
         //TODO 뭐가 리턴되는지 확인해야함.
         return result;
