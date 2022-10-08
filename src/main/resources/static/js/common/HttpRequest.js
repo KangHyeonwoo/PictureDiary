@@ -9,7 +9,9 @@ export default class HttpRequest {
 	static async post(url, data) {
 		const method = 'POST';
 		const res = await HttpRequest.#send(method, url, data);
-		
+
+		console.log(res);
+
 		if (res.count > 0) {
 			return res.data;
 		} else {
