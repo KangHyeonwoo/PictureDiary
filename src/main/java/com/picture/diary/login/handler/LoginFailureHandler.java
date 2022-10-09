@@ -20,8 +20,9 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         log.debug("login fail");
         response.setStatus(HttpStatus.SC_UNAUTHORIZED);
         //TODO 이부분 문자열 말고 객체 -> 문자열 로 바꿔서 리턴하고 싶어..
-
-        response.getWriter().print("{\"isSuccess\":false, \"message\":"+exception.getMessage()+"}");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().print("{\"isSuccess\":false, \"message\":\""+exception.getMessage()+"\"}");
         response.getWriter().flush();
     }
 }

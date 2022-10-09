@@ -78,13 +78,7 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         }
 
         //인증이 완료되면
-        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        log.debug("asdasdasdq1wdascx");
-        System.out.println(result);
-
-        //TODO 뭐가 리턴되는지 확인해야함.
-        return result;
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
 }
