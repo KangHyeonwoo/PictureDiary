@@ -15,8 +15,8 @@ public class MemoryUserRepository implements UserRepository {
 
     @PostConstruct
     public void init() {
-        UserDetails user1 = new User("user1", "username", Role.USER);
-        userMap.put("user1", user1);
+        UserDetails hwkang = new User("hwkang", "username", Role.USER);
+        userMap.put("hwkang", hwkang);
     }
 
 

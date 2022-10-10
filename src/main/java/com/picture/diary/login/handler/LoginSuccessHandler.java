@@ -18,13 +18,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    //private final JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setStatus(HttpStatus.SC_OK);
         //TODO 여기에 토큰 먹여야 하나?
-        log.info("여기옴1111");
-        super.onAuthenticationSuccess(request, response, authentication);
+        //
+        authentication.getName();
+        //jwtProvider.createToken()
     }
 }
