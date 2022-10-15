@@ -24,7 +24,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setStatus(HttpStatus.SC_OK);
         //TODO 여기에 토큰 먹여야 하나?
-        //
+
         authentication.getName();
         //jwtProvider.createToken()
     }
