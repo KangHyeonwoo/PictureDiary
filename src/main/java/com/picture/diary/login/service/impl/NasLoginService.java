@@ -38,7 +38,7 @@ public class NasLoginService implements LoginService {
             //return jwtAuthenticationProvider.createToken(LoginType.SYNOLOGY_NAS, userId, Arrays.asList(""));
             return "fffff";
         }
-
+        System.out.println("하이하이 여기오나욥");
         throw new PictureDiaryException(connection.createErrorResponse());
     }
 

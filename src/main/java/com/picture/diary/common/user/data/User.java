@@ -1,5 +1,6 @@
 package com.picture.diary.common.user.data;
 
+import com.picture.diary.login.data.LoginType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,9 +21,12 @@ public class User implements UserDetails {
 
     private Role role;
 
+    private LoginType loginType;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority(loginType.name()));
         authorityList.add(new SimpleGrantedAuthority(role.name()));
 
         return authorityList;
