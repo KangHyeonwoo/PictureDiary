@@ -17,9 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
 
-    //private final LoginSuccessHandler loginSuccessHandler;
-    //private final LoginFailureHandler loginFailureHandler;
-
     private final static String[] PERMIT_ALL_PATTERNS = {"/login", "/css/**" , "/images/**", "/js/**"};
     private final static String[] USER_ROLE_PATTERNS = {"/map"};
 
@@ -40,8 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/map")
-                //.successHandler(loginSuccessHandler)
-                //.failureHandler(loginFailureHandler)
             .and()
                 .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

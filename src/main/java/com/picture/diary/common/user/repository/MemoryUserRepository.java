@@ -3,12 +3,10 @@ package com.picture.diary.common.user.repository;
 import com.picture.diary.common.user.data.Role;
 import com.picture.diary.common.user.data.User;
 import com.picture.diary.login.data.LoginType;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +32,8 @@ public class MemoryUserRepository implements UserRepository {
                 .filter(key -> key.equals(userId) && !userMap.get(key).getAuthorities().isEmpty())
                 .map(key -> userMap.get(key).getAuthorities())
                 .filter(auth -> auth.equals(LoginType.SYNOLOGY_NAS))
-                .findAny()
-                .orElse(null);
+                .findAny().get();
+
+        return null;
     }
 }
