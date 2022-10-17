@@ -6,11 +6,13 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +32,6 @@ public class JwtProvider {
     }
 
     public boolean resolve(String accessToken) {
-        //String accessToken = this.resolveToken((HttpServletRequest) request);
         if(accessToken != null) {
             JwtEntity validateResponseToken = this.getValidateResponseToken(accessToken);
             //유효성 검사에 성공한 토큰이면
@@ -86,7 +87,7 @@ public class JwtProvider {
      * @param roles
      * @return Jwt Access Token
      */
-    public String createToken(LoginType loginType, String userId, List<String> roles) {
+    public String createToken(LoginType loginType, String userId, Collection<? extends GrantedAuthority> roles) {
         String userPk = this.createUserPk(loginType, userId);
         String accessToken = createAccessToken(userPk, roles);
         String refreshToken = createRefreshToken(accessToken);
@@ -98,7 +99,7 @@ public class JwtProvider {
         return jwtEntity.getAccessToken();
     }
 
-    private String createAccessToken(String userPk, List<String> roles) {
+    private String createAccessToken(String userPk, Collection<? extends GrantedAuthority> roles) {
         //JWT payload 에 저장되는 정보 단위, 여기서 사용자를 식별하는 값을 넣는다.
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
