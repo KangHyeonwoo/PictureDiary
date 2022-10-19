@@ -62,8 +62,7 @@ export default class HttpRequest {
 			body : JSON.stringify(data)
 		};
 		
-		return fetch(url, sendOption)
-			.then(response => response.json())
+		return fetch(url, sendOption);
 	}
 
 }

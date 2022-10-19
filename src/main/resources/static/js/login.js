@@ -18,6 +18,32 @@ function login(username, password) {
         username : username,
         password : password
     }
+    /*
     HttpRequest.post('/login', data).then()
-        .then(response => console.log(response));
+        .then(response => {
+            debugger;
+        });
+    */
+
+    const options = {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify(data)
+    };
+
+    fetch('/login', options)
+        .then(response => response.headers)
+        .then(headers => {
+            const auth = headers.get('auth');
+
+            moveToMainPage(auth);
+        })
+        .catch(error => console.error(error.message));
+
+}
+
+function moveToMainPage(auth) {
+    console.log(auth);
 }
