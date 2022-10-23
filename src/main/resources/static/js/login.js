@@ -34,14 +34,18 @@ function login(username, password) {
     };
 
     fetch('/login', options)
-        .then(response => response.headers)
+        .then(response => {
+            if(response.ok) {
+                return response.headers;
+            }
+
+            console.log(response.json())
+        })
         .then(headers => {
             const auth = headers.get('auth');
 
             moveToMainPage(auth);
         })
-        .catch(error => console.error(error.message));
-
 }
 
 function moveToMainPage(auth) {

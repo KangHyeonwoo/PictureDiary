@@ -1,17 +1,10 @@
 package com.picture.diary.login.handler;
 
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.common.jwt.JwtEntity;
-import com.picture.diary.common.jwt.JwtRepository;
-import com.picture.diary.common.response.ErrorResponse;
 import com.picture.diary.common.user.service.UserService;
 import com.picture.diary.login.data.LoginRequestDto;
 import com.picture.diary.login.data.LoginType;
 import com.picture.diary.login.service.LoginService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,20 +12,11 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -58,17 +42,19 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         log.info("requestUsername : " + requestUsername);
         log.info("requestPassword : " + requestPassword);
 
-        //로그인
-        try {
-            loginService.login(new LoginRequestDto(LoginType.SYNOLOGY_NAS, requestUsername, requestPassword));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AuthenticationServiceException("aaa");
-        }
-
         //만약 실패 시 에러 리턴
         if(StringUtils.isEmpty(requestUsername) || StringUtils.isEmpty(requestPassword)) {
             throw new AuthenticationServiceException("아이디 또는 비밀번호를 입력해주세요.");
+        }
+
+        //로그인
+        try {
+            loginService.login(new LoginRequestDto(LoginType.SYNOLOGY_NAS, requestUsername, requestPassword));
+        } catch (PictureDiaryException e) {
+            throw new AuthenticationServiceException(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AuthenticationServiceException("기타 오류");
         }
 
         //JWT 인증 성공 시 해당 사용자의 권한을 조회

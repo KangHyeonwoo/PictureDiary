@@ -2,6 +2,7 @@ package com.picture.diary.login.data;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,4 +28,5 @@ public class LoginRequestDto {
         this.username = username;
         this.password = password;
     }
+
 }
