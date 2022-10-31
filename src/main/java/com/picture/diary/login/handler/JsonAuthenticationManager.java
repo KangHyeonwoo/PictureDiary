@@ -38,14 +38,8 @@ public class JsonAuthenticationManager implements AuthenticationManager {
         String requestPassword = authentication.getCredentials().toString();
 
         //JWT 로 인증하는 절차 필요
-        log.info("===== JWT 로 인증하는 절차 단계 =====");
-        log.info("requestUsername : " + requestUsername);
-        log.info("requestPassword : " + requestPassword);
-
-        //만약 실패 시 에러 리턴
-        if(StringUtils.isEmpty(requestUsername) || StringUtils.isEmpty(requestPassword)) {
-            throw new AuthenticationServiceException("아이디 또는 비밀번호를 입력해주세요.");
-        }
+        log.info("===== JWT Authentication Start. =====");
+        log.info(" ==> requestUsername : " + requestUsername);
 
         //로그인
         try {

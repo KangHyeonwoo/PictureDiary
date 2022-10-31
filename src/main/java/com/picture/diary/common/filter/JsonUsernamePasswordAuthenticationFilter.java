@@ -1,9 +1,11 @@
 package com.picture.diary.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.picture.diary.common.provider.ApplicationContextProvider;
 import com.picture.diary.login.data.LoginRequestDto;
 import com.picture.diary.login.handler.LoginSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,24 +32,28 @@ import java.nio.charset.Charset;
 public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper;
-    public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "username";
-    public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "password";
+    //private final MessageSourceAccessor messageSource;
     public static final String HTTP_METHOD = "POST";
     private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher("/login", HTTP_METHOD);
 
     public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager,
                                                     LoginSuccessHandler loginSuccessHandler, AuthenticationFailureHandler authenticationFailureHandler) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER, authenticationManager);
+        log.info("여기 오냐?");
         this.objectMapper =objectMapper;
         setAuthenticationSuccessHandler(loginSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
+
+         //messageSource = ApplicationContextProvider.getApplicationContext().getBean(MessageSourceAccessor.class);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
 
-        if (!request.getMethod().equals(HTTP_METHOD) || !request.getContentType().equals("application/json")) {//POST가 아니거나 JSON이 아닌 경우
+        //Request Method must be POST , and request content-type must be json.
+        if (!request.getMethod().equals(HTTP_METHOD) || !request.getContentType().equals("application/json")) {
+
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         LoginRequestDto loginDto = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), Charset.defaultCharset()), LoginRequestDto.class);
@@ -57,7 +63,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         String password = loginDto.getPassword();
 
         if(username ==null || password == null){
-            throw new AuthenticationServiceException("DATA IS MISS");
+            //String errorMessage = messageSource.getMessage("login.error.paramEmpty");
+            throw new AuthenticationServiceException("아이디 또는 비밀번호를 입력해주세요.");
         }
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
