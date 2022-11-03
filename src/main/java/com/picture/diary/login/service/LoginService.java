@@ -15,6 +15,6 @@ public interface LoginService {
      * @return JWT
      * @throws IOException
      */
-    String login(LoginRequestDto loginRequestDto) throws IOException;
+    void login(LoginRequestDto loginRequestDto) throws IOException;
 
 }

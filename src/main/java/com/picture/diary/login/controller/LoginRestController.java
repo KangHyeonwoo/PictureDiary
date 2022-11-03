@@ -25,9 +25,10 @@ public class LoginRestController {
 
     @PostMapping("/login")
     public ResponseEntity<BasicResponse> login(@Valid LoginRequestDto loginRequestDto) throws IOException {
-        String accessToken = loginService.login(loginRequestDto);
+        System.out.println("여기오냐!!!!!!!!!!!!!!!!!!!!!!!");
+        loginService.login(loginRequestDto);
 
-        SuccessResponse<String> response = new SuccessResponse<>(accessToken);
+        SuccessResponse<String> response = new SuccessResponse<>();
         return ResponseEntity.ok(response);
     }
 

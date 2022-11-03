@@ -1,6 +1,8 @@
 package com.picture.diary.login.handler;
 
 import com.picture.diary.common.jwt.JwtProvider;
+import com.picture.diary.common.user.data.User;
+import com.picture.diary.login.data.LoginType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -23,9 +25,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         response.setStatus(HttpStatus.SC_OK);
-        //TODO 여기에 토큰 먹여야 하나?
 
-        authentication.getName();
-        //jwtProvider.createToken()
+        User loginUser = (User) authentication.getPrincipal();
+        String userId = loginUser.getUserId();
+        LoginType loginType = loginUser.getLoginType();
+
+        String token = jwtProvider.createToken(loginType, userId, loginUser.getAuthorities());
+        log.info("Login Success auth is [ {} ]" , token);
+        response.setHeader("auth", token);
     }
 }
