@@ -18,10 +18,8 @@ import java.util.Arrays;
 @Slf4j
 public class NasLoginService implements LoginService {
 
-    //private final JwtAuthenticationProvider jwtAuthenticationProvider;
-
     @Override
-    public String login(LoginRequestDto loginRequestDto) throws IOException {
+    public void login(LoginRequestDto loginRequestDto) throws IOException {
         //1.  param setting
         final String userId = loginRequestDto.getUsername();
         final String password = loginRequestDto.getPassword();
@@ -31,15 +29,9 @@ public class NasLoginService implements LoginService {
                 .addParam("passwd", password)
                 .send();
 
-        if(connection.isSuccess()) {
-            //TODO DB 에 사용자 ROLE 저장 조회
-            //현재는 임시 데이터 세팅
-            //return new LoginResponseEntity(LoginType.SYNOLOGY_NAS, userId, LocalDateTime.now(), Arrays.asList("USER"));
-            //return jwtAuthenticationProvider.createToken(LoginType.SYNOLOGY_NAS, userId, Arrays.asList(""));
-            return "fffff";
+        if(!connection.isSuccess()) {
+            throw new PictureDiaryException(connection.createErrorResponse());
         }
-        System.out.println("하이하이 여기오나욥");
-        throw new PictureDiaryException(connection.createErrorResponse());
     }
 
 }
