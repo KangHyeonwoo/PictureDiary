@@ -29,6 +29,7 @@ import java.nio.charset.Charset;
  */
 @Slf4j
 @Component
+@Deprecated
 public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper;

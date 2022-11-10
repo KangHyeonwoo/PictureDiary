@@ -15,7 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
+    //private final JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter;
+    private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
 
     private final static String[] PERMIT_ALL_PATTERNS = {"/login", "/css/**" , "/images/**", "/js/**"};
@@ -33,14 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
             .and()
                 .logout()
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
             .and()
                 .formLogin()
                 .loginPage("/login")
-                .failureHandler(loginFailureHandler)
+                .successHandler(loginSuccessHandler)
                 .defaultSuccessUrl("/map")
-            .and()
-                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .failureHandler(loginFailureHandler);
+
+            //.and()
+                //.addFilterBefore(jsonUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
