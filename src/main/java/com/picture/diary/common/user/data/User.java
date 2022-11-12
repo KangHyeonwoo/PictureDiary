@@ -19,6 +19,8 @@ public class User implements UserDetails {
 
     private String userId;
 
+    private String password;
+
     private String username;
 
     private Role role;
@@ -34,10 +36,9 @@ public class User implements UserDetails {
         return authorityList;
     }
 
-    //비밀번호는 객체로 만들지 않는다.
     @Override
     public String getPassword() {
-        return null;
+        return "{bcrypt}" + this.password;
     }
 
     @Override
