@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script type="module" src="/js/login.js" defer></script>
+    <!--<script type="module" src="/js/login.js" defer></script>-->
 </head>
 <body>
-    <div>
-        <input type="text" id="username" placeholder="ID 를 입력해주세요." value="hwkang"/>
-        <input type="password" id="password" placeholder="비밀번호를 입력해주세요." value="Rla0011!!!"/>
+    <form action="/login" method="post">
+        <div>
+            <input type="text" id="username" name="username" placeholder="ID 를 입력해주세요." value="hwkang"/>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요." value="Rla0011!!!"/>
 
-        <input type="button" id="loginButton" value="Log In">
-    </div>
-
+            <input type="submit" id="loginButton" value="Log In">
+        </div>
+    </form>
 </body>
 </html>

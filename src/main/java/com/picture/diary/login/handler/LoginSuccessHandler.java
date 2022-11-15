@@ -34,7 +34,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         log.info("Login Success auth is : {} " , token);
 
         response.setHeader("auth", token);
-        response.setStatus(HttpStatus.SC_MOVED_TEMPORARILY);
         //메인화면으로 이동해야 하는데 URL 세팅을 여기서 하는게 맞는가..
         //클라이언트에서 하는게 맞는가..
 
