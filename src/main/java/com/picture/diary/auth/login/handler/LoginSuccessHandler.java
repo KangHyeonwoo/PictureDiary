@@ -1,8 +1,8 @@
-package com.picture.diary.login.handler;
+package com.picture.diary.auth.login.handler;
 
 import com.picture.diary.common.jwt.JwtProvider;
 import com.picture.diary.common.user.data.User;
-import com.picture.diary.login.data.LoginType;
+import com.picture.diary.auth.login.data.LoginType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;

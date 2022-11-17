@@ -1,9 +1,8 @@
-package com.picture.diary.login.service.impl;
+package com.picture.diary.auth.login.service.impl;
 
 import com.picture.diary.common.exception.PictureDiaryException;
-import com.picture.diary.login.data.LoginRequestDto;
-import com.picture.diary.login.data.LoginType;
-import com.picture.diary.login.service.LoginService;
+import com.picture.diary.auth.login.data.LoginRequestDto;
+import com.picture.diary.auth.login.service.LoginService;
 import com.picture.diary.utils.NasConnection;
 import com.picture.diary.utils.NasConnectionType;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor

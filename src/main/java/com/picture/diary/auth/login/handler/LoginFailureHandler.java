@@ -1,4 +1,4 @@
-package com.picture.diary.login.handler;
+package com.picture.diary.auth.login.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;

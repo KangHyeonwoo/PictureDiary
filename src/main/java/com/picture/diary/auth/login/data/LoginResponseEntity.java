@@ -1,10 +1,9 @@
-package com.picture.diary.login.data;
+package com.picture.diary.auth.login.data;
 
 import com.picture.diary.common.response.SuccessResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor

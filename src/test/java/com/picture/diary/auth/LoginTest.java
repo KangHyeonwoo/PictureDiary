@@ -1,11 +1,8 @@
-package com.picture.diary.login;
+package com.picture.diary.auth;
 
-import com.picture.diary.common.response.BasicResponse;
-import com.picture.diary.common.response.SuccessResponse;
-import com.picture.diary.login.data.LoginRequestDto;
-import com.picture.diary.login.data.LoginResponseEntity;
-import com.picture.diary.login.data.LoginType;
-import com.picture.diary.login.service.LoginService;
+import com.picture.diary.auth.login.data.LoginRequestDto;
+import com.picture.diary.auth.login.data.LoginType;
+import com.picture.diary.auth.login.service.LoginService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,18 +60,7 @@ public class LoginTest {
     @Test
     @DisplayName("Synology API) 로그인 성공")
     void login_success() throws IOException {
-        final String id = "hwkang";
-        final String password = "Rla0011!!!";
-
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
-                .userId(id)
-                .password(password)
-                .build();
-
-        LoginResponseEntity responseEntity = loginService.login(loginRequestDto);
-
-        System.out.println(responseEntity.isSuccess());
-        //System.out.println(responseEntity.getSid());
+        //TODO 새로 만들기
     }
 
 }

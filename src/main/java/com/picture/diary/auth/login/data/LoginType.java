@@ -1,4 +1,4 @@
-package com.picture.diary.login.data;
+package com.picture.diary.auth.login.data;
 
 public enum LoginType {
 

@@ -1,8 +1,7 @@
-package com.picture.diary.login.data;
+package com.picture.diary.auth.login.data;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

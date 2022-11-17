@@ -1,9 +1,9 @@
-package com.picture.diary.login.controller;
+package com.picture.diary.auth.login.controller;
 
 import com.picture.diary.common.response.BasicResponse;
 import com.picture.diary.common.response.SuccessResponse;
-import com.picture.diary.login.data.LoginRequestDto;
-import com.picture.diary.login.service.LoginService;
+import com.picture.diary.auth.login.data.LoginRequestDto;
+import com.picture.diary.auth.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

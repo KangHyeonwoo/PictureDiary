@@ -1,10 +1,10 @@
-package com.picture.diary.login.handler;
+package com.picture.diary.auth.login.handler;
 
 import com.picture.diary.common.exception.PictureDiaryException;
 import com.picture.diary.common.user.service.UserService;
-import com.picture.diary.login.data.LoginRequestDto;
-import com.picture.diary.login.data.LoginType;
-import com.picture.diary.login.service.LoginService;
+import com.picture.diary.auth.login.data.LoginRequestDto;
+import com.picture.diary.auth.login.data.LoginType;
+import com.picture.diary.auth.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 

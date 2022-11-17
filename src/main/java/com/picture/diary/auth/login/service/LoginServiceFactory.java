@@ -1,8 +1,8 @@
-package com.picture.diary.login.service;
+package com.picture.diary.auth.login.service;
 
 import com.picture.diary.common.provider.ApplicationContextProvider;
-import com.picture.diary.login.data.LoginType;
-import com.picture.diary.login.service.impl.NasLoginService;
+import com.picture.diary.auth.login.data.LoginType;
+import com.picture.diary.auth.login.service.impl.NasLoginService;
 import org.springframework.context.ApplicationContext;
 
 /**

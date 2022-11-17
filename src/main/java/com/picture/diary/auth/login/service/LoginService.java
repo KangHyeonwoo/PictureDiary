@@ -1,8 +1,6 @@
-package com.picture.diary.login.service;
+package com.picture.diary.auth.login.service;
 
-import com.picture.diary.common.response.BasicResponse;
-import com.picture.diary.login.data.LoginRequestDto;
-import com.picture.diary.login.data.LoginResponseEntity;
+import com.picture.diary.auth.login.data.LoginRequestDto;
 
 import java.io.IOException;
 
