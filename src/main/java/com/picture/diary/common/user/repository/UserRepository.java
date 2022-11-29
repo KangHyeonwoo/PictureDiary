@@ -1,6 +1,6 @@
 package com.picture.diary.common.user.repository;
 
-import com.picture.diary.login.data.LoginType;
+import com.picture.diary.auth.login.data.LoginType;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserRepository {

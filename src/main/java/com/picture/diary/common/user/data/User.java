@@ -1,6 +1,6 @@
 package com.picture.diary.common.user.data;
 
-import com.picture.diary.login.data.LoginType;
+import com.picture.diary.auth.login.data.LoginType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
