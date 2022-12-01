@@ -1,6 +1,6 @@
 package com.picture.diary.common.jwt;
 
-import com.picture.diary.login.data.LoginType;
+import com.picture.diary.auth.login.data.LoginType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
