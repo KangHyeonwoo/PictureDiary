@@ -2,7 +2,7 @@ package com.picture.diary.common.user.repository;
 
 import com.picture.diary.common.user.data.Role;
 import com.picture.diary.common.user.data.User;
-import com.picture.diary.login.data.LoginType;
+import com.picture.diary.auth.login.data.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
